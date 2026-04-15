@@ -1,0 +1,134 @@
+/* ── Filter dropdown ──────────────────────────────────────────── */
+
+.filter-select {
+  margin-top: 20px;
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 6px 28px 6px 10px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235C5240'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+/* ── Entry list ───────────────────────────────────────────────── */
+
+.entry-list {
+  flex: 1;
+  padding: 48px 0;
+}
+
+.entry-list .container {
+  max-width: 1400px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Individual entry ─────────────────────────────────────────── */
+
+.music-entry {
+  display: flex;
+  gap: 28px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.entry-cover-link {
+  flex-shrink: 0;
+}
+
+.entry-cover-wrap {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  overflow: visible;
+}
+
+.entry-cover {
+  width: 168px;
+  height: 168px;
+  object-fit: cover;
+  display: block;
+}
+
+.entry-type-icon {
+  position: absolute;
+  top: -28px;
+  left: -33px;
+  width: 72px;
+  height: 72px;
+  image-rendering: pixelated;
+}
+
+.entry-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.entry-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: normal;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.entry-title:hover {
+  text-decoration: underline;
+}
+
+.entry-artist {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.entry-notes {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-top: 4px;
+  white-space: pre-line;
+}
+
+.entry-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  align-self: flex-end;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* ── Two-column layout on wide screens ────────────────────────── */
+
+@media (min-width: 900px) {
+  .entry-list .container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 64px;
+    align-items: start;
+  }
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .music-entry {
+    gap: 20px;
+  }
+
+  .entry-cover-wrap,
+  .entry-cover {
+    width: 88px;
+    height: 88px;
+  }
+}

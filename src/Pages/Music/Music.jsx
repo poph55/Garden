@@ -1,0 +1,55 @@
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import MusicEntry from './MusicEntry'
+import cantBuyAThrillCover from './covers/Cant buy a thrill cover.jpg'
+import './Music.css'
+
+const entries = [
+  {
+    title: 'Only A Fool Would Say That',
+    artist: 'Steely Dan',
+    type: 'song',
+    cover: cantBuyAThrillCover,
+    notes: `a world become one\nof salads and sun\nonly a fool would say that\ntalkin' 'bout a world where all is free`,
+    link: 'https://open.spotify.com/track/7GVvj4zJNVuBJSl6StEfn5',
+  },
+  {
+    title: 'Blood On The Tracks',
+    artist: 'Bob Dylan',
+    type: 'album',
+    link: 'https://open.spotify.com/album/4WD4pslu83FF6oMa1e19mF',
+  },
+]
+
+export default function Music() {
+  const [filter, setFilter] = useState('all')
+
+  const visible = filter === 'all' ? entries : entries.filter(e => e.type === filter)
+
+  return (
+    <Layout>
+      <section className="page-hero">
+        <div className="container">
+          <h1 className="page-title">music</h1>
+          <select
+            className="filter-select"
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+          >
+            <option value="all">all</option>
+            <option value="song">songs</option>
+            <option value="album">albums</option>
+          </select>
+        </div>
+      </section>
+
+      <section className="entry-list">
+        <div className="container">
+          {visible.map((entry, i) => (
+            <MusicEntry key={i} {...entry} />
+          ))}
+        </div>
+      </section>
+    </Layout>
+  )
+}

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create *)",
+      "Bash(mv .claude /tmp/claude-backup)",
+      "Bash(mv /tmp/claude-backup .claude)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(curl -s \"https://open.spotify.com/oembed?url=https://open.spotify.com/track/7GVvj4zJNVuBJSl6StEfn5\")",
+      "Bash(curl -s \"https://open.spotify.com/oembed?url=https://open.spotify.com/album/4WD4pslu83FF6oMa1e19mF\")",
+      "Bash(python3 -c \"from PIL import Image; img = Image.open\\('c:/Users/palma/OneDrive/Desktop/Projects/Garden/public/cursor.png'\\); print\\(img.size\\)\")",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}

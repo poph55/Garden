@@ -1,0 +1,56 @@
+:root {
+  --bg: #CBD496;
+  --bg-card: #EDE9D8;
+  --bg-card-hover: #E4DFC9;
+  --text: #2B261A;
+  --text-muted: #5C5240;
+  --accent: #3D5E28;
+  --border: rgba(75, 60, 30, 0.18);
+
+  --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: Georgia, 'Times New Roman', serif;
+
+  --max-width: 860px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #252B14;
+    --bg-card: #1E1D15;
+    --bg-card-hover: #26241A;
+    --text: #E8E4D4;
+    --text-muted: #8A8470;
+    --accent: #9ABF7A;
+    --border: rgba(180, 160, 100, 0.15);
+  }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  cursor: url('/gardenSpadeCursor.cur'), auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a, button, select, [role="button"] {
+  cursor: url('/greenHandCursor.cur'), pointer;
+}
