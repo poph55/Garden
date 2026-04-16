@@ -10,7 +10,7 @@
   --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: Georgia, 'Times New Roman', serif;
 
-  --max-width: 860px;
+  --max-width: 1100px;
 }
 
 @media (prefers-color-scheme: dark) {
