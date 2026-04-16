@@ -10,6 +10,9 @@ const categories = [
   { slug: 'tools',    title: 'tools' },
   { slug: 'poetry',   title: 'poetry' },
   { slug: 'articles', title: 'articles' },
+  { slug: 'physics',  title: 'physics' },
+  { slug: 'math',     title: 'math' },
+  { slug: 'baseball', title: 'baseball' },
 ]
 
 export default function Home() {

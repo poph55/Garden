@@ -12,14 +12,16 @@ const entries = [
     cover: cantBuyAThrillCover,
     notes: `a world become one\nof salads and sun\nonly a fool would say that\ntalkin' 'bout a world where all is free`,
     link: 'https://open.spotify.com/track/7GVvj4zJNVuBJSl6StEfn5',
+    dateAdded: 'Apr 14, 2026',
   },
   {
     title: 'Blood On The Tracks',
     artist: 'Bob Dylan',
     type: 'album',
     link: 'https://open.spotify.com/album/4WD4pslu83FF6oMa1e19mF',
+    dateAdded: 'Apr 15, 2026',
   },
-]
+].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
 
 export default function Music() {
   const [filter, setFilter] = useState('all')
@@ -27,7 +29,7 @@ export default function Music() {
   const visible = filter === 'all' ? entries : entries.filter(e => e.type === filter)
 
   return (
-    <Layout>
+    <Layout showBack>
       <section className="page-hero">
         <div className="container">
           <h1 className="page-title">music</h1>

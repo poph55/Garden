@@ -4,9 +4,12 @@ import Movies      from './Pages/Movies/Movies'
 import Music       from './Pages/Music/Music'
 import Books       from './Pages/Books/Books'
 import Travel      from './Pages/Travel/Travel'
-import UsefulTools from './Pages/UsefulTools/UsefulTools'
+import Tools from './Pages/Tools/Tools'
 import Poetry      from './Pages/Poetry/Poetry'
 import Articles    from './Pages/Articles/Articles'
+import Physics     from './Pages/Physics/Physics'
+import Math        from './Pages/Math/Math'
+import Baseball    from './Pages/Baseball/Baseball'
 
 export default function App() {
   return (
@@ -17,9 +20,12 @@ export default function App() {
         <Route path="/music"        element={<Music />} />
         <Route path="/books"        element={<Books />} />
         <Route path="/travel"       element={<Travel />} />
-        <Route path="/tools"         element={<UsefulTools />} />
+        <Route path="/tools"         element={<Tools />} />
         <Route path="/poetry"       element={<Poetry />} />
         <Route path="/articles"     element={<Articles />} />
+        <Route path="/physics"      element={<Physics />} />
+        <Route path="/math"         element={<Math />} />
+        <Route path="/baseball"     element={<Baseball />} />
       </Routes>
     </BrowserRouter>
   )

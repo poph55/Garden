@@ -1,0 +1,209 @@
+/* ── Filepath breadcrumb ──────────────────────────────────────── */
+
+.tools-path {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+  font-family: var(--font-body);
+  font-size: 20px;
+}
+
+.path-back {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 8px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  display: flex;
+  align-items: center;
+}
+
+.path-back img {
+  width: 45px;
+  height: 45px;
+  image-rendering: pixelated;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+
+.path-back:hover img {
+  opacity: 1;
+}
+
+.path-segment {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 20px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+}
+
+.path-segment:hover {
+  color: var(--text);
+}
+
+.path-segment-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.path-sep {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.path-arrow-fill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  color: var(--text-muted);
+  opacity: 0.3;
+}
+
+.path-arrow-chevron {
+  flex-shrink: 0;
+  font-size: 20px;
+  font-family: var(--font-body);
+}
+
+.path-arrow-line {
+  flex: 1;
+  border-bottom: 1px solid var(--text-muted);
+}
+
+.path-current {
+  color: var(--text-muted);
+  font-size: 20px;
+  font-family: var(--font-body);
+  flex-shrink: 0;
+}
+
+/* ── Folder entry ─────────────────────────────────────────────── */
+
+.folder-entry {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: url('/greenHandCursor.cur'), pointer;
+}
+
+.folder-entry:hover .folder-title {
+  text-decoration: underline;
+}
+
+.folder-icon {
+  width: 62px;
+  height: 62px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.folder-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: normal;
+  color: var(--text);
+}
+
+/* ── Entry list ───────────────────────────────────────────────── */
+
+.tools-list {
+  flex: 1;
+}
+
+.tools-list .container {
+  max-width: 1400px;
+}
+
+/* ── Individual entry ─────────────────────────────────────────── */
+
+.tool-entry {
+  display: flex;
+  gap: 28px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* image present */
+.tool-image-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 336px;
+  height: 210px;
+}
+
+.tool-image {
+  width: 336px;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+}
+
+.tool-type-icon {
+  position: absolute;
+  top: -28px;
+  left: -33px;
+  width: 72px;
+  height: 72px;
+  image-rendering: pixelated;
+}
+
+/* no image — just the icon */
+.tool-icon-only {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.tool-type-icon--solo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 72px;
+  height: 72px;
+}
+
+/* body */
+.tool-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 210px;
+}
+
+.tool-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: normal;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.tool-title:hover {
+  text-decoration: underline;
+}
+
+.tool-description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.tool-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: auto;
+  padding-top: 8px;
+  align-self: flex-end;
+}
+

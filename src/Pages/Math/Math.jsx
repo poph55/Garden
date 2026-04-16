@@ -1,11 +1,11 @@
 import Layout from '../../components/Layout'
 
-export default function UsefulTools() {
+export default function Math() {
   return (
-    <Layout>
+    <Layout showBack>
       <section className="page-hero">
         <div className="container">
-          <h1 className="page-title">tools</h1>
+          <h1 className="page-title">math</h1>
         </div>
       </section>
     </Layout>
