@@ -7,6 +7,8 @@ import piixes from './screenshots/piixes.jpg'
 import bgremover from './screenshots/bgremover.png'
 import fileconverter from './screenshots/fileconverter.png'
 import albumcovers from './screenshots/albumcovers.png'
+import cursorfinder from './screenshots/cursorfinder.png'
+import movieposterfinder from './screenshots/movieposterfinder.jpg'
 import './Tools.css'
 
 const root = [
@@ -51,6 +53,22 @@ const root = [
         description: 'covers.musichoarders.xyz',
         dateAdded: 'Apr 15, 2026',
         image: albumcovers,
+      },
+      {
+        type: 'tool',
+        title: 'custom mouse cursors',
+        link: 'https://www.cursors-4u.com/trending',
+        description: 'cursors-4u.com/trending',
+        dateAdded: 'Apr 15, 2026',
+        image: cursorfinder,
+      },
+      {
+        type: 'tool',
+        title: 'hi-res movie posters and alternates',
+        link: 'https://theposterdb.com',
+        description: 'theposterdb.com',
+        dateAdded: 'Apr 15, 2026',
+        image: movieposterfinder,
       },
     ],
   },

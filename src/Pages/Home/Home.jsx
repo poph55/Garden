@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Layout from '../../components/Layout'
+import catSheet from '../../assets/blackcat.png'
 import './Home.css'
 
 const categories = [
@@ -12,7 +13,8 @@ const categories = [
   { slug: 'articles', title: 'articles' },
   { slug: 'physics',  title: 'physics' },
   { slug: 'math',     title: 'math' },
-  { slug: 'baseball', title: 'baseball' },
+  { slug: 'baseball',    title: 'baseball' },
+  { slug: 'video-games', title: 'video games' },
 ]
 
 export default function Home() {
@@ -20,7 +22,14 @@ export default function Home() {
     <Layout>
       <section className="hero">
         <div className="container">
-          <h1 className="page-title">the garden</h1>
+          <h1 className="page-title hero-title">
+            the garden
+            <span
+              className="cat-sprite"
+              aria-hidden="true"
+              style={{ backgroundImage: `url(${catSheet})` }}
+            />
+          </h1>
         </div>
       </section>
 

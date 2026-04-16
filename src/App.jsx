@@ -10,6 +10,7 @@ import Articles    from './Pages/Articles/Articles'
 import Physics     from './Pages/Physics/Physics'
 import Math        from './Pages/Math/Math'
 import Baseball    from './Pages/Baseball/Baseball'
+import VideoGames  from './Pages/VideoGames/VideoGames'
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/physics"      element={<Physics />} />
         <Route path="/math"         element={<Math />} />
         <Route path="/baseball"     element={<Baseball />} />
+        <Route path="/video-games"  element={<VideoGames />} />
       </Routes>
     </BrowserRouter>
   )

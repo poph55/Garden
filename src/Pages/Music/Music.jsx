@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Layout from '../../components/Layout'
 import MusicEntry from './MusicEntry'
 import cantBuyAThrillCover from './covers/Cant buy a thrill cover.jpg'
+import bloodOnTheTracksCover from './covers/blood on the tracks.jpg'
 import './Music.css'
 
 const entries = [
@@ -18,6 +19,7 @@ const entries = [
     title: 'Blood On The Tracks',
     artist: 'Bob Dylan',
     type: 'album',
+    cover: bloodOnTheTracksCover,
     link: 'https://open.spotify.com/album/4WD4pslu83FF6oMa1e19mF',
     dateAdded: 'Apr 15, 2026',
   },
