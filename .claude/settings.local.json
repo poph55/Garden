@@ -11,7 +11,9 @@
       "Bash(python3 -c \"from PIL import Image; img = Image.open\\('c:/Users/palma/OneDrive/Desktop/Projects/Garden/public/cursor.png'\\); print\\(img.size\\)\")",
       "Bash(python3 -c ' *)",
       "Bash(git config *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "WebFetch(domain:www.imdb.com)",
+      "WebFetch(domain:image.tmdb.org)"
     ]
   }
 }

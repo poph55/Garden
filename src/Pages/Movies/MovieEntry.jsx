@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 export default function MovieEntry({ poster, title, year, director, link, notes, dateAdded, onPosterClick }) {
   const posters = Array.isArray(poster) ? poster : [poster].filter(Boolean)
-  const [idx, setIdx] = useState(0)
+  const [idx, setIdx] = useState(() => Math.floor(Math.random() * (posters.length || 1)))
   const multi = posters.length > 1
 
   const prev = e => { e.preventDefault(); setIdx(i => (i - 1 + posters.length) % posters.length) }
@@ -34,7 +34,7 @@ export default function MovieEntry({ poster, title, year, director, link, notes,
           <a href={link} target="_blank" rel="noreferrer" className="movie-title">{title}</a>
           {year && <span className="movie-year">{year}</span>}
         </div>
-        {director && <p className="movie-director">{director}</p>}
+        {director && <p className="movie-director">{Array.isArray(director) ? director.join(', ') : director}</p>}
         {notes && <p className="movie-notes">{notes}</p>}
         {dateAdded && <p className="movie-date">{dateAdded}</p>}
       </div>

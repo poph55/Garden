@@ -2,17 +2,108 @@ import { useState, useMemo } from 'react'
 import Layout from '../../components/Layout'
 import MovieEntry from './MovieEntry'
 import Lightbox from './Lightbox'
-import whiplash from './posters/Whiplash (2014).jpg'
-import whiplash2 from './posters/Whiplash (2014).png'
-import bugoniaClassic from './posters/Bugonia (2025) classic.jpg'
-import weaponsClassic from './posters/Weapons (2025) classic.jpg'
-import weaponsCinematic from './posters/Weapons (2025) cinematic.jpg'
-import weaponsDrawing from './posters/Weapons (2025) drawing.jpg'
-import bugoniaHive from './posters/Bugonia (2025) hive.png'
-import bugoniaBasement from './posters/Bugonia (2025) basement.png'
+import intolerableCruelty from './posters/Intolerable Cruelty/Intolerable Cruelty (2003).jpeg'
+import primer1 from './posters/Primer/Primer (2004).jpg'
+import primer2 from './posters/Primer/Primer (2004) (1).jpg'
+import moonstruck from './posters/Moonstruck/Moonstruck (1987).jpg'
+import annihilation1 from './posters/Annihilation/Annihilation (2018).jpeg'
+import annihilation2 from './posters/Annihilation/Annihilation (2018) (1).jpeg'
+import perfectBlue1 from './posters/Perfect Blue/Perfect Blue (1998).png'
+import perfectBlue2 from './posters/Perfect Blue/Perfect Blue (1998).jpeg'
+import perfectBlue3 from './posters/Perfect Blue/Perfect Blue (1998) (1).jpeg'
+import perfectBlue4 from './posters/Perfect Blue/Perfect Blue (1998) (2).jpeg'
+import aftersunBeach from './posters/Aftersun/Aftersun (2022) beach.jpg'
+import aftersunHug from './posters/Aftersun/Aftersun (2022) hug.png'
+import spiritedAwayBridge1 from './posters/Spirited Away/Spirited Away (2001) bridge 1.png'
+import spiritedAwayBridge2 from './posters/Spirited Away/Spirited Away (2001) bridge 2.jpg'
+import spiritedAwayDragon from './posters/Spirited Away/Spirited Away (2001) dragon.jpeg'
+import duneTimmy from './posters/Dune/Dune Timmy.jpg'
+import duneDune from './posters/Dune/Dune Dune.png'
+import dunePartTwoTz from './posters/Dune Part Two/Dune- Part Two tz.png'
+import dunePartTwoDune from './posters/Dune Part Two/Dune- Part Two Dune.png'
+import whiplash from './posters/Whiplash/Whiplash (2014).jpg'
+import whiplash2 from './posters/Whiplash/Whiplash (2014).png'
+import bugoniaClassic from './posters/Bugonia/Bugonia (2025) classic.jpg'
+import weaponsClassic from './posters/Weapons/Weapons (2025) classic.jpg'
+import weaponsCinematic from './posters/Weapons/Weapons (2025) cinematic.jpg'
+import weaponsDrawing from './posters/Weapons/Weapons (2025) drawing.jpg'
+import bugoniaHive from './posters/Bugonia/Bugonia (2025) hive.png'
+import bugoniaBasement from './posters/Bugonia/Bugonia (2025) basement.png'
 import './Movies.css'
 
 const entries = [
+  {
+    title: 'Intolerable Cruelty',
+    year: 2003,
+    director: ['Joel Coen', 'Ethan Coen'],
+    link: 'https://www.imdb.com/title/tt0138524/',
+    poster: [intolerableCruelty],
+    dateAdded: 'Apr 20, 2026',
+  },
+  {
+    title: 'Primer',
+    year: 2004,
+    director: 'Shane Carruth',
+    link: 'https://www.imdb.com/title/tt0390384/',
+    poster: [primer1, primer2],
+    dateAdded: 'Apr 20, 2026',
+  },
+  {
+    title: 'Moonstruck',
+    year: 1987,
+    director: 'Norman Jewison',
+    link: 'https://www.imdb.com/title/tt0093565/',
+    poster: [moonstruck],
+    dateAdded: 'Apr 20, 2026',
+  },
+  {
+    title: 'Annihilation',
+    year: 2018,
+    director: 'Alex Garland',
+    link: 'https://www.imdb.com/title/tt2798920/',
+    poster: [annihilation1, annihilation2],
+    dateAdded: 'Apr 20, 2026',
+  },
+  {
+    title: 'Perfect Blue',
+    year: 1997,
+    director: 'Satoshi Kon',
+    link: 'https://www.imdb.com/title/tt0156887/',
+    poster: [perfectBlue1, perfectBlue2, perfectBlue3, perfectBlue4],
+    dateAdded: 'Apr 20, 2026',
+  },
+  {
+    title: 'Aftersun',
+    year: 2022,
+    director: 'Charlotte Wells',
+    link: 'https://www.imdb.com/title/tt19770238/',
+    poster: [aftersunBeach, aftersunHug],
+    dateAdded: 'Apr 20, 2026',
+  },
+  {
+    title: 'Spirited Away',
+    year: 2001,
+    director: 'Hayao Miyazaki',
+    link: 'https://www.imdb.com/title/tt0245429/',
+    poster: [spiritedAwayBridge1, spiritedAwayBridge2, spiritedAwayDragon],
+    dateAdded: 'Apr 20, 2026',
+  },
+  {
+    title: 'Dune',
+    year: 2021,
+    director: 'Denis Villeneuve',
+    link: 'https://www.imdb.com/title/tt1160419/',
+    poster: [duneTimmy, duneDune],
+    dateAdded: 'Apr 20, 2026',
+  },
+  {
+    title: 'Dune: Part Two',
+    year: 2024,
+    director: 'Denis Villeneuve',
+    link: 'https://www.imdb.com/title/tt15239678/',
+    poster: [dunePartTwoTz, dunePartTwoDune],
+    dateAdded: 'Apr 20, 2026',
+  },
   {
     title: 'Whiplash',
     year: 2014,
@@ -50,8 +141,10 @@ function sortEntries(list, by) {
     if (by === 'title')    return a.title.localeCompare(b.title)
     if (by === 'director') {
       const lastName = name => (name || '').split(' ').pop()
-      return lastName(a.director).localeCompare(lastName(b.director))
+      const firstDirector = d => Array.isArray(d) ? d[0] : d
+      return lastName(firstDirector(a.director)).localeCompare(lastName(firstDirector(b.director)))
     }
+    if (by === 'year') return b.year - a.year
     return new Date(b.dateAdded) - new Date(a.dateAdded)
   })
 }
@@ -95,6 +188,7 @@ export default function Movies() {
             <option value="dateAdded">date added</option>
             <option value="title">title</option>
             <option value="director">director</option>
+            <option value="year">release year</option>
           </select>
         </div>
       </section>
