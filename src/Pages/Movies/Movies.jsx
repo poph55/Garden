@@ -23,6 +23,8 @@ import dunePartTwoTz from './posters/Dune Part Two/Dune- Part Two tz.png'
 import dunePartTwoDune from './posters/Dune Part Two/Dune- Part Two Dune.png'
 import whiplash from './posters/Whiplash/Whiplash (2014).jpg'
 import whiplash2 from './posters/Whiplash/Whiplash (2014).png'
+import inTheMoodForLove1 from './posters/In the Mood for Love/In the Mood for Love (2000).jpg'
+import inTheMoodForLove2 from './posters/In the Mood for Love/In the Mood for Love (2000).png'
 import bugoniaClassic from './posters/Bugonia/Bugonia (2025) classic.jpg'
 import weaponsClassic from './posters/Weapons/Weapons (2025) classic.jpg'
 import weaponsCinematic from './posters/Weapons/Weapons (2025) cinematic.jpg'
@@ -32,6 +34,14 @@ import bugoniaBasement from './posters/Bugonia/Bugonia (2025) basement.png'
 import './Movies.css'
 
 const entries = [
+  {
+    title: 'In the Mood for Love',
+    year: 2000,
+    director: 'Wong Kar-wai',
+    link: 'https://www.imdb.com/title/tt0118694/',
+    poster: [inTheMoodForLove1, inTheMoodForLove2],
+    dateAdded: 'Apr 22, 2026',
+  },
   {
     title: 'Intolerable Cruelty',
     year: 2003,
