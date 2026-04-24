@@ -19,6 +19,14 @@
   flex-direction: column;
 }
 
+.garden > main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .container {
   max-width: var(--max-width);
   margin: 0 auto;

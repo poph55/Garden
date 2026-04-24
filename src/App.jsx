@@ -12,6 +12,8 @@ import Math        from './Pages/Math/Math'
 import Baseball    from './Pages/Baseball/Baseball'
 import VideoGames  from './Pages/VideoGames/VideoGames'
 import Vocab       from './Pages/Vocab/Vocab'
+import Quotes      from './Pages/Quotes/Quotes'
+import Paintings   from './Pages/Paintings/Paintings'
 
 export default function App() {
   return (
@@ -30,6 +32,8 @@ export default function App() {
         <Route path="/baseball"     element={<Baseball />} />
         <Route path="/video-games"  element={<VideoGames />} />
         <Route path="/vocab"        element={<Vocab />} />
+        <Route path="/quotes"       element={<Quotes />} />
+        <Route path="/paintings"    element={<Paintings />} />
       </Routes>
     </BrowserRouter>
   )

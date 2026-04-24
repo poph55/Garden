@@ -1,12 +1,12 @@
 /* ── Page title ───────────────────────────────────────────────── */
 
-.poetry-title {
+.quotes-title {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.poetry-title-icon {
+.quotes-title-icon {
   width: 112px;
   height: 112px;
   object-fit: contain;
@@ -15,63 +15,77 @@
 
 /* ── Entry list ───────────────────────────────────────────────── */
 
-.poetry-list {
+.quotes-list {
   flex: 1;
   padding: 48px 0;
 }
 
-.poetry-list .container {
+.quotes-list .container {
   max-width: unset;
   border-top: 1px solid var(--border);
 }
 
 /* ── Individual entry ─────────────────────────────────────────── */
 
-.poetry-entry {
+.quote-entry {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   padding: 32px 0;
   border-bottom: 1px solid var(--border);
 }
 
-.poetry-header {
+.quote-body {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.quote-body p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text);
+  margin: 0;
+  font-style: normal;
+}
+
+.quote-attribution {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  margin-top: 4px;
 }
 
-.poetry-entry-title {
-  font-family: var(--font-display);
-  font-size: 20px;
+.quote-person {
+  font-size: 14px;
   color: var(--text);
-  line-height: 1.2;
+  font-weight: 500;
 }
 
-.poetry-author {
+.quote-source {
   font-size: 13px;
   color: var(--text-muted);
 }
 
-.poetry-body {
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.8;
-  color: var(--text);
-  white-space: pre-wrap;
-  margin: 0;
+.quote-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
 }
 
-.poetry-date {
+.quote-date {
   font-size: 11px;
   color: var(--text-muted);
-  margin-top: auto;
+  margin: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* ── Multi-column on wide screens ─────────────────────────────── */
 
 @media (min-width: 900px) {
-  .poetry-list .container {
+  .quotes-list .container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 48px;

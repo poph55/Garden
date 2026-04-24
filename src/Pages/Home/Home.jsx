@@ -13,6 +13,8 @@ import newspaperIcon from '../../assets/newspaper-3-Original.png'
 import gyroscopeIcon from '../../assets/foucault-gyroscope-Original.png'
 import abacusIcon from '../../assets/abacus-pixel-Original.png'
 import videoGameIcon from '../../assets/videogame-icon-Original.png'
+import quotationMarksIcon from '../../assets/quotation-marks-Original.png'
+import paintbrushIcon from '../../assets/magic-paintbrush-Original.png'
 import './Home.css'
 
 const categories = [
@@ -28,6 +30,8 @@ const categories = [
   { slug: 'math',     title: 'math', icon: abacusIcon },
   { slug: 'baseball',    title: 'baseball', icon: baseballFieldIcon },
   { slug: 'video-games', title: 'video games', icon: videoGameIcon },
+  { slug: 'quotes',      title: 'quotes',      icon: quotationMarksIcon },
+  { slug: 'paintings',   title: 'paintings',   icon: paintbrushIcon },
 ]
 
 export default function Home() {
