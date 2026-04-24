@@ -1,4 +1,4 @@
-export default function VocabEntry({ term, partOfSpeech, definition, source }) {
+export default function VocabEntry({ term, partOfSpeech, definition, source, dateAdded }) {
   return (
     <div className="vocab-entry">
       <div className="vocab-term-row">
@@ -6,7 +6,10 @@ export default function VocabEntry({ term, partOfSpeech, definition, source }) {
         {partOfSpeech && <span className="vocab-pos">{partOfSpeech}</span>}
       </div>
       <p className="vocab-definition">{definition}</p>
-      {source && <p className="vocab-source">{source}</p>}
+      <div className="vocab-entry-footer">
+        {source && <span className="vocab-source">{source}</span>}
+        {dateAdded && <span className="vocab-date">{dateAdded}</span>}
+      </div>
     </div>
   )
 }

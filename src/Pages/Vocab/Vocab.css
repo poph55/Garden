@@ -20,7 +20,7 @@
 }
 
 .vocab-list .container {
-  max-width: 900px;
+  max-width: 1400px;
 }
 
 /* ── Entry list ───────────────────────────────────────────────── */
@@ -64,12 +64,33 @@
   color: var(--text);
 }
 
+.vocab-entry-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 4px;
+}
+
 .vocab-source {
   font-size: 11px;
   color: var(--text-muted);
   font-style: italic;
-  align-self: flex-end;
-  margin-top: 4px;
+}
+
+.vocab-date {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.passage-page-date {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.passage-date {
+  font-size: 10px;
+  color: var(--text-muted);
 }
 
 /* ── Passage entry ────────────────────────────────────────────── */
@@ -90,10 +111,46 @@
   white-space: pre-line;
 }
 
+.passage-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 8px;
+}
+
+.passage-source {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .passage-page {
   font-size: 10px;
   color: var(--text-muted);
-  margin-top: 8px;
-  align-self: flex-end;
-  text-align: right;
+  margin-left: auto;
+}
+
+/* ── All-words / all-passages buttons ─────────────────────────── */
+
+.vocab-view-buttons {
+  display: flex;
+  gap: 12px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.vocab-view-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 6px 14px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.vocab-view-btn:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
 }
