@@ -11,6 +11,7 @@ import Physics     from './Pages/Physics/Physics'
 import Math        from './Pages/Math/Math'
 import Baseball    from './Pages/Baseball/Baseball'
 import VideoGames  from './Pages/VideoGames/VideoGames'
+import Vocab       from './Pages/Vocab/Vocab'
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/math"         element={<Math />} />
         <Route path="/baseball"     element={<Baseball />} />
         <Route path="/video-games"  element={<VideoGames />} />
+        <Route path="/vocab"        element={<Vocab />} />
       </Routes>
     </BrowserRouter>
   )

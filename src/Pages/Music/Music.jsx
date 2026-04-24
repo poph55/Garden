@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Layout from '../../components/Layout'
 import MusicEntry from './MusicEntry'
+import musicBoxIcon from '../../assets/music-storage-box-Original.png'
 import cantBuyAThrillCover from './covers/Cant buy a thrill cover.jpg'
 import bloodOnTheTracksCover from './covers/blood on the tracks.jpg'
 import wishYouWereHereCover from './covers/wish you were here cover.jpg'
@@ -44,7 +45,10 @@ export default function Music() {
     <Layout showBack>
       <section className="page-hero">
         <div className="container">
-          <h1 className="page-title">music</h1>
+          <h1 className="page-title music-title">
+            <img src={musicBoxIcon} alt="" className="music-title-icon" aria-hidden="true" />
+            music
+          </h1>
           <select
             className="filter-select"
             value={filter}

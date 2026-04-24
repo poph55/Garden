@@ -1,0 +1,12 @@
+.videogames-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.videogames-title-icon {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}

@@ -85,11 +85,13 @@
 
 .category-link {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   height: 160px;
   font-family: var(--font-display);
-  font-size: 30px;
+  font-size: 34px;
   font-weight: normal;
   text-align: center;
   background: var(--bg);
@@ -99,6 +101,13 @@
 .category-link:hover {
   background: #4A3520;
   color: #EDE8D6;
+}
+
+.category-icon {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 /* ── Responsive ───────────────────────────────────────────────── */

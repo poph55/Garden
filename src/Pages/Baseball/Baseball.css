@@ -1,0 +1,12 @@
+.baseball-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.baseball-title-icon {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}

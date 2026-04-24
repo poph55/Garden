@@ -1,3 +1,18 @@
+/* ── Page title ───────────────────────────────────────────────── */
+
+.tools-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tools-title-icon {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
 /* ── Filepath breadcrumb ──────────────────────────────────────── */
 
 .tools-path {

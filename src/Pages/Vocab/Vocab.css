@@ -1,0 +1,99 @@
+/* ── Page title ───────────────────────────────────────────────── */
+
+.vocab-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.vocab-title-icon {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* ── List container ───────────────────────────────────────────── */
+
+.vocab-list {
+  flex: 1;
+}
+
+.vocab-list .container {
+  max-width: 900px;
+}
+
+/* ── Entry list ───────────────────────────────────────────────── */
+
+.vocab-entries {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Individual entry ─────────────────────────────────────────── */
+
+.vocab-entry {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vocab-term-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.vocab-term {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--text);
+}
+
+.vocab-pos {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.vocab-definition {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.vocab-source {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  align-self: flex-end;
+  margin-top: 4px;
+}
+
+/* ── Passage entry ────────────────────────────────────────────── */
+
+.passage-entry {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.passage-entry:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.passage-text {
+  font-size: 22px;
+  line-height: 1.8;
+  color: var(--text);
+  white-space: pre-line;
+}
+
+.passage-page {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  align-self: flex-end;
+  text-align: right;
+}

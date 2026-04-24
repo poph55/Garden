@@ -1,0 +1,173 @@
+/* ── Page title ───────────────────────────────────────────────── */
+
+.books-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.books-title-icon {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* ── Entry grid ───────────────────────────────────────────────── */
+
+.book-list {
+  flex: 1;
+  padding: 48px 0;
+}
+
+.book-list .container {
+  max-width: 1400px;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 32px 24px;
+}
+
+/* ── Individual entry ─────────────────────────────────────────── */
+
+.book-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-cover-wrap {
+  display: block;
+}
+
+.book-cover-wrap a {
+  display: block;
+  cursor: url('/greenHandCursor.cur'), pointer;
+}
+
+.book-cover {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.book-cover--placeholder {
+  background: var(--border);
+}
+
+/* ── Body ─────────────────────────────────────────────────────── */
+
+.book-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 60px;
+}
+
+.book-top-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.book-title-year {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.book-year {
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.book-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: normal;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+a.book-title:hover {
+  text-decoration: underline;
+}
+
+.book-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.book-star {
+  display: block;
+  width: 18px;
+  height: 18px;
+  image-rendering: pixelated;
+}
+
+.book-star--empty {
+  opacity: 0.2;
+}
+
+.book-star-half-wrap {
+  display: inline-block;
+  width: 9px;
+  overflow: hidden;
+}
+
+.book-author {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.book-dates {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: auto;
+  padding-top: 6px;
+  align-self: flex-end;
+}
+
+.book-vocab-link {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-decoration: none;
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+.book-vocab-link:hover {
+  text-decoration: underline;
+  color: var(--text);
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .book-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .book-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .book-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
+  }
+}

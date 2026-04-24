@@ -1,3 +1,18 @@
+/* ── Page title ───────────────────────────────────────────────── */
+
+.music-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.music-title-icon {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
 /* ── Filter dropdown ──────────────────────────────────────────── */
 
 .filter-select {

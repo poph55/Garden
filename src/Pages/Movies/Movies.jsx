@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import Layout from '../../components/Layout'
 import MovieEntry from './MovieEntry'
 import Lightbox from './Lightbox'
+import movieProjectorIcon from '../../assets/movie-projector-Original.png'
 import intolerableCruelty from './posters/Intolerable Cruelty/Intolerable Cruelty (2003).jpeg'
 import primer1 from './posters/Primer/Primer (2004).jpg'
 import primer2 from './posters/Primer/Primer (2004) (1).jpg'
@@ -189,7 +190,10 @@ export default function Movies() {
     <Layout showBack>
       <section className="page-hero">
         <div className="container">
-          <h1 className="page-title">movies</h1>
+          <h1 className="page-title movies-title">
+            <img src={movieProjectorIcon} alt="" className="movies-title-icon" aria-hidden="true" />
+            movies
+          </h1>
           <select
             className="filter-select"
             value={sortBy}

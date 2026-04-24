@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import Layout from '../../components/Layout'
 import PoetryEntry from './PoetryEntry'
+import papyrusScrollIcon from '../../assets/papyrus-scroll-Original.png'
 import './Poetry.css'
 
 const entries = [
@@ -40,7 +41,10 @@ export default function Poetry() {
     <Layout showBack>
       <section className="page-hero">
         <div className="container">
-          <h1 className="page-title">poetry</h1>
+          <h1 className="page-title poetry-title">
+            <img src={papyrusScrollIcon} alt="" className="poetry-title-icon" aria-hidden="true" />
+            poetry
+          </h1>
           <select
             className="filter-select"
             value={sortBy}

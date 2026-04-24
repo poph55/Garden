@@ -1,11 +1,16 @@
 import Layout from '../../components/Layout'
+import cargoplaneIcon from '../../assets/cargoplane-Original.png'
+import './Travel.css'
 
 export default function Travel() {
   return (
     <Layout showBack>
       <section className="page-hero">
         <div className="container">
-          <h1 className="page-title">travel</h1>
+          <h1 className="page-title travel-title">
+            <img src={cargoplaneIcon} alt="" className="travel-title-icon" aria-hidden="true" />
+            travel
+          </h1>
         </div>
       </section>
     </Layout>

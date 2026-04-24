@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Layout from '../../components/Layout'
 import backIcon from '../../assets/back-image-Original.png'
+import toolboxIcon from '../../assets/toolbox-1-Original.png'
 import ToolEntry from './ToolEntry'
 import FolderEntry from './FolderEntry'
 import piixes from './screenshots/piixes.jpg'
@@ -9,6 +10,10 @@ import fileconverter from './screenshots/fileconverter.png'
 import albumcovers from './screenshots/albumcovers.png'
 import cursorfinder from './screenshots/cursorfinder.png'
 import movieposterfinder from './screenshots/movieposterfinder.jpg'
+import pokemonsprites from './screenshots/pokemonsprites.png'
+import storygraph from './screenshots/book covers and reading tracking.png'
+import pokemonitemsprites from './screenshots/pokemon item sprites.png'
+import pokemontypeicons from './screenshots/pokemon type icons.png'
 import './Tools.css'
 
 const root = [
@@ -70,6 +75,38 @@ const root = [
         dateAdded: 'Apr 15, 2026',
         image: movieposterfinder,
       },
+      {
+        type: 'tool',
+        title: 'book covers and reading tracking',
+        link: 'https://app.thestorygraph.com',
+        description: 'app.thestorygraph.com',
+        dateAdded: 'Apr 24, 2026',
+        image: storygraph,
+      },
+      {
+        type: 'tool',
+        title: 'pokémon type icons',
+        link: 'https://bulbapedia.bulbagarden.net/wiki/Type#Icons',
+        description: 'bulbapedia.bulbagarden.net',
+        dateAdded: 'Apr 24, 2026',
+        image: pokemontypeicons,
+      },
+      {
+        type: 'tool',
+        title: 'pokémon item sprites',
+        link: 'https://msikma.github.io/pokesprite/overview/inventory.html',
+        description: 'msikma.github.io/pokesprite',
+        dateAdded: 'Apr 24, 2026',
+        image: pokemonitemsprites,
+      },
+      {
+        type: 'tool',
+        title: 'pokémon sprite finder',
+        link: 'https://pokemondb.net/sprites#gen9',
+        description: 'pokemondb.net/sprites',
+        dateAdded: 'Apr 24, 2026',
+        image: pokemonsprites,
+      },
     ],
   },
 ]
@@ -98,7 +135,10 @@ export default function Tools() {
     <Layout showBack>
       <section className="page-hero">
         <div className="container">
-          <h1 className="page-title">tools</h1>
+          <h1 className="page-title tools-title">
+            <img src={toolboxIcon} alt="" className="tools-title-icon" aria-hidden="true" />
+            tools
+          </h1>
         </div>
       </section>
 
