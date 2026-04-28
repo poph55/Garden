@@ -5,14 +5,14 @@ import './Physics.css'
 export default function Physics() {
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title physics-title">
             <img src={gyroscopeIcon} alt="" className="physics-title-icon" aria-hidden="true" />
             physics
           </h1>
         </div>
-      </section>
+      </div>
     </Layout>
   )
 }

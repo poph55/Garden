@@ -1,3 +1,5 @@
+/* ── Page title ───────────────────────────────────────────────── */
+
 .baseball-title {
   display: flex;
   align-items: center;
@@ -9,4 +11,303 @@
   height: 112px;
   object-fit: contain;
   image-rendering: pixelated;
+}
+
+/* ── Tabs ─────────────────────────────────────────────────────── */
+
+.baseball-tabs {
+  display: flex;
+  gap: 0;
+  margin-top: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.baseball-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 8px 16px 8px 0;
+  margin-bottom: -1px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.baseball-tab:hover {
+  color: var(--text);
+}
+
+.baseball-tab--active {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+/* ── List container ───────────────────────────────────────────── */
+
+.baseball-list {
+  flex: 1;
+  padding: 32px 0 48px;
+}
+
+/* ── Season group ─────────────────────────────────────────────── */
+
+.season-divider {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 48px 0 16px;
+}
+
+.season-group:first-child .season-divider {
+  padding-top: 0;
+}
+
+.season-year {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.season-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.season-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  align-self: center;
+}
+
+/* ── Game grid ────────────────────────────────────────────────── */
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+/* ── Game entry card ──────────────────────────────────────────── */
+
+.game-entry {
+  aspect-ratio: 3 / 2;
+  border: 1px solid var(--border);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ── Matchup rows ─────────────────────────────────────────────── */
+
+.game-matchup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.game-team-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.game-team-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.game-team-abbr {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  font-size: 8px;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.game-team-name {
+  font-size: 15px;
+  color: var(--text-muted);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-score {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  min-width: 24px;
+  text-align: right;
+}
+
+.game-team-row--winner .game-team-name {
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.game-team-row--winner .game-score {
+  color: var(--text);
+  font-size: 28px;
+}
+
+.game-team-row--winner .game-team-abbr {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+/* ── Game metadata ────────────────────────────────────────────── */
+
+.game-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.game-tag {
+  font-size: 9px;
+  font-family: var(--font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  align-self: flex-start;
+  padding: 2px 6px;
+  margin-bottom: 2px;
+}
+
+.game-tag--playoffs {
+  color: #9a7b2e;
+  border: 1px solid #9a7b2e;
+}
+
+.game-tag--world-series {
+  color: #b03030;
+  border: 1px solid #b03030;
+}
+
+.game-location {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-date {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ── Teams visibility toggle ──────────────────────────────────── */
+
+.teams-visibility-toggle {
+  display: flex;
+  gap: 0;
+  margin-top: 24px;
+}
+
+.visibility-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  padding: 5px 14px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  margin-right: -1px;
+}
+
+.visibility-btn:hover {
+  color: var(--text);
+}
+
+.visibility-btn--active {
+  color: var(--text);
+  border-color: var(--text-muted);
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Teams grid ───────────────────────────────────────────────── */
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.team-cell {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  opacity: 0.3;
+}
+
+.team-cell--visited {
+  opacity: 1;
+}
+
+.team-cell-record {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.team-cell-count {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.team-cell-field-icon {
+  width: 21px;
+  height: 21px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  opacity: 0.6;
+}
+
+.team-cell-logo {
+  width: 65%;
+  height: 65%;
+  object-fit: contain;
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  .game-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

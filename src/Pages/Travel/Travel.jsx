@@ -5,14 +5,14 @@ import './Travel.css'
 export default function Travel() {
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title travel-title">
             <img src={cargoplaneIcon} alt="" className="travel-title-icon" aria-hidden="true" />
             travel
           </h1>
         </div>
-      </section>
+      </div>
     </Layout>
   )
 }

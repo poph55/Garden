@@ -39,7 +39,7 @@ export default function Poetry() {
 
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title poetry-title">
             <img src={papyrusScrollIcon} alt="" className="poetry-title-icon" aria-hidden="true" />
@@ -55,7 +55,7 @@ export default function Poetry() {
             <option value="title">title</option>
           </select>
         </div>
-      </section>
+      </div>
 
       <section className="poetry-list">
         <div className="container">

@@ -59,7 +59,7 @@ export default function Books() {
 
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title books-title">
             <img src={bookshelfIcon} alt="" className="books-title-icon" aria-hidden="true" />
@@ -76,7 +76,7 @@ export default function Books() {
             <option value="rating">rating</option>
           </select>
         </div>
-      </section>
+      </div>
 
       <section className="book-list">
         <div className="container">

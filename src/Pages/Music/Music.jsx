@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useGreedyColumns } from '../../hooks/useGreedyColumns'
 import Layout from '../../components/Layout'
 import MusicEntry from './MusicEntry'
 import musicBoxIcon from '../../assets/music-storage-box-Original.png'
@@ -86,13 +87,11 @@ export default function Music() {
     })
   }, [filter, sortBy])
 
-  const NUM_COLS = 3
-  const cols = Array.from({ length: NUM_COLS }, () => [])
-  visible.forEach((entry, i) => cols[i % NUM_COLS].push(entry))
+  const { cols } = useGreedyColumns(visible, 3)
 
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title music-title">
             <img src={musicBoxIcon} alt="" className="music-title-icon" aria-hidden="true" />
@@ -119,14 +118,14 @@ export default function Music() {
             </select>
           </div>
         </div>
-      </section>
+      </div>
 
       <section className="entry-list">
         <div className="container">
           <div className="music-columns">
             {cols.map((col, ci) => (
               <div key={ci} className="music-column">
-                {col.map((entry, i) => <MusicEntry key={i} {...entry} />)}
+                {col.map(({ entry, idx }) => <MusicEntry key={idx} {...entry} />)}
               </div>
             ))}
           </div>

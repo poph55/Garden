@@ -133,14 +133,14 @@ export default function Tools() {
 
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title tools-title">
             <img src={toolboxIcon} alt="" className="tools-title-icon" aria-hidden="true" />
             tools
           </h1>
         </div>
-      </section>
+      </div>
 
       <section className="tools-list">
         <div className="container">

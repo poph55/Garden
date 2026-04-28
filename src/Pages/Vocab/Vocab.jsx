@@ -207,7 +207,7 @@ export default function Vocab() {
 
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title vocab-title">
             <img src={enchantedQuillIcon} alt="" className="vocab-title-icon" aria-hidden="true" />
@@ -232,7 +232,7 @@ export default function Vocab() {
             )}
           </select>
         </div>
-      </section>
+      </div>
 
       <section className="vocab-list">
         <div className="container">

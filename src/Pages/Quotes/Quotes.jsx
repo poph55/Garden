@@ -26,7 +26,7 @@ export default function Quotes() {
 
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title quotes-title">
             <img src={quotationMarksIcon} alt="" className="quotes-title-icon" aria-hidden="true" />
@@ -41,7 +41,7 @@ export default function Quotes() {
             <option value="person">person</option>
           </select>
         </div>
-      </section>
+      </div>
 
       <section className="quotes-list">
         <div className="container">

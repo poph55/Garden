@@ -188,7 +188,7 @@ export default function Movies() {
 
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title movies-title">
             <img src={movieProjectorIcon} alt="" className="movies-title-icon" aria-hidden="true" />
@@ -205,7 +205,7 @@ export default function Movies() {
             <option value="year">release year</option>
           </select>
         </div>
-      </section>
+      </div>
 
       <section className="movie-list">
         <div className="container">

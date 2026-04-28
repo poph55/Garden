@@ -22,7 +22,6 @@
 
 .quotes-list .container {
   max-width: unset;
-  border-top: 1px solid var(--border);
 }
 
 /* ── Individual entry ─────────────────────────────────────────── */

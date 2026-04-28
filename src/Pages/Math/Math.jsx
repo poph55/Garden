@@ -5,14 +5,14 @@ import './Math.css'
 export default function Math() {
   return (
     <Layout showBack>
-      <section className="page-hero">
+      <div className="page-header">
         <div className="container">
           <h1 className="page-title math-title">
             <img src={abacusIcon} alt="" className="math-title-icon" aria-hidden="true" />
             math
           </h1>
         </div>
-      </section>
+      </div>
     </Layout>
   )
 }
