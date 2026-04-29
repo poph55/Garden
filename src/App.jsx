@@ -14,6 +14,7 @@ import VideoGames  from './Pages/VideoGames/VideoGames'
 import Vocab       from './Pages/Vocab/Vocab'
 import Quotes      from './Pages/Quotes/Quotes'
 import Paintings   from './Pages/Paintings/Paintings'
+import Recipes    from './Pages/Recipes/Recipes'
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/vocab"        element={<Vocab />} />
         <Route path="/quotes"       element={<Quotes />} />
         <Route path="/paintings"    element={<Paintings />} />
+        <Route path="/recipes"      element={<Recipes />} />
       </Routes>
     </BrowserRouter>
   )

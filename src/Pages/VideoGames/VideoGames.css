@@ -1,3 +1,5 @@
+/* ── Page title ───────────────────────────────────────────────── */
+
 .videogames-title {
   display: flex;
   align-items: center;
@@ -9,4 +11,607 @@
   height: 112px;
   object-fit: contain;
   image-rendering: pixelated;
+}
+
+/* ── Tabs ─────────────────────────────────────────────────────── */
+
+.vg-tabs {
+  display: flex;
+  gap: 0;
+  margin-top: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.vg-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 8px 16px 8px 0;
+  margin-bottom: -1px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.vg-tab:hover {
+  color: var(--text);
+}
+
+.vg-tab--active {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+/* ── List container ───────────────────────────────────────────── */
+
+.vg-list {
+  flex: 1;
+  padding: 40px 0 64px;
+}
+
+.vg-list .container {
+  max-width: 1500px;
+}
+
+/* ── Champion entry ───────────────────────────────────────────── */
+
+.pokemon-champions {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.champion-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.champion-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.champion-trainer {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--text);
+}
+
+.champion-game {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Pokemon team grid ────────────────────────────────────────── */
+
+.champion-team {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+/* ── Pokemon card ─────────────────────────────────────────────── */
+
+.poke-card {
+  border: 1px solid var(--border);
+  padding: 4px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-card);
+}
+
+/* ── Sprite area ──────────────────────────────────────────────── */
+
+.poke-sprite-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.poke-sprite {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 70%;
+}
+
+.poke-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.poke-item-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.poke-item-sprite {
+  width: 67px;
+  height: 67px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+}
+
+.poke-item-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  width: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 20;
+}
+
+.poke-item-wrap:hover .poke-item-tooltip {
+  opacity: 1;
+}
+
+.poke-item-tooltip-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.poke-item-tooltip-effect {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Info ─────────────────────────────────────────────────────── */
+
+.poke-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.poke-types {
+  display: flex;
+  gap: 4px;
+}
+
+.poke-type-icon {
+  height: 27px;
+  width: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.poke-nature-ability {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+
+.poke-nature {
+  color: var(--text);
+}
+
+.poke-nature-sep {
+  color: var(--border);
+}
+
+.poke-ability {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.poke-item-name {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Moves ────────────────────────────────────────────────────── */
+
+.poke-moves {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.poke-move {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.poke-move .poke-type-icon {
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.poke-move > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.poke-move-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  width: 250px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 20;
+}
+
+.poke-move:hover .poke-move-tooltip {
+  opacity: 1;
+}
+
+.poke-move-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.poke-move-tooltip-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.poke-move-tooltip-title .poke-type-icon {
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.poke-move-tooltip-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.poke-move-tooltip-stats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.poke-move-tooltip-power {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.poke-move-category-icon {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.poke-move-tooltip-effect {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── EV bars ──────────────────────────────────────────────────── */
+
+.poke-evs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+.poke-ev-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.poke-ev-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.poke-ev-label--plus  { color: #5a9e6f; }
+.poke-ev-label--minus { color: #c0554a; }
+
+.poke-ev-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+}
+
+.poke-ev-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s;
+}
+
+.poke-ev-num {
+  font-size: 9px;
+  color: var(--text-muted);
+  width: 14px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Type chart ───────────────────────────────────────────────── */
+
+.type-chart-layout {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.type-chart-scroll {
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+
+.type-chart {
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.type-chart th,
+.type-chart td {
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.type-chart-corner {
+  width: 52px;
+  min-width: 52px;
+  font-size: 10px;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  padding: 4px 6px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  white-space: nowrap;
+}
+
+.type-chart-def-label {
+  font-size: 10px;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  text-align: left !important;
+  padding: 4px 6px !important;
+  letter-spacing: 0.04em;
+}
+
+.type-chart-col-header {
+  width: 32px;
+  min-width: 32px;
+  padding: 4px 2px !important;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  opacity: 0.7;
+  transition: opacity 0.1s;
+}
+
+.type-chart-col-header:hover,
+.type-chart-col-header.tc-col-header--active {
+  opacity: 1;
+}
+
+.type-chart-col-header.tc-col-header--active img {
+  outline: 2px solid var(--text-muted);
+  outline-offset: 1px;
+}
+
+.type-chart-row-header {
+  padding: 2px 4px !important;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  opacity: 0.7;
+  transition: opacity 0.1s;
+}
+
+.type-chart-row-header:hover,
+tr.tc-row--active .type-chart-row-header {
+  opacity: 1;
+}
+
+tr.tc-row--active .type-chart-row-header img {
+  outline: 2px solid var(--text-muted);
+  outline-offset: 1px;
+}
+
+/* Row highlight */
+tr.tc-row--active .tc-cell {
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.2), inset 0 -2px 0 rgba(255,255,255,0.2);
+}
+
+tr.tc-row--active .tc-neutral {
+  background: rgba(255,255,255,0.05);
+}
+
+/* Column highlight */
+.tc-col-highlight {
+  box-shadow: inset 2px 0 0 rgba(255,255,255,0.2), inset -2px 0 0 rgba(255,255,255,0.2);
+}
+
+.tc-col-highlight.tc-neutral {
+  background: rgba(255,255,255,0.05);
+}
+
+/* Intersection: merge row + column shadows */
+tr.tc-row--active .tc-col-highlight {
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.2),
+    inset 0 -2px 0 rgba(255,255,255,0.2),
+    inset 2px 0 0 rgba(255,255,255,0.2),
+    inset -2px 0 0 rgba(255,255,255,0.2);
+}
+
+tr.tc-row--active .tc-col-highlight.tc-neutral {
+  background: rgba(255,255,255,0.1);
+}
+
+.tc-type-icon {
+  width: 28px;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+  margin: 0 auto;
+}
+
+.tc-cell {
+  width: 32px;
+  min-width: 32px;
+  height: 28px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 1px solid var(--border);
+}
+
+.tc-se      { background: #3a6e44; color: #9ddfaa; }
+.tc-nve     { background: #6e3a3a; color: #dfa09d; }
+.tc-immune  { background: #1e1e1e; color: var(--text-muted); }
+.tc-neutral { background: transparent; color: transparent; }
+
+/* ── Type effectiveness calculator ────────────────────────────── */
+
+.type-calc {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.type-calc-label {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.type-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 32px);
+  gap: 3px;
+}
+
+.type-calc-btn {
+  background: none;
+  border: 1px solid transparent;
+  padding: 2px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.55;
+  transition: opacity 0.1s, border-color 0.1s;
+}
+
+.type-calc-btn:hover {
+  opacity: 1;
+}
+
+.type-calc-btn--active {
+  opacity: 1;
+  border-color: var(--text-muted);
+}
+
+.type-calc-selected-types {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+}
+
+.type-calc-slot-empty {
+  font-size: 12px;
+  color: var(--border);
+  width: 28px;
+  text-align: center;
+}
+
+.type-calc-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.type-calc-value {
+  font-family: var(--font-display);
+  font-size: 48px;
+  line-height: 1;
+  padding: 12px 20px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.type-calc-value.tc-se      { background: #3a6e44; color: #9ddfaa; }
+.type-calc-value.tc-nve     { background: #6e3a3a; color: #dfa09d; }
+.type-calc-value.tc-immune  { background: #1e1e1e; color: var(--text-muted); }
+.type-calc-value.tc-neutral { background: transparent; color: var(--border); }
+
+.type-calc-result-label {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .champion-team {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .champion-team {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

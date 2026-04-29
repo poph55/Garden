@@ -1,4 +1,4 @@
-import baseballFieldIcon from '../../assets/baseball-field-Original.png'
+import baseballFieldIcon from '../../../assets/baseball-field-Original.png'
 
 export default function TeamsGrid({ divisions, icon, games, visibilityMode }) {
   const stats = games.reduce((acc, game) => {

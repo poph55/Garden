@@ -15,6 +15,7 @@ import abacusIcon from '../../assets/abacus-pixel-Original.png'
 import videoGameIcon from '../../assets/videogame-icon-Original.png'
 import quotationMarksIcon from '../../assets/quotation-marks-Original.png'
 import paintbrushIcon from '../../assets/magic-paintbrush-Original.png'
+import casseroleIcon from '../../assets/casserole-dish-2-Original.png'
 import './Home.css'
 
 const categories = [
@@ -32,6 +33,7 @@ const categories = [
   { slug: 'video-games', title: 'video games', icon: videoGameIcon },
   { slug: 'quotes',      title: 'quotes',      icon: quotationMarksIcon },
   { slug: 'paintings',   title: 'paintings',   icon: paintbrushIcon },
+  { slug: 'recipes',     title: 'recipes',     icon: casseroleIcon },
 ]
 
 export default function Home() {

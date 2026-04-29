@@ -1,0 +1,116 @@
+/* ── Page title ───────────────────────────────────────────────── */
+
+.recipes-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.recipes-title-icon {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* ── Sort dropdown ────────────────────────────────────────────── */
+
+.filter-select {
+  margin-top: 20px;
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 6px 32px 6px 10px;
+  cursor: url('/greenHandCursor.cur'), pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235C5240'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+/* ── Entry list ───────────────────────────────────────────────── */
+
+.recipes-list {
+  flex: 1;
+  padding: 48px 0;
+}
+
+/* ── Individual entry ─────────────────────────────────────────── */
+
+.recipe-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.recipe-top {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recipe-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.recipe-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: normal;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+a.recipe-title:hover {
+  text-decoration: underline;
+}
+
+.recipe-category {
+  font-size: 11px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 2px 7px;
+  flex-shrink: 0;
+}
+
+.recipe-source {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.recipe-notes {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.recipe-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Two-column on wide screens ───────────────────────────────── */
+
+@media (min-width: 900px) {
+  .recipes-list .container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 48px;
+    align-items: start;
+  }
+}
