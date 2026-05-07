@@ -10,6 +10,7 @@ import ds2Cover from './covers/ds2.jpg'
 import dillardAndClarkCover from './covers/dillard and clark.jpg'
 import loversRockCover from './covers/lovers rock.jpg'
 import freewheelinCover from './covers/the freewheelin bob dylan.jpg'
+import tomsDinerCover from './covers/tomsdiner.jpg'
 import './Music.css'
 
 const entries = [
@@ -63,6 +64,15 @@ const entries = [
     cover: loversRockCover,
     link: 'https://open.spotify.com/track/7H3ojI1BsVy0dEJENqMt1k?si=94874a7a999849af',
     dateAdded: 'Apr 24, 2026',
+  },
+  {
+    title: "Tom's Diner",
+    artist: 'AnnenMayKantereit & Giant Rooks',
+    type: 'song',
+    cover: tomsDinerCover,
+    notes: `it is always nice to see you`,
+    link: 'https://open.spotify.com/track/0oA9wBGDY4uyILLg4GymWP?si=50ea42f6f6104956',
+    dateAdded: 'Apr 30, 2026',
   },
   {
     title: 'The Percocet & Stripper Joint',
