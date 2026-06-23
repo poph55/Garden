@@ -137,6 +137,22 @@ const root = [
       { type: 'folder', title: 'passages', children: [] },
     ],
   },
+  {
+    type: 'folder',
+    title: 'Love Triangle',
+    children: [
+      { type: 'folder', title: 'words', children: [] },
+      { type: 'folder', title: 'passages', children: [] },
+    ],
+  },
+  {
+    type: 'folder',
+    title: 'The Book of Laughter and Forgetting',
+    children: [
+      { type: 'folder', title: 'words', children: [] },
+      { type: 'folder', title: 'passages', children: [] },
+    ],
+  },
 ]
 
 function collectByType(tree, type, book = null) {

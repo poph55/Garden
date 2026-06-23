@@ -5,9 +5,29 @@ import bookshelfIcon from '../../assets/bookshelf-Original.png'
 import bloodMeridian from './covers/blood meridian.png'
 import tomorrowAndTomorrowAndTomorrow from './covers/tomorrow and tomorrow and tomorrow.jpg'
 import snowsOfKilimanjaro from './covers/snows of kilimanjaro and other stories.jpg'
+import loveTriangle from './covers/love triangle.jpg'
+import bookOfLaughterAndForgetting from './covers/the book of laughter and forgetting.jpg'
 import './Books.css'
 
 const entries = [
+  {
+    title: 'The Book of Laughter and Forgetting',
+    author: 'Milan Kundera',
+    year: 1979,
+    cover: bookOfLaughterAndForgetting,
+    startDate: 'May 13, 2026',
+    endDate: 'May 19, 2026',
+    rating: 4.5,
+  },
+  {
+    title: 'Love Triangle',
+    author: 'Matt Parker',
+    year: 2024,
+    cover: loveTriangle,
+    startDate: 'Apr 22, 2026',
+    endDate: 'May 13, 2026',
+    rating: 2.5,
+  },
   {
     title: 'The Snows of Kilimanjaro and Other Stories',
     author: 'Ernest Hemingway',

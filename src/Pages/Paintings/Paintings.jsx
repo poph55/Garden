@@ -9,6 +9,7 @@ import saintSebastian from './paintings/Saint Sebastian - Perugino.jpg'
 import wanderer from './paintings/Wanderer Above the Sea of Fog - Casper David Friedrich.jpeg'
 import refugeAndEternity from './paintings/REFUGE & ETERNITY - Philip Williams.webp'
 import oathOfHoratii from './paintings/Oath of the Horatii - Jacques-Louis David.jpg'
+import stSebastianCrown from './paintings/St sebastian receives the crown and palm of martyrdom.jpg'
 import './Paintings.css'
 
 const entries = [
@@ -39,6 +40,13 @@ const entries = [
     year: 2024,
     image: refugeAndEternity,
     dateAdded: 'Apr 28, 2026',
+  },
+  {
+    title: 'St. Sebastian Receives the Crown and Palm of Martyrdom',
+    artist: 'Girolamo Siciolante',
+    year: 1580,
+    image: stSebastianCrown,
+    dateAdded: 'May 19, 2026',
   },
   {
     title: 'Oath of the Horatii',

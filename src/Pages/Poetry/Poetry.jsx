@@ -1,10 +1,51 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Layout from '../../components/Layout'
 import PoetryEntry from './PoetryEntry'
 import papyrusScrollIcon from '../../assets/papyrus-scroll-Original.png'
+import { useGreedyColumns } from '../../hooks/useGreedyColumns'
 import './Poetry.css'
 
 const entries = [
+  {
+    title: 'We Real Cool',
+    author: 'Gwendolyn Brooks',
+    year: 1960,
+    poem: `THE POOL PLAYERS.
+SEVEN AT THE GOLDEN SHOVEL.
+
+We real cool. We
+Left school. We
+
+Lurk late. We
+Strike straight. We
+
+Sing sin. We
+Thin gin. We
+
+Jazz June. We
+Die soon.`,
+    dateAdded: 'May 19, 2026',
+  },
+  {
+    title: 'This Is Just To Say',
+    author: 'William Carlos Williams',
+    year: 1938,
+    poem: `I have eaten
+the plums
+that were in
+the icebox
+
+and which
+you were probably
+saving
+for breakfast
+
+Forgive me
+they were delicious
+so sweet
+and so cold`,
+    dateAdded: 'May 19, 2026',
+  },
   {
     title: 'blessing the boats',
     author: 'Lucille Clifton',
@@ -29,6 +70,7 @@ function sortEntries(list, by) {
   return [...list].sort((a, b) => {
     if (by === 'title')  return a.title.localeCompare(b.title)
     if (by === 'author') return a.author.split(' ').pop().localeCompare(b.author.split(' ').pop())
+    if (by === 'year')   return (a.year ?? 0) - (b.year ?? 0)
     return new Date(b.dateAdded) - new Date(a.dateAdded)
   })
 }
@@ -36,6 +78,13 @@ function sortEntries(list, by) {
 export default function Poetry() {
   const [sortBy, setSortBy] = useState('dateAdded')
   const sorted = useMemo(() => sortEntries(entries, sortBy), [sortBy])
+  const { cols, registerWeight } = useGreedyColumns(sorted, 3)
+
+  useEffect(() => {
+    sorted.forEach(entry => {
+      registerWeight(entry.title, entry.poem.split('\n').length)
+    })
+  }, [sorted, registerWeight])
 
   return (
     <Layout showBack>
@@ -53,15 +102,22 @@ export default function Poetry() {
             <option value="dateAdded">date added</option>
             <option value="author">author</option>
             <option value="title">title</option>
+            <option value="year">year</option>
           </select>
         </div>
       </div>
 
       <section className="poetry-list">
         <div className="container">
-          {sorted.map((entry, i) => (
-            <PoetryEntry key={i} {...entry} />
-          ))}
+          <div className="poetry-columns">
+            {cols.map((col, ci) => (
+              <div key={ci} className="poetry-column">
+                {col.map(({ entry }) => (
+                  <PoetryEntry key={entry.title} {...entry} />
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </Layout>
