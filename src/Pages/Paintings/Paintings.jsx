@@ -10,6 +10,7 @@ import wanderer from './paintings/Wanderer Above the Sea of Fog - Casper David F
 import refugeAndEternity from './paintings/REFUGE & ETERNITY - Philip Williams.webp'
 import oathOfHoratii from './paintings/Oath of the Horatii - Jacques-Louis David.jpg'
 import stSebastianCrown from './paintings/St sebastian receives the crown and palm of martyrdom.jpg'
+import fright from './paintings/Fright - Phil Hale.jpg'
 import './Paintings.css'
 
 const entries = [
@@ -54,6 +55,13 @@ const entries = [
     year: 1785,
     image: oathOfHoratii,
     dateAdded: 'Apr 28, 2026',
+  },
+  {
+    title: 'Fright',
+    artist: 'Phil Hale',
+    year: 2000,
+    image: fright,
+    dateAdded: 'Jul 9, 2026',
   },
 ]
 
