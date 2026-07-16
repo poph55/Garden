@@ -74,7 +74,9 @@
 .professional-card p:not(.card-number) { max-width: 430px; }
 .coming-soon { margin-top: 28px; }
 
+.projects-card,
 .garden-card { transition: background 160ms ease, padding 160ms ease; }
+.projects-card:hover,
 .garden-card:hover { background: #dce3ad; padding-right: 24px; }
 .garden-card:hover h2 span { transform: translate(4px, -4px); }
 

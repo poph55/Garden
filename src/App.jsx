@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 import ProfessionalHome from './Pages/ProfessionalHome/ProfessionalHome'
+import Projects from './Pages/Projects/Projects'
 
 const GardenHome = lazy(() => import('./Pages/Home/Home'))
 const Movies = lazy(() => import('./Pages/Movies/Movies'))
@@ -25,6 +26,7 @@ export default function App() {
       <Suspense fallback={<div className="route-loading" role="status">growing...</div>}>
       <Routes>
         <Route path="/"                    element={<ProfessionalHome />} />
+        <Route path="/projects"            element={<Projects />} />
         <Route path="/garden"              element={<GardenHome />} />
         <Route path="/garden/movies"       element={<Movies />} />
         <Route path="/garden/music"        element={<Music />} />

@@ -10,14 +10,14 @@ export default function ProfessionalHome() {
       </header>
 
       <div className="professional-paths">
-        <section className="professional-card projects-card">
+        <Link to="/projects" className="professional-card projects-card">
           <p className="card-number">01</p>
           <div>
             <h2>Projects</h2>
             <p>A home for software, experiments, and things I’m building.</p>
-            <p className="coming-soon">Project links coming soon.</p>
+            <p className="coming-soon">View projects ↗</p>
           </div>
-        </section>
+        </Link>
 
         <Link to="/garden" className="professional-card garden-card">
           <p className="card-number">02</p>
