@@ -1,4 +1,5 @@
 import folderIcon from './assets/file-folder-2-Original.png'
+import './FolderEntry.css'
 
 export default function FolderEntry({ title, onOpen }) {
   return (

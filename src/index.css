@@ -63,7 +63,7 @@ a, button, select, [role="button"] {
 .quote-entry,
 .recipe-entry {
   content-visibility: auto;
-  contain-intrinsic-size: auto 420px;
+  contain-intrinsic-block-size: auto 420px;
 }
 
 /* ── Scrollbar ────────────────────────────────────────────────── */

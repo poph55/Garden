@@ -88,13 +88,14 @@
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
 
 /* ── Game entry card ──────────────────────────────────────────── */
 
 .game-entry {
+  min-width: 0;
   aspect-ratio: 3 / 2;
   border: 1px solid var(--border);
   padding: 14px;
@@ -112,6 +113,7 @@
 }
 
 .game-team-row {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -139,6 +141,7 @@
 }
 
 .game-team-name {
+  min-width: 0;
   font-size: 15px;
   color: var(--text-muted);
   flex: 1;
@@ -308,6 +311,12 @@
 
 @media (max-width: 700px) {
   .game-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .game-grid {
+    grid-template-columns: 1fr;
   }
 }

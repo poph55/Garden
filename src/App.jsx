@@ -19,6 +19,7 @@ const Vocab = lazy(() => import('./Pages/Vocab/Vocab'))
 const Quotes = lazy(() => import('./Pages/Quotes/Quotes'))
 const Paintings = lazy(() => import('./Pages/Paintings/Paintings'))
 const Recipes = lazy(() => import('./Pages/Recipes/Recipes'))
+const NotFound = lazy(() => import('./Pages/NotFound/NotFound'))
 
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
         {['movies', 'music', 'books', 'travel', 'tools', 'poetry', 'articles', 'physics', 'math', 'baseball', 'video-games', 'vocab', 'quotes', 'paintings', 'recipes'].map(path => (
           <Route key={path} path={`/${path}`} element={<Navigate to={`/garden/${path}`} replace />} />
         ))}
+        <Route path="*" element={<NotFound />} />
       </Routes>
       </Suspense>
     </BrowserRouter>

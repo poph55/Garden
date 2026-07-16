@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import Layout from '../../components/Layout'
 import PoetryEntry from './PoetryEntry'
 import papyrusScrollIcon from '../../assets/optimized/papyrus-scroll-Original.webp'
@@ -78,13 +78,7 @@ function sortEntries(list, by) {
 export default function Poetry() {
   const [sortBy, setSortBy] = useState('dateAdded')
   const sorted = useMemo(() => sortEntries(entries, sortBy), [sortBy])
-  const { cols, registerWeight } = useGreedyColumns(sorted, 3)
-
-  useEffect(() => {
-    sorted.forEach(entry => {
-      registerWeight(entry.title, entry.poem.split('\n').length)
-    })
-  }, [sorted, registerWeight])
+  const { cols } = useGreedyColumns(sorted, 3)
 
   return (
     <Layout showBack>

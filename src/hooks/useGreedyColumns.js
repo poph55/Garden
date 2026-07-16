@@ -7,7 +7,7 @@ export function useGreedyColumns(entries, numCols) {
     entries.forEach((entry, idx) => {
       const minCol = heights.indexOf(Math.min(...heights))
       columns[minCol].push({ entry, idx })
-      heights[minCol] += entry.aspectRatio ?? 1
+      heights[minCol] += entry.columnWeight ?? entry.aspectRatio ?? entry.poem?.split('\n').length ?? 1
     })
     return columns
   }, [entries, numCols])
