@@ -41,6 +41,7 @@ export default function Home() {
     <Layout>
       <section className="hero">
         <div className="container">
+          <Link to="/" className="professional-link">Palmer Hudson</Link>
           <h1 className="page-title hero-title">
             the garden
             <span
@@ -55,7 +56,7 @@ export default function Home() {
       <section className="collections">
         <div className="categories">
           {categories.map(({ slug, title, icon }) => (
-            <Link key={slug} to={`/${slug}`} className="category-link">
+            <Link key={slug} to={`/garden/${slug}`} className="category-link">
               {icon && <img src={icon} alt="" className="category-icon" aria-hidden="true" width="62" height="62" decoding="async" />}
               {title}
               {icon && <img src={icon} alt="" className="category-icon" aria-hidden="true" width="62" height="62" decoding="async" />}

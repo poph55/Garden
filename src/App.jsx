@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
+import ProfessionalHome from './Pages/ProfessionalHome/ProfessionalHome'
 
-const Home = lazy(() => import('./Pages/Home/Home'))
+const GardenHome = lazy(() => import('./Pages/Home/Home'))
 const Movies = lazy(() => import('./Pages/Movies/Movies'))
 const Music = lazy(() => import('./Pages/Music/Music'))
 const Books = lazy(() => import('./Pages/Books/Books'))
@@ -23,22 +24,26 @@ export default function App() {
     <BrowserRouter>
       <Suspense fallback={<div className="route-loading" role="status">growing...</div>}>
       <Routes>
-        <Route path="/"             element={<Home />} />
-        <Route path="/movies"       element={<Movies />} />
-        <Route path="/music"        element={<Music />} />
-        <Route path="/books"        element={<Books />} />
-        <Route path="/travel"       element={<Travel />} />
-        <Route path="/tools"         element={<Tools />} />
-        <Route path="/poetry"       element={<Poetry />} />
-        <Route path="/articles"     element={<Articles />} />
-        <Route path="/physics"      element={<Physics />} />
-        <Route path="/math"         element={<Math />} />
-        <Route path="/baseball"     element={<Baseball />} />
-        <Route path="/video-games"  element={<VideoGames />} />
-        <Route path="/vocab"        element={<Vocab />} />
-        <Route path="/quotes"       element={<Quotes />} />
-        <Route path="/paintings"    element={<Paintings />} />
-        <Route path="/recipes"      element={<Recipes />} />
+        <Route path="/"                    element={<ProfessionalHome />} />
+        <Route path="/garden"              element={<GardenHome />} />
+        <Route path="/garden/movies"       element={<Movies />} />
+        <Route path="/garden/music"        element={<Music />} />
+        <Route path="/garden/books"        element={<Books />} />
+        <Route path="/garden/travel"       element={<Travel />} />
+        <Route path="/garden/tools"        element={<Tools />} />
+        <Route path="/garden/poetry"       element={<Poetry />} />
+        <Route path="/garden/articles"     element={<Articles />} />
+        <Route path="/garden/physics"      element={<Physics />} />
+        <Route path="/garden/math"         element={<Math />} />
+        <Route path="/garden/baseball"     element={<Baseball />} />
+        <Route path="/garden/video-games"  element={<VideoGames />} />
+        <Route path="/garden/vocab"        element={<Vocab />} />
+        <Route path="/garden/quotes"       element={<Quotes />} />
+        <Route path="/garden/paintings"    element={<Paintings />} />
+        <Route path="/garden/recipes"      element={<Recipes />} />
+        {['movies', 'music', 'books', 'travel', 'tools', 'poetry', 'articles', 'physics', 'math', 'baseball', 'video-games', 'vocab', 'quotes', 'paintings', 'recipes'].map(path => (
+          <Route key={path} path={`/${path}`} element={<Navigate to={`/garden/${path}`} replace />} />
+        ))}
       </Routes>
       </Suspense>
     </BrowserRouter>

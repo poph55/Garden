@@ -6,7 +6,7 @@ export default function Layout({ children, showBack = false }) {
   return (
     <div className="garden">
       {showBack && (
-        <Link to="/" className="back-btn" aria-label="Back to home">
+        <Link to="/garden" className="back-btn" aria-label="Back to the garden">
           <img src={hikingPerson} alt="Back to home" width="120" height="120" decoding="async" />
         </Link>
       )}

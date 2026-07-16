@@ -1,0 +1,91 @@
+.professional-home {
+  min-height: 100vh;
+  background: #f3f1eb;
+  color: #171714;
+  padding: clamp(28px, 5vw, 72px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  cursor: auto;
+}
+
+.professional-home a { cursor: pointer; }
+
+.professional-hero {
+  align-self: center;
+  padding: 10vh 0 14vh;
+}
+
+.professional-name {
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.professional-hero h1 {
+  max-width: 1000px;
+  font-family: var(--font-body);
+  font-size: clamp(64px, 12vw, 172px);
+  font-weight: 500;
+  letter-spacing: -0.07em;
+  line-height: 0.86;
+}
+
+.professional-paths {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid rgba(23, 23, 20, 0.24);
+}
+
+.professional-card {
+  min-height: 230px;
+  padding: 30px 0;
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 20px;
+}
+
+.professional-card + .professional-card {
+  padding-left: 36px;
+  border-left: 1px solid rgba(23, 23, 20, 0.24);
+}
+
+.card-number,
+.coming-soon {
+  color: #68675f;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.professional-card h2 {
+  margin-bottom: 12px;
+  font-size: clamp(28px, 4vw, 50px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.professional-card h2 span {
+  display: inline-block;
+  transition: transform 160ms ease;
+}
+
+.professional-card p:not(.card-number) { max-width: 430px; }
+.coming-soon { margin-top: 28px; }
+
+.garden-card { transition: background 160ms ease, padding 160ms ease; }
+.garden-card:hover { background: #dce3ad; padding-right: 24px; }
+.garden-card:hover h2 span { transform: translate(4px, -4px); }
+
+@media (max-width: 700px) {
+  .professional-home { grid-template-rows: auto 1fr; }
+  .professional-hero { padding: 12vh 0 16vh; }
+  .professional-paths { grid-template-columns: 1fr; }
+  .professional-card { min-height: 180px; }
+  .professional-card + .professional-card {
+    padding-left: 0;
+    border-top: 1px solid rgba(23, 23, 20, 0.24);
+    border-left: 0;
+  }
+}
