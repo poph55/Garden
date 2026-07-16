@@ -1,5 +1,5 @@
 import Layout from '../../components/Layout'
-import gyroscopeIcon from '../../assets/foucault-gyroscope-Original.png'
+import gyroscopeIcon from '../../assets/optimized/foucault-gyroscope-Original.webp'
 import './Physics.css'
 
 export default function Physics() {

@@ -26,7 +26,7 @@ export default function Lightbox({ entries, movieIdx, posterIdx, onClose, onPrev
       )}
 
       <div className="lb-content" onClick={e => e.stopPropagation()}>
-        <img src={posters[posterIdx]} alt={entry.title} className="lb-img" />
+        <img src={posters[posterIdx]} alt={entry.title} className="lb-img" decoding="async" />
         {multiPoster && (
           <div className="lb-poster-nav">
             <button className="lb-poster-arrow" onClick={onPrevPoster} aria-label="Previous poster">&#8249;</button>

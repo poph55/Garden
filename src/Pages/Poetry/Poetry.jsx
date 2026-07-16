@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import Layout from '../../components/Layout'
 import PoetryEntry from './PoetryEntry'
-import papyrusScrollIcon from '../../assets/papyrus-scroll-Original.png'
+import papyrusScrollIcon from '../../assets/optimized/papyrus-scroll-Original.webp'
 import { useGreedyColumns } from '../../hooks/useGreedyColumns'
 import './Poetry.css'
 

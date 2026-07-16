@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import Layout from '../../components/Layout'
-import enchantedQuillIcon from '../../assets/enchanted-quill-Original.png'
+import enchantedQuillIcon from '../../assets/optimized/enchanted-quill-Original.webp'
 import backIcon from '../../assets/back-image-Original.png'
 import FolderEntry from '../Tools/FolderEntry'
 import VocabEntry from './VocabEntry'

@@ -1,21 +1,21 @@
 import { Link } from 'react-router-dom'
 import Layout from '../../components/Layout'
 import catSheet from '../../assets/blackcat.png'
-import bookshelfIcon from '../../assets/bookshelf-Original.png'
-import musicBoxIcon from '../../assets/music-storage-box-Original.png'
-import movieProjectorIcon from '../../assets/movie-projector-Original.png'
-import enchantedQuillIcon from '../../assets/enchanted-quill-Original.png'
-import papyrusScrollIcon from '../../assets/papyrus-scroll-Original.png'
-import baseballFieldIcon from '../../assets/baseball-field-Original.png'
-import cargoplaneIcon from '../../assets/cargoplane-Original.png'
-import toolboxIcon from '../../assets/toolbox-1-Original.png'
-import newspaperIcon from '../../assets/newspaper-3-Original.png'
-import gyroscopeIcon from '../../assets/foucault-gyroscope-Original.png'
-import abacusIcon from '../../assets/abacus-pixel-Original.png'
-import videoGameIcon from '../../assets/videogame-icon-Original.png'
-import quotationMarksIcon from '../../assets/quotation-marks-Original.png'
-import paintbrushIcon from '../../assets/magic-paintbrush-Original.png'
-import casseroleIcon from '../../assets/casserole-dish-2-Original.png'
+import bookshelfIcon from '../../assets/optimized/bookshelf-Original.webp'
+import musicBoxIcon from '../../assets/optimized/music-storage-box-Original.webp'
+import movieProjectorIcon from '../../assets/optimized/movie-projector-Original.webp'
+import enchantedQuillIcon from '../../assets/optimized/enchanted-quill-Original.webp'
+import papyrusScrollIcon from '../../assets/optimized/papyrus-scroll-Original.webp'
+import baseballFieldIcon from '../../assets/optimized/baseball-field-Original.webp'
+import cargoplaneIcon from '../../assets/optimized/cargoplane-Original.webp'
+import toolboxIcon from '../../assets/optimized/toolbox-1-Original.webp'
+import newspaperIcon from '../../assets/optimized/newspaper-3-Original.webp'
+import gyroscopeIcon from '../../assets/optimized/foucault-gyroscope-Original.webp'
+import abacusIcon from '../../assets/optimized/abacus-pixel-Original.webp'
+import videoGameIcon from '../../assets/optimized/videogame-icon-Original.webp'
+import quotationMarksIcon from '../../assets/optimized/quotation-marks-Original.webp'
+import paintbrushIcon from '../../assets/optimized/magic-paintbrush-Original.webp'
+import casseroleIcon from '../../assets/optimized/casserole-dish-2-Original.webp'
 import './Home.css'
 
 const categories = [
@@ -56,9 +56,9 @@ export default function Home() {
         <div className="categories">
           {categories.map(({ slug, title, icon }) => (
             <Link key={slug} to={`/${slug}`} className="category-link">
-              {icon && <img src={icon} alt="" className="category-icon" aria-hidden="true" />}
+              {icon && <img src={icon} alt="" className="category-icon" aria-hidden="true" width="62" height="62" decoding="async" />}
               {title}
-              {icon && <img src={icon} alt="" className="category-icon" aria-hidden="true" />}
+              {icon && <img src={icon} alt="" className="category-icon" aria-hidden="true" width="62" height="62" decoding="async" />}
             </Link>
           ))}
         </div>

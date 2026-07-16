@@ -1,4 +1,4 @@
-import baseballFieldIcon from '../../../assets/baseball-field-Original.png'
+import baseballFieldIcon from '../../../assets/optimized/baseball-field-Original.webp'
 
 export default function TeamsGrid({ divisions, icon, games, visibilityMode }) {
   const stats = games.reduce((acc, game) => {
@@ -34,7 +34,7 @@ export default function TeamsGrid({ divisions, icon, games, visibilityMode }) {
                 {homeCount}
               </span>
             )}
-            <img src={icon[team]} alt={team} className="team-cell-logo" />
+            <img src={icon[team]} alt={team} className="team-cell-logo" loading="lazy" decoding="async" />
           </div>
         )
       })}

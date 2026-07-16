@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import Layout from '../../components/Layout'
 import RecipeEntry from './RecipeEntry'
-import casseroleIcon from '../../assets/casserole-dish-2-Original.png'
+import casseroleIcon from '../../assets/optimized/casserole-dish-2-Original.webp'
 import './Recipes.css'
 
 const entries = []

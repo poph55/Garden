@@ -3,7 +3,7 @@ export default function ToolEntry({ title, link, description, dateAdded, image }
     <div className="tool-entry">
       {image && (
         <a href={link} target="_blank" rel="noreferrer" className="tool-image-wrap">
-          <img src={image} alt={title} className="tool-image" />
+          <img src={image} alt={title} className="tool-image" loading="lazy" decoding="async" />
         </a>
       )}
       <div className="tool-body">

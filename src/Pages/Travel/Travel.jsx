@@ -1,5 +1,5 @@
 import Layout from '../../components/Layout'
-import cargoplaneIcon from '../../assets/cargoplane-Original.png'
+import cargoplaneIcon from '../../assets/optimized/cargoplane-Original.webp'
 import './Travel.css'
 
 export default function Travel() {

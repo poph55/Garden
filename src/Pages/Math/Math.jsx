@@ -1,5 +1,5 @@
 import Layout from '../../components/Layout'
-import abacusIcon from '../../assets/abacus-pixel-Original.png'
+import abacusIcon from '../../assets/optimized/abacus-pixel-Original.webp'
 import './Math.css'
 
 export default function Math() {

@@ -3,14 +3,21 @@ import { useGreedyColumns } from '../../hooks/useGreedyColumns'
 import Layout from '../../components/Layout'
 import PaintingEntry from './PaintingEntry'
 import PaintingLightbox from './PaintingLightbox'
-import paintbrushIcon from '../../assets/magic-paintbrush-Original.png'
-import soriaMoria from './paintings/Far, far away Soria Moria Palace shimmered like Gold - Theodor Kittelsen.jpg'
-import saintSebastian from './paintings/Saint Sebastian - Perugino.jpg'
-import wanderer from './paintings/Wanderer Above the Sea of Fog - Casper David Friedrich.jpeg'
-import refugeAndEternity from './paintings/REFUGE & ETERNITY - Philip Williams.webp'
-import oathOfHoratii from './paintings/Oath of the Horatii - Jacques-Louis David.jpg'
-import stSebastianCrown from './paintings/St sebastian receives the crown and palm of martyrdom.jpg'
-import fright from './paintings/Fright - Phil Hale.jpg'
+import paintbrushIcon from '../../assets/optimized/magic-paintbrush-Original.webp'
+import soriaMoria from './paintings/optimized/Far, far away Soria Moria Palace shimmered like Gold - Theodor Kittelsen-full.webp'
+import soriaMoriaThumb from './paintings/optimized/Far, far away Soria Moria Palace shimmered like Gold - Theodor Kittelsen-thumb.webp'
+import saintSebastian from './paintings/optimized/Saint Sebastian - Perugino-full.webp'
+import saintSebastianThumb from './paintings/optimized/Saint Sebastian - Perugino-thumb.webp'
+import wanderer from './paintings/optimized/Wanderer Above the Sea of Fog - Casper David Friedrich-full.webp'
+import wandererThumb from './paintings/optimized/Wanderer Above the Sea of Fog - Casper David Friedrich-thumb.webp'
+import refugeAndEternity from './paintings/optimized/REFUGE & ETERNITY - Philip Williams-full.webp'
+import refugeAndEternityThumb from './paintings/optimized/REFUGE & ETERNITY - Philip Williams-thumb.webp'
+import oathOfHoratii from './paintings/optimized/Oath of the Horatii - Jacques-Louis David-full.webp'
+import oathOfHoratiiThumb from './paintings/optimized/Oath of the Horatii - Jacques-Louis David-thumb.webp'
+import stSebastianCrown from './paintings/optimized/St sebastian receives the crown and palm of martyrdom-full.webp'
+import stSebastianCrownThumb from './paintings/optimized/St sebastian receives the crown and palm of martyrdom-thumb.webp'
+import fright from './paintings/optimized/Fright - Phil Hale-full.webp'
+import frightThumb from './paintings/optimized/Fright - Phil Hale-thumb.webp'
 import './Paintings.css'
 
 const entries = [
@@ -19,6 +26,7 @@ const entries = [
     artist: 'Theodor Kittelsen',
     year: 1900,
     image: soriaMoria,
+    thumbnail: soriaMoriaThumb, width: 7546, height: 4955, aspectRatio: 0.6566,
     dateAdded: 'Apr 28, 2026',
   },
   {
@@ -26,6 +34,7 @@ const entries = [
     artist: 'Perugino',
     year: 1495,
     image: saintSebastian,
+    thumbnail: saintSebastianThumb, width: 2130, height: 3372, aspectRatio: 1.5831,
     dateAdded: 'Apr 28, 2026',
   },
   {
@@ -33,6 +42,7 @@ const entries = [
     artist: 'Caspar David Friedrich',
     year: 1818,
     image: wanderer,
+    thumbnail: wandererThumb, width: 1920, height: 2463, aspectRatio: 1.2828,
     dateAdded: 'Apr 28, 2026',
   },
   {
@@ -40,6 +50,7 @@ const entries = [
     artist: 'Philip Williams',
     year: 2024,
     image: refugeAndEternity,
+    thumbnail: refugeAndEternityThumb, width: 1000, height: 1010, aspectRatio: 1.01,
     dateAdded: 'Apr 28, 2026',
   },
   {
@@ -47,6 +58,7 @@ const entries = [
     artist: 'Girolamo Siciolante',
     year: 1580,
     image: stSebastianCrown,
+    thumbnail: stSebastianCrownThumb, width: 823, height: 1260, aspectRatio: 1.531,
     dateAdded: 'May 19, 2026',
   },
   {
@@ -54,6 +66,7 @@ const entries = [
     artist: 'Jacques-Louis David',
     year: 1785,
     image: oathOfHoratii,
+    thumbnail: oathOfHoratiiThumb, width: 3840, height: 2978, aspectRatio: 0.7755,
     dateAdded: 'Apr 28, 2026',
   },
   {
@@ -61,6 +74,7 @@ const entries = [
     artist: 'Phil Hale',
     year: 2000,
     image: fright,
+    thumbnail: frightThumb, width: 1708, height: 2374, aspectRatio: 1.3899,
     dateAdded: 'Jul 9, 2026',
   },
 ]
@@ -85,7 +99,7 @@ export default function Paintings() {
   const prevPainting = () => setLightboxIdx(i => (i - 1 + sorted.length) % sorted.length)
   const nextPainting = () => setLightboxIdx(i => (i + 1) % sorted.length)
 
-  const { cols, registerWeight } = useGreedyColumns(sorted, 3)
+  const { cols } = useGreedyColumns(sorted, 3)
 
   return (
     <Layout showBack>
@@ -118,7 +132,6 @@ export default function Paintings() {
                     key={entry.title}
                     {...entry}
                     onImageClick={() => openLightbox(idx)}
-                    onLoad={(w, h) => registerWeight(entry.title, h / w)}
                   />
                 ))}
               </div>

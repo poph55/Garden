@@ -55,6 +55,17 @@ a, button, select, [role="button"] {
   cursor: url('/greenHandCursor.cur'), pointer;
 }
 
+.movie-entry,
+.painting-entry,
+.music-entry,
+.book-entry,
+.tool-entry,
+.quote-entry,
+.recipe-entry {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+}
+
 /* ── Scrollbar ────────────────────────────────────────────────── */
 
 ::-webkit-scrollbar {

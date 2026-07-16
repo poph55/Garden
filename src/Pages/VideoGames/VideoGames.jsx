@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Layout from '../../components/Layout'
 import PokemonChampions from './pokemon-champions/PokemonChampions'
 import TypeChart from './type-chart/TypeChart'
-import videoGameIcon from '../../assets/videogame-icon-Original.png'
+import videoGameIcon from '../../assets/optimized/videogame-icon-Original.webp'
 import './VideoGames.css'
 
 const TABS = [

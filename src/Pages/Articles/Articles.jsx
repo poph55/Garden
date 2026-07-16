@@ -1,5 +1,5 @@
 import Layout from '../../components/Layout'
-import newspaperIcon from '../../assets/newspaper-3-Original.png'
+import newspaperIcon from '../../assets/optimized/newspaper-3-Original.webp'
 import './Articles.css'
 
 export default function Articles() {

@@ -27,7 +27,7 @@ export default function PaintingLightbox({ entries, idx, onClose, onPrev, onNext
       )}
 
       <div className="lb-content" onClick={e => e.stopPropagation()}>
-        <img src={entry.image} alt={entry.title} className="lb-img lb-painting-img" />
+        <img src={entry.image} alt={entry.title} className="lb-img lb-painting-img" decoding="async" />
         <div className="lb-painting-caption">
           <span className="lb-painting-title">{entry.title}</span>
           <span className="lb-painting-artist">

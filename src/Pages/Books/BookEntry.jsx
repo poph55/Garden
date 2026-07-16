@@ -28,12 +28,12 @@ export default function BookEntry({ cover, title, author, year, startDate, endDa
         {link
           ? <a href={link} target="_blank" rel="noreferrer">
               {cover
-                ? <img src={cover} alt={title} className="book-cover" />
+                ? <img src={cover} alt={title} className="book-cover" loading="lazy" decoding="async" />
                 : <div className="book-cover book-cover--placeholder" />
               }
             </a>
           : cover
-            ? <img src={cover} alt={title} className="book-cover" />
+            ? <img src={cover} alt={title} className="book-cover" loading="lazy" decoding="async" />
             : <div className="book-cover book-cover--placeholder" />
         }
       </div>

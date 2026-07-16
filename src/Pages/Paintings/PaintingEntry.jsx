@@ -1,4 +1,4 @@
-export default function PaintingEntry({ title, artist, year, image, dateAdded, onImageClick, onLoad }) {
+export default function PaintingEntry({ title, artist, year, thumbnail, width, height, dateAdded, onImageClick }) {
   return (
     <div className="painting-entry">
       <button
@@ -7,10 +7,13 @@ export default function PaintingEntry({ title, artist, year, image, dateAdded, o
         aria-label={`Enlarge ${title}`}
       >
         <img
-          src={image}
+          src={thumbnail}
           alt={title}
           className="painting-img"
-          onLoad={e => onLoad?.(e.target.naturalWidth, e.target.naturalHeight)}
+          loading="lazy"
+          decoding="async"
+          width={width}
+          height={height}
         />
       </button>
       <div className="painting-meta">

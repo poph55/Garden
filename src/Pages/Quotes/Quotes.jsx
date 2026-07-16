@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import Layout from '../../components/Layout'
 import QuoteEntry from './QuoteEntry'
-import quotationMarksIcon from '../../assets/quotation-marks-Original.png'
+import quotationMarksIcon from '../../assets/optimized/quotation-marks-Original.webp'
 import './Quotes.css'
 
 const entries = [

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Layout from '../../components/Layout'
 import backIcon from '../../assets/back-image-Original.png'
-import toolboxIcon from '../../assets/toolbox-1-Original.png'
+import toolboxIcon from '../../assets/optimized/toolbox-1-Original.webp'
 import ToolEntry from './ToolEntry'
 import FolderEntry from './FolderEntry'
 import piixes from './screenshots/piixes.jpg'

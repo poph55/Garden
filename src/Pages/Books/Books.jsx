@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import Layout from '../../components/Layout'
 import BookEntry from './BookEntry'
-import bookshelfIcon from '../../assets/bookshelf-Original.png'
+import bookshelfIcon from '../../assets/optimized/bookshelf-Original.webp'
 import bloodMeridian from './covers/blood meridian.png'
 import tomorrowAndTomorrowAndTomorrow from './covers/tomorrow and tomorrow and tomorrow.jpg'
 import snowsOfKilimanjaro from './covers/snows of kilimanjaro and other stories.jpg'

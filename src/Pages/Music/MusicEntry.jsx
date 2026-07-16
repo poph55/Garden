@@ -11,7 +11,7 @@ export default function MusicEntry({ cover, title, artist, notes, link, dateAdde
     <div className="music-entry">
       <a href={link} target="_blank" rel="noreferrer" className="entry-cover-link">
         <div className="entry-cover-wrap">
-          <img src={cover || defaultCover} alt={`${title} by ${artist}`} className="entry-cover" />
+          <img src={cover || defaultCover} alt={`${title} by ${artist}`} className="entry-cover" loading="lazy" decoding="async" />
           <img src={typeIcon} alt={type} className="entry-type-icon" />
         </div>
       </a>

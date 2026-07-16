@@ -13,7 +13,7 @@ export default function MovieEntry({ poster, title, year, director, link, notes,
       <div className="movie-poster-wrap">
         <button className="movie-poster-btn" onClick={() => onPosterClick(idx)} aria-label={`Enlarge ${title} poster`}>
           {posters[idx]
-            ? <img src={posters[idx]} alt={title} className="movie-poster" />
+            ? <img src={posters[idx]} alt={title} className="movie-poster" loading="lazy" decoding="async" />
             : <div className="movie-poster movie-poster--placeholder" />
           }
         </button>
