@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import pulsarPreview from './assets/pulsar-navigation-lab.png'
+import gardenPreview from './assets/the-garden.png'
 import './Projects.css'
 
 export default function Projects() {
@@ -36,6 +37,19 @@ export default function Projects() {
           >
             <img src={pulsarPreview} alt="Pulsar Navigation Lab showing a spacecraft position solution from three pulsars" width="1041" height="905" />
           </a>
+        </article>
+
+        <article className="project-row">
+          <p className="project-number">02</p>
+          <div className="project-copy">
+            <p className="project-type">Personal digital garden</p>
+            <h2>The Garden</h2>
+            <p>A growing, hand-curated collection of films, music, books, words, paintings, tools, and other things worth remembering.</p>
+            <Link className="project-visit" to="/garden">Enter the garden →</Link>
+          </div>
+          <Link className="project-preview" to="/garden" aria-label="Enter the Garden">
+            <img src={gardenPreview} alt="The Garden homepage showing its illustrated collection grid" width="1044" height="905" loading="lazy" decoding="async" />
+          </Link>
         </article>
       </section>
     </main>
