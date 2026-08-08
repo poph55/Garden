@@ -21,18 +21,14 @@ export default function Projects() {
             <p>An interactive X-ray pulsar navigation lab for estimating a spacecraft’s position from simulated photon arrival data.</p>
             <a
               className="project-visit"
-              href="https://pulsar-navigation-lab.palmalama.chatgpt.site/"
-              target="_blank"
-              rel="noreferrer"
+              href="/pulsarnav"
             >
-              Visit project ↗
+              Visit project →
             </a>
           </div>
           <a
             className="project-preview"
-            href="https://pulsar-navigation-lab.palmalama.chatgpt.site/"
-            target="_blank"
-            rel="noreferrer"
+            href="/pulsarnav"
             aria-label="Open Pulsar Navigation Lab"
           >
             <img src={pulsarPreview} alt="Pulsar Navigation Lab showing a spacecraft position solution from three pulsars" width="1041" height="905" />
