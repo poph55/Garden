@@ -1,16 +1,30 @@
-# React + Vite
+# palmerhudson.com
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio and digital garden built with React and Vite and deployed on Netlify.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```sh
+npm install
+npm run dev
+```
 
-## React Compiler
+## Validation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```sh
+npm run lint
+npm run build
+```
 
-## Expanding the ESLint configuration
+The production build includes an asset-size budget check.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Site structure
+
+- `/` — professional landing page
+- `/projects` — project index
+- `/projects/box-score` — MLB box score visualizer
+- `/projects/subway-live` — live MTA subway visualization
+- `/pulsarnav` — bundled Pulsar Navigator
+- `/garden` — personal collections
+
+Netlify Functions proxy the MLB and MTA feeds. Their routes and cache behavior are configured in `netlify.toml`.
