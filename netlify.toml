@@ -9,6 +9,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/subway"
+  to = "/.netlify/functions/subway"
+  status = 200
+
+[[redirects]]
   from = "/pulsarnav"
   to = "/pulsarnav/index.html"
   status = 200

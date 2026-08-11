@@ -46,6 +46,8 @@
   grid-template-columns: 52px minmax(260px, 0.8fr) minmax(360px, 1.2fr);
   gap: clamp(20px, 4vw, 72px);
   align-items: start;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 650px;
 }
 
 .project-row + .project-row {
@@ -92,6 +94,18 @@
 }
 
 .project-preview:hover img { transform: scale(1.015); }
+
+.subway-preview { background: #071b24; position: relative; }
+.subway-preview-grid { position: absolute; inset: 0; overflow: hidden; background-image: linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size: 30px 30px; }
+.subway-preview-grid > span { position:absolute; left:22px; bottom:18px; color:#a9bcc2; font:600 10px/1 system-ui; letter-spacing:.18em; }
+.sp-line { position:absolute; display:block; height:7px; border-radius:9px; transform-origin:left center; }
+.sp-line::after { content:""; position:absolute; inset:-5px 0; border:2px solid rgba(255,255,255,.13); border-left:0; border-right:0; }
+.sp-red { background:#ee352e; width:74%; left:9%; top:28%; transform:rotate(23deg); }
+.sp-blue { background:#2850ad; width:88%; left:3%; top:70%; transform:rotate(-29deg); }
+.sp-green { background:#00933c; width:72%; left:30%; top:6%; transform:rotate(73deg); }
+.sp-yellow { background:#fccc0a; width:58%; left:39%; top:79%; transform:rotate(-66deg); }
+.sp-train { position:absolute; width:28px; height:28px; display:grid; place-items:center; color:white; border:3px solid #071b24; border-radius:50%; font:700 12px/1 system-ui; }
+.sp-one { background:#2850ad; left:29%; top:53%; }.sp-two { background:#00933c; left:62%; top:45%; }.sp-three { background:#fccc0a; color:#111; left:73%; top:23%; }
 
 .project-preview-placeholder {
   display: grid;

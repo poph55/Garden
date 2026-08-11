@@ -1,5 +1,13 @@
 /* ── Hero ─────────────────────────────────────────────────────── */
 
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('./fonts/press-start-2p-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 .hero {
   border-bottom: 1px solid var(--border);
   padding: 80px 0 72px;

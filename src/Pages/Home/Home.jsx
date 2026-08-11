@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Layout from '../../components/Layout'
+import { preloadOnIntent } from '../../routeLoaders'
 import catSheet from '../../assets/blackcat.png'
 import bookshelfIcon from '../../assets/optimized/bookshelf-Original.webp'
 import musicBoxIcon from '../../assets/optimized/music-storage-box-Original.webp'
@@ -56,7 +57,7 @@ export default function Home() {
       <section className="collections">
         <div className="categories">
           {categories.map(({ slug, title, icon }) => (
-            <Link key={slug} to={`/garden/${slug}`} className="category-link">
+            <Link key={slug} to={`/garden/${slug}`} className="category-link" {...preloadOnIntent(slug)}>
               {icon && <img src={icon} alt="" className="category-icon" aria-hidden="true" width="62" height="62" decoding="async" />}
               {title}
               {icon && <img src={icon} alt="" className="category-icon" aria-hidden="true" width="62" height="62" decoding="async" />}

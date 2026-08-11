@@ -1,6 +1,6 @@
-import defaultCover from './assets/record.png'
-import musicNoteIcon from './assets/MusicNote.png'
-import vinylRecordIcon from './assets/VinylRecord.png'
+import defaultCover from './assets/optimized/record.webp'
+import musicNoteIcon from './assets/optimized/music-note.png'
+import vinylRecordIcon from './assets/optimized/vinyl-record.png'
 
 const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 

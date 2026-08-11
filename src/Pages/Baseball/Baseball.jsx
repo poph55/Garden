@@ -101,6 +101,7 @@ const abbr = {
 function i(team) { return icon[team] ?? null }
 
 const games = [
+  { homeTeam: 'White Sox', homeScore: 1,  awayTeam: 'Astros',    awayScore: 4,  location: 'Rate Field',      homeWin: false, date: 'Jul 25, 2026' },
   { homeTeam: 'Yankees', homeScore: 7,  awayTeam: 'Rangers',   awayScore: 4,  location: 'Yankee Stadium',  homeWin: true,  date: 'May 5, 2026'  },
   { homeTeam: 'Yankees', homeScore: 11, awayTeam: 'Angels',    awayScore: 10, location: 'Yankee Stadium',  homeWin: true,  date: 'Apr 13, 2026' },
   { homeTeam: 'Yankees', homeScore: 8,  awayTeam: 'Marlins',   awayScore: 2,  location: 'Yankee Stadium',  homeWin: true,  date: 'Apr 3, 2026'  },

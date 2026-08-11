@@ -1,26 +1,28 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 import ProfessionalHome from './Pages/ProfessionalHome/ProfessionalHome'
-import Projects from './Pages/Projects/Projects'
+import { routeLoaders } from './routeLoaders'
 
-const GardenHome = lazy(() => import('./Pages/Home/Home'))
-const Movies = lazy(() => import('./Pages/Movies/Movies'))
-const Music = lazy(() => import('./Pages/Music/Music'))
-const Books = lazy(() => import('./Pages/Books/Books'))
-const Travel = lazy(() => import('./Pages/Travel/Travel'))
-const Tools = lazy(() => import('./Pages/Tools/Tools'))
-const Poetry = lazy(() => import('./Pages/Poetry/Poetry'))
-const Articles = lazy(() => import('./Pages/Articles/Articles'))
-const Physics = lazy(() => import('./Pages/Physics/Physics'))
-const Math = lazy(() => import('./Pages/Math/Math'))
-const Baseball = lazy(() => import('./Pages/Baseball/Baseball'))
-const VideoGames = lazy(() => import('./Pages/VideoGames/VideoGames'))
-const Vocab = lazy(() => import('./Pages/Vocab/Vocab'))
-const Quotes = lazy(() => import('./Pages/Quotes/Quotes'))
-const Paintings = lazy(() => import('./Pages/Paintings/Paintings'))
-const Recipes = lazy(() => import('./Pages/Recipes/Recipes'))
-const BoxScore = lazy(() => import('./Pages/BoxScore/BoxScore'))
-const NotFound = lazy(() => import('./Pages/NotFound/NotFound'))
+const Projects = lazy(routeLoaders.projects)
+const GardenHome = lazy(routeLoaders.garden)
+const Movies = lazy(routeLoaders.movies)
+const Music = lazy(routeLoaders.music)
+const Books = lazy(routeLoaders.books)
+const Travel = lazy(routeLoaders.travel)
+const Tools = lazy(routeLoaders.tools)
+const Poetry = lazy(routeLoaders.poetry)
+const Articles = lazy(routeLoaders.articles)
+const Physics = lazy(routeLoaders.physics)
+const Math = lazy(routeLoaders.math)
+const Baseball = lazy(routeLoaders.baseball)
+const VideoGames = lazy(routeLoaders['video-games'])
+const Vocab = lazy(routeLoaders.vocab)
+const Quotes = lazy(routeLoaders.quotes)
+const Paintings = lazy(routeLoaders.paintings)
+const Recipes = lazy(routeLoaders.recipes)
+const BoxScore = lazy(routeLoaders['box-score'])
+const SubwayLive = lazy(routeLoaders['subway-live'])
+const NotFound = lazy(routeLoaders['not-found'])
 
 export default function App() {
   return (
@@ -30,6 +32,7 @@ export default function App() {
         <Route path="/"                    element={<ProfessionalHome />} />
         <Route path="/projects"            element={<Projects />} />
         <Route path="/projects/box-score"  element={<BoxScore />} />
+        <Route path="/projects/subway-live" element={<SubwayLive />} />
         <Route path="/garden"              element={<GardenHome />} />
         <Route path="/garden/movies"       element={<Movies />} />
         <Route path="/garden/music"        element={<Music />} />

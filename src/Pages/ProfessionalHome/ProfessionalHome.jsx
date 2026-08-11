@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { preloadOnIntent } from '../../routeLoaders'
 import './ProfessionalHome.css'
 
 export default function ProfessionalHome() {
@@ -10,7 +11,7 @@ export default function ProfessionalHome() {
       </header>
 
       <div className="professional-paths">
-        <Link to="/projects" className="professional-card projects-card">
+        <Link to="/projects" className="professional-card projects-card" {...preloadOnIntent('projects')}>
           <p className="card-number">01</p>
           <div>
             <h2>Projects</h2>
@@ -19,7 +20,7 @@ export default function ProfessionalHome() {
           </div>
         </Link>
 
-        <Link to="/garden" className="professional-card garden-card">
+        <Link to="/garden" className="professional-card garden-card" {...preloadOnIntent('garden')}>
           <p className="card-number">02</p>
           <div>
             <h2>The garden <span aria-hidden="true">↗</span></h2>
