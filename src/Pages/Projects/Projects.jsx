@@ -3,6 +3,7 @@ import { preloadOnIntent } from '../../routeLoaders'
 import boxScorePreview from './assets/box-score.png'
 import pulsarPreview from './assets/pulsar-navigation-lab.png'
 import gardenPreview from './assets/the-garden.png'
+import subwayPreview from './assets/subway-live.webp'
 import './Projects.css'
 
 export default function Projects() {
@@ -24,28 +25,7 @@ export default function Projects() {
             <Link className="project-visit" to="/projects/subway-live" {...preloadOnIntent('subway-live')}>Watch the network →</Link>
           </div>
           <Link className="project-preview subway-preview" to="/projects/subway-live" aria-label="Open Subway Live" {...preloadOnIntent('subway-live')}>
-            <div className="subway-card-shot" aria-hidden="true">
-              <div className="subway-card-bar"><strong>SUBWAY <i>LIVE</i></strong><span><b/> MTA FEED LIVE</span><time>8:42 PM</time></div>
-              <div className="subway-card-sidebar"><small>NETWORK PULSE</small><strong>287</strong><span>ACTIVE TRIPS</span><p>A real-time view of the city in motion.</p><div><i>1</i><i>4</i><i>A</i><i>F</i><i>N</i><i>J</i></div></div>
-              <div className="subway-card-map">
-                <svg viewBox="0 0 720 390" preserveAspectRatio="xMidYMid slice">
-                  <path className="sp-land" d="M82 390L166 344 190 278 237 229 247 169 284 113 314 18 363 0 381 55 359 119 325 183 300 242 252 297 212 364ZM315 390L357 333 400 291 454 273 512 220 573 211 632 237 720 225V390ZM420 0L456 65 505 100 568 107 623 145 720 163V0Z"/>
-                  <g className="sp-roads"><path d="M103 358L354 31M173 382L487 56M315 373L674 239M352 331L669 143M259 267L572 101"/><path d="M68 316L297 210M255 348L590 218M333 123L707 177"/></g>
-                  <g className="sp-routes">
-                    <path className="route-a" d="M138 365C181 323 213 291 246 249S310 158 349 36"/>
-                    <path className="route-1" d="M194 373C213 331 234 292 263 250S321 150 365 31"/>
-                    <path className="route-4" d="M225 373C251 327 273 285 294 236S345 132 385 24"/>
-                    <path className="route-f" d="M159 338C221 314 266 292 309 269S398 248 454 272 548 302 632 280"/>
-                    <path className="route-j" d="M279 306C346 294 393 281 438 259S517 218 594 219"/>
-                    <path className="route-m" d="M279 298C345 286 391 273 434 251S514 210 593 211"/>
-                    <path className="route-n" d="M201 352C265 316 308 289 347 256S418 193 471 166 568 148 671 166"/>
-                  </g>
-                  <g className="sp-stops"><path d="M138 365L349 36M194 373L365 31M225 373L385 24M159 338L632 280M279 302L594 215M201 352L671 166"/></g>
-                </svg>
-                <b className="sp-marker marker-a">A<span>↗</span></b><b className="sp-marker marker-4">4<span>↑</span></b><b className="sp-marker marker-m">M<span>↗</span></b><b className="sp-marker marker-n">N<span>→</span></b>
-                <span className="subway-card-caption">LIVE TRAINS · NEW YORK CITY</span>
-              </div>
-            </div>
+            <img src={subwayPreview} alt="Subway Live displaying active New York City subway trains over the city map" width="1400" height="875" loading="lazy" decoding="async" />
           </Link>
         </article>
 
