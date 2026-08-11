@@ -95,17 +95,33 @@
 
 .project-preview:hover img { transform: scale(1.015); }
 
-.subway-preview { background: #071b24; position: relative; }
-.subway-preview-grid { position: absolute; inset: 0; overflow: hidden; background-image: linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size: 30px 30px; }
-.subway-preview-grid > span { position:absolute; left:22px; bottom:18px; color:#a9bcc2; font:600 10px/1 system-ui; letter-spacing:.18em; }
-.sp-line { position:absolute; display:block; height:7px; border-radius:9px; transform-origin:left center; }
-.sp-line::after { content:""; position:absolute; inset:-5px 0; border:2px solid rgba(255,255,255,.13); border-left:0; border-right:0; }
-.sp-red { background:#ee352e; width:74%; left:9%; top:28%; transform:rotate(23deg); }
-.sp-blue { background:#2850ad; width:88%; left:3%; top:70%; transform:rotate(-29deg); }
-.sp-green { background:#00933c; width:72%; left:30%; top:6%; transform:rotate(73deg); }
-.sp-yellow { background:#fccc0a; width:58%; left:39%; top:79%; transform:rotate(-66deg); }
-.sp-train { position:absolute; width:28px; height:28px; display:grid; place-items:center; color:white; border:3px solid #071b24; border-radius:50%; font:700 12px/1 system-ui; }
-.sp-one { background:#2850ad; left:29%; top:53%; }.sp-two { background:#00933c; left:62%; top:45%; }.sp-three { background:#fccc0a; color:#111; left:73%; top:23%; }
+.subway-preview { position:relative; background:#071b24; }
+.subway-card-shot { position:absolute; inset:0; display:grid; grid-template:38px 1fr/24% 1fr; overflow:hidden; background:#071b24; color:#dbe9ec; font-family:Arial,sans-serif; transition:transform 220ms ease; }
+.subway-preview:hover .subway-card-shot { transform:scale(1.012); }
+.subway-card-bar { grid-column:1/-1; z-index:3; display:grid; grid-template-columns:24% 1fr auto; align-items:center; border-bottom:1px solid rgba(185,221,228,.18); background:#071b24; font-size:7px; letter-spacing:.12em; }
+.subway-card-bar strong { padding-left:13px; font-size:8px; line-height:.85; letter-spacing:-.02em; }
+.subway-card-bar strong i { color:#ef4135; font-style:normal; }
+.subway-card-bar>span { display:flex; align-items:center; gap:5px; padding-left:13px; color:#9bb0b5; font-weight:700; }
+.subway-card-bar>span b { width:5px; height:5px; border-radius:50%; background:#55dd8b; box-shadow:0 0 8px #55dd8b; }
+.subway-card-bar time { padding-right:14px; color:#dbe9ec; font:700 8px/1 monospace; }
+.subway-card-sidebar { z-index:2; padding:15px 13px; border-right:1px solid rgba(185,221,228,.18); background:#09202a; }
+.subway-card-sidebar small,.subway-card-sidebar>span { display:block; color:#718e95; font-size:5px; font-weight:700; letter-spacing:.16em; }
+.subway-card-sidebar>strong { display:block; margin-top:7px; font-size:32px; line-height:.9; letter-spacing:-.08em; }
+.subway-card-sidebar p { max-width:82px; margin:12px 0 15px; color:#91a9ae; font:7px/1.45 Georgia,serif; }
+.subway-card-sidebar div { display:grid; grid-template-columns:repeat(3,18px); gap:6px; }
+.subway-card-sidebar div i { width:18px; height:18px; display:grid; place-items:center; border-radius:50%; background:#2850ad; color:#fff; font:700 7px/1 Arial; font-style:normal; }
+.subway-card-sidebar div i:nth-child(1){background:#ee352e}.subway-card-sidebar div i:nth-child(2){background:#00933c}.subway-card-sidebar div i:nth-child(4),.subway-card-sidebar div i:nth-child(5){background:#ff6319}.subway-card-sidebar div i:nth-child(5){background:#fccc0a;color:#111}.subway-card-sidebar div i:nth-child(6){background:#996633}
+.subway-card-map { position:relative; overflow:hidden; background:radial-gradient(circle at 52% 48%,#17353e,#071b24 72%); }
+.subway-card-map svg { width:100%; height:100%; display:block; }
+.sp-land { fill:#102c35; stroke:#31505a; stroke-width:1; opacity:.82; }
+.sp-roads path { fill:none; stroke:#5c7780; stroke-width:.8; opacity:.16; }
+.sp-routes path { fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; }
+.sp-routes .route-a{stroke:#2850ad}.sp-routes .route-1{stroke:#ee352e}.sp-routes .route-4{stroke:#00933c}.sp-routes .route-f,.sp-routes .route-m{stroke:#ff6319}.sp-routes .route-j{stroke:#996633}.sp-routes .route-n{stroke:#fccc0a}
+.sp-stops path { fill:none; stroke:#edf6f7; stroke-width:2.8; stroke-linecap:round; stroke-dasharray:.1 18; opacity:.92; }
+.sp-marker { position:absolute; width:22px; height:22px; display:grid; place-items:center; border:2px solid #071b24; border-radius:50%; color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.7); font:800 8px/1 Arial; }
+.sp-marker span { position:absolute; top:-9px; color:#fff; font-size:10px; text-shadow:0 1px 3px #071b24; }
+.marker-a{left:26%;top:56%;background:#2850ad}.marker-4{left:45%;top:28%;background:#00933c}.marker-m{left:63%;top:57%;background:#ff6319}.marker-n{left:76%;top:39%;background:#fccc0a;color:#111}
+.subway-card-caption { position:absolute; right:14px; bottom:10px; padding:5px 7px; background:rgba(7,27,36,.82); color:#91a9ae; font:700 6px/1 Arial; letter-spacing:.15em; }
 
 .project-preview-placeholder {
   display: grid;
