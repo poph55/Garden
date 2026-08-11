@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import boxScorePreview from './assets/box-score.png'
 import pulsarPreview from './assets/pulsar-navigation-lab.png'
 import gardenPreview from './assets/the-garden.png'
 import './Projects.css'
@@ -15,6 +16,19 @@ export default function Projects() {
       <section className="project-list" aria-label="Projects">
         <article className="project-row">
           <p className="project-number">01</p>
+          <div className="project-copy">
+            <p className="project-type">Sports data visualization</p>
+            <h2>Box Score</h2>
+            <p>A fast, visual way to find a baseball game and understand how it unfolded—from the first pitch to the final out.</p>
+            <Link className="project-visit" to="/projects/box-score">Explore scores →</Link>
+          </div>
+          <Link className="project-preview" to="/projects/box-score" aria-label="Open Box Score visualizer">
+            <img src={boxScorePreview} alt="Box Score visualizer showing Mets and Braves batting data over a Truist Park spray chart" width="1269" height="714" />
+          </Link>
+        </article>
+
+        <article className="project-row">
+          <p className="project-number">02</p>
           <div className="project-copy">
             <p className="project-type">Interactive simulation</p>
             <h2>Pulsar Simulation</h2>
@@ -36,7 +50,7 @@ export default function Projects() {
         </article>
 
         <article className="project-row">
-          <p className="project-number">02</p>
+          <p className="project-number">03</p>
           <div className="project-copy">
             <p className="project-type">Personal digital garden</p>
             <h2>The Garden</h2>

@@ -19,6 +19,7 @@ const Vocab = lazy(() => import('./Pages/Vocab/Vocab'))
 const Quotes = lazy(() => import('./Pages/Quotes/Quotes'))
 const Paintings = lazy(() => import('./Pages/Paintings/Paintings'))
 const Recipes = lazy(() => import('./Pages/Recipes/Recipes'))
+const BoxScore = lazy(() => import('./Pages/BoxScore/BoxScore'))
 const NotFound = lazy(() => import('./Pages/NotFound/NotFound'))
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
       <Routes>
         <Route path="/"                    element={<ProfessionalHome />} />
         <Route path="/projects"            element={<Projects />} />
+        <Route path="/projects/box-score"  element={<BoxScore />} />
         <Route path="/garden"              element={<GardenHome />} />
         <Route path="/garden/movies"       element={<Movies />} />
         <Route path="/garden/music"        element={<Music />} />
