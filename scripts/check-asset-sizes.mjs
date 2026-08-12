@@ -26,7 +26,11 @@ const violations = []
 for (const file of files) {
   const relative = path.relative(dist, file)
   if (relative.startsWith(`pulsarnav${path.sep}`)) continue
-  const limit = limits[path.extname(file).toLowerCase()]
+  // Phaser is isolated behind the optional Overgrown route. Keep a separate
+  // ceiling for that lazily loaded engine without weakening the main bundle.
+  const limit = /^assets[\\/]createGame-.*\.js$/.test(relative)
+    ? 1.5 * 1024 * 1024
+    : limits[path.extname(file).toLowerCase()]
   if (!limit) continue
   const { size } = await stat(file)
   if (size > limit) violations.push(`${relative}: ${(size / 1024).toFixed(1)} KB > ${(limit / 1024).toFixed(0)} KB`)

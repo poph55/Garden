@@ -22,6 +22,7 @@ const Paintings = lazy(routeLoaders.paintings)
 const Recipes = lazy(routeLoaders.recipes)
 const BoxScore = lazy(routeLoaders['box-score'])
 const SubwayLive = lazy(routeLoaders['subway-live'])
+const Overgrown = lazy(routeLoaders.overgrown)
 const NotFound = lazy(routeLoaders['not-found'])
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/projects"            element={<Projects />} />
         <Route path="/projects/box-score"  element={<BoxScore />} />
         <Route path="/projects/subway-live" element={<SubwayLive />} />
+        <Route path="/projects/overgrown" element={<Overgrown />} />
         <Route path="/garden"              element={<GardenHome />} />
         <Route path="/garden/movies"       element={<Movies />} />
         <Route path="/garden/music"        element={<Music />} />

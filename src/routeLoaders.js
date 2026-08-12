@@ -18,6 +18,7 @@ export const routeLoaders = {
   recipes: () => import('./Pages/garden/Recipes/Recipes'),
   'box-score': () => import('./Pages/projects/BoxScore/BoxScore'),
   'subway-live': () => import('./Pages/projects/SubwayLive/SubwayLive'),
+  overgrown: () => import('./Pages/projects/Overgrown/Overgrown'),
   'not-found': () => import('./Pages/NotFound/NotFound'),
 }
 
