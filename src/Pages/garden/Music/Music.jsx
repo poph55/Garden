@@ -2,7 +2,9 @@ import { useState, useMemo } from 'react'
 import { useGreedyColumns } from '../../../hooks/useGreedyColumns'
 import Layout from '../../../components/Layout'
 import MusicEntry from './MusicEntry'
+import VinylEntry from './VinylEntry'
 import musicBoxIcon from '../../../assets/optimized/music-storage-box-Original.webp'
+import vinylRecordIcon from './assets/optimized/vinyl-record.png'
 import cantBuyAThrillCover from './covers/optimized/Cant buy a thrill cover.webp'
 import bloodOnTheTracksCover from './covers/optimized/blood on the tracks.webp'
 import wishYouWereHereCover from './covers/optimized/wish you were here cover.webp'
@@ -84,7 +86,11 @@ link: 'https://open.spotify.com/track/1yCVsVH2hQ72SxNI8QTDaB?si=57f7396f0c90458b
   },
 ].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
 
+// Add records here as: { name, artist, image, dateAdded }.
+const vinyls = []
+
 export default function Music() {
+  const [view, setView] = useState('listening')
   const [filter, setFilter] = useState('all')
   const [sortBy, setSortBy] = useState('dateAdded')
 
@@ -99,6 +105,12 @@ export default function Music() {
 
   const { cols } = useGreedyColumns(visible, 3)
 
+  const sortedVinyls = useMemo(() => [...vinyls].sort((a, b) => {
+    if (sortBy === 'name') return a.name.localeCompare(b.name)
+    if (sortBy === 'artist') return a.artist.localeCompare(b.artist)
+    return new Date(b.dateAdded) - new Date(a.dateAdded)
+  }), [sortBy])
+
   return (
     <Layout showBack>
       <div className="page-header">
@@ -107,16 +119,36 @@ export default function Music() {
             <img src={musicBoxIcon} alt="" className="music-title-icon" aria-hidden="true" />
             music
           </h1>
-          <div className="music-selects">
-            <select
-              className="filter-select"
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
+          <nav className="music-tabs" aria-label="Music collections">
+            <button
+              type="button"
+              className={`music-tab${view === 'listening' ? ' music-tab--active' : ''}`}
+              aria-pressed={view === 'listening'}
+              onClick={() => setView('listening')}
             >
-              <option value="all">all</option>
-              <option value="song">songs</option>
-              <option value="album">albums</option>
-            </select>
+              listening
+            </button>
+            <button
+              type="button"
+              className={`music-tab${view === 'vinyls' ? ' music-tab--active' : ''}`}
+              aria-pressed={view === 'vinyls'}
+              onClick={() => setView('vinyls')}
+            >
+              vinyls <span className="music-tab-count">{vinyls.length}</span>
+            </button>
+          </nav>
+          <div className="music-selects">
+            {view === 'listening' && (
+              <select
+                className="filter-select"
+                value={filter}
+                onChange={e => setFilter(e.target.value)}
+              >
+                <option value="all">all</option>
+                <option value="song">songs</option>
+                <option value="album">albums</option>
+              </select>
+            )}
             <select
               className="filter-select"
               value={sortBy}
@@ -132,13 +164,27 @@ export default function Music() {
 
       <section className="entry-list">
         <div className="container">
-          <div className="music-columns">
-            {cols.map((col, ci) => (
-              <div key={ci} className="music-column">
-                {col.map(({ entry, idx }) => <MusicEntry key={idx} {...entry} />)}
-              </div>
-            ))}
-          </div>
+          {view === 'listening' ? (
+            <div className="music-columns">
+              {cols.map((col, ci) => (
+                <div key={ci} className="music-column">
+                  {col.map(({ entry, idx }) => <MusicEntry key={idx} {...entry} />)}
+                </div>
+              ))}
+            </div>
+          ) : sortedVinyls.length ? (
+            <div className="vinyl-grid">
+              {sortedVinyls.map(vinyl => (
+                <VinylEntry key={`${vinyl.name}-${vinyl.artist}`} {...vinyl} />
+              ))}
+            </div>
+          ) : (
+            <div className="vinyl-empty">
+              <img src={vinylRecordIcon} alt="" aria-hidden="true" />
+              <p>the crate is empty</p>
+              <span>your vinyl collection will grow here.</span>
+            </div>
+          )}
         </div>
       </section>
     </Layout>
