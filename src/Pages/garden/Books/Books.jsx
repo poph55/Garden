@@ -7,9 +7,31 @@ import tomorrowAndTomorrowAndTomorrow from './covers/tomorrow and tomorrow and t
 import snowsOfKilimanjaro from './covers/snows of kilimanjaro and other stories.jpg'
 import loveTriangle from './covers/love triangle.jpg'
 import bookOfLaughterAndForgetting from './covers/the book of laughter and forgetting.jpg'
+import meditations from './covers/optimized/meditations.webp'
+import notesFromUnderground from './covers/optimized/notes from underground.webp'
 import './Books.css'
 
 const entries = [
+  {
+    title: 'Meditations',
+    author: 'Marcus Aurelius',
+    year: 180,
+    cover: meditations,
+    startDate: 'Aug 16, 2026',
+    endDate: 'Aug 17, 2026',
+    rating: 3,
+    link: 'https://app.thestorygraph.com/books/5c0989bb-e324-476f-b7ba-46a74bc1cb7a',
+  },
+  {
+    title: 'Notes from Underground',
+    author: 'Fyodor Dostoevsky',
+    year: 1864,
+    cover: notesFromUnderground,
+    startDate: 'Aug 17, 2026',
+    endDate: 'Aug 17, 2026',
+    rating: 4,
+    link: 'https://app.thestorygraph.com/books/1dbb8c28-5e66-4d5d-ac9c-ca82d4029420',
+  },
   {
     title: 'The Book of Laughter and Forgetting',
     author: 'Milan Kundera',
