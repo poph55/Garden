@@ -7,11 +7,22 @@ import tomorrowAndTomorrowAndTomorrow from './covers/tomorrow and tomorrow and t
 import snowsOfKilimanjaro from './covers/snows of kilimanjaro and other stories.jpg'
 import loveTriangle from './covers/love triangle.jpg'
 import bookOfLaughterAndForgetting from './covers/the book of laughter and forgetting.jpg'
+import bigSwiss from './covers/optimized/big swiss.webp'
 import meditations from './covers/optimized/meditations.webp'
 import notesFromUnderground from './covers/optimized/notes from underground.webp'
 import './Books.css'
 
 const entries = [
+  {
+    title: 'Big Swiss',
+    author: 'Jen Beagin',
+    year: 2023,
+    cover: bigSwiss,
+    startDate: 'Aug 18, 2026',
+    endDate: 'Aug 25, 2026',
+    rating: 2,
+    link: 'https://app.thestorygraph.com/books/83e41998-b29e-48e0-9d5f-13a6709943cf',
+  },
   {
     title: 'Meditations',
     author: 'Marcus Aurelius',
