@@ -1,4 +1,5 @@
-import { formatSs } from './reportModel'
+import { WEEKLY_FABRICS, fabricFromVin, formatSs } from './reportModel'
+import weeklyLogoDataUrl from './modern-works-logo.png?inline'
 
 const encoder = new TextEncoder()
 const EMU_PER_INCH = 914400
@@ -16,6 +17,8 @@ const WEEKLY_COLUMN_DXA = WEEKLY_TABLE_WIDTH_DXA / 2
 const WEEKLY_RATINGS = ['great', 'good', 'ok', 'slow']
 const escapeXml = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 const inchesToEmu = (inches) => Math.round(inches * EMU_PER_INCH)
+const WEEKLY_LOGO_WIDTH_EMU = inchesToEmu(2.4)
+const WEEKLY_LOGO_HEIGHT_EMU = inchesToEmu(2.4 * 102 / 1000)
 
 function run(text, { bold = false, size = 22, color = '231F20' } = {}) {
   return `<w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b w:val="${bold ? 1 : 0}"/><w:color w:val="${color}"/><w:sz w:val="${size}"/></w:rPr><w:t xml:space="preserve">${escapeXml(text)}</w:t></w:r>`
@@ -63,9 +66,9 @@ function weeklyTableRow(cells) {
   return `<w:tr><w:trPr><w:cantSplit/><w:trHeight w:val="6100" w:hRule="atLeast"/></w:trPr>${cells.join('')}</w:tr>`
 }
 
-function weeklyTitleParagraph(rating) {
+function weeklyTitleParagraph(fabric, rating) {
   const colors = { great: '276749', good: '2F6B85', ok: '9A6700', slow: '9B2C2C' }
-  return `<w:p><w:pPr><w:spacing w:after="100"/><w:keepNext/></w:pPr>${run(rating.toUpperCase(), { bold: true, size: 34, color: colors[rating] })}</w:p>`
+  return `<w:p><w:pPr><w:spacing w:after="100"/><w:keepNext/></w:pPr>${run(`${fabric.toUpperCase()}S`, { bold: true, size: 34, color: '4F3240' })}${run(' · ', { bold: true, size: 34, color: '7B6870' })}${run(rating.toUpperCase(), { bold: true, size: 34, color: colors[rating] })}</w:p>`
 }
 
 function weeklyDetails(style) {
@@ -75,6 +78,15 @@ function weeklyDetails(style) {
 
 function pageBreak() {
   return '<w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:br w:type="page"/></w:r></w:p>'
+}
+
+function bytesFromDataUrl(dataUrl) {
+  const encoded = dataUrl.slice(dataUrl.indexOf(',') + 1)
+  return Uint8Array.from(atob(encoded), (character) => character.charCodeAt(0))
+}
+
+function weeklyHeaderXml() {
+  return `<?xml version="1.0"?><w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${WEEKLY_LOGO_WIDTH_EMU}" cy="${WEEKLY_LOGO_HEIGHT_EMU}"/><wp:docPr id="9000" name="Modern Works logo" descr="Modern Works"/><wp:cNvGraphicFramePr/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="Modern Works logo"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdLogo"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${WEEKLY_LOGO_WIDTH_EMU}" cy="${WEEKLY_LOGO_HEIGHT_EMU}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p></w:hdr>`
 }
 
 function imageExtension(name) {
@@ -162,16 +174,23 @@ export async function buildWeeklyReportDocx(report) {
   const pages = []
   let imageId = 0
 
-  for (const rating of WEEKLY_RATINGS) {
-    const styles = report.groups
-      .flatMap((group) => group.styles.map((style) => ({ ...style, group })))
-      .filter((style) => (style.rating ?? style.group.classification) === rating)
-      .sort((a, b) => a.ss - b.ss || a.vin.localeCompare(b.vin) || a.description.localeCompare(b.description))
-    for (let index = 0; index < styles.length; index += 4) pages.push({ rating, styles: styles.slice(index, index + 4) })
+  files['word/header1.xml'] = encoder.encode(weeklyHeaderXml())
+  files['word/_rels/header1.xml.rels'] = encoder.encode('<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdLogo" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/modern-works-logo.png"/></Relationships>')
+  files['word/media/modern-works-logo.png'] = bytesFromDataUrl(weeklyLogoDataUrl)
+
+  for (const fabric of WEEKLY_FABRICS) {
+    for (const rating of WEEKLY_RATINGS) {
+      const styles = report.groups
+        .filter((group) => (group.fabric ?? fabricFromVin(group.vin)) === fabric)
+        .flatMap((group) => group.styles.map((style) => ({ ...style, group })))
+        .filter((style) => (style.rating ?? style.group.classification) === rating)
+        .sort((a, b) => a.ss - b.ss || a.vin.localeCompare(b.vin) || a.description.localeCompare(b.description))
+      for (let index = 0; index < styles.length; index += 4) pages.push({ fabric, rating, styles: styles.slice(index, index + 4) })
+    }
   }
 
   for (const [pageIndex, page] of pages.entries()) {
-    body.push(weeklyTitleParagraph(page.rating))
+    body.push(weeklyTitleParagraph(page.fabric, page.rating))
     const cards = []
     for (const style of page.styles) {
       const asset = style.group.candidates.find((candidate) => candidate.id === style.group.assignments[style.id])
@@ -194,10 +213,10 @@ export async function buildWeeklyReportDocx(report) {
     if (pageIndex < pages.length - 1) body.push(pageBreak())
   }
 
-  files['[Content_Types].xml'] = encoder.encode('<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>')
+  files['[Content_Types].xml'] = encoder.encode('<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/></Types>')
   files['_rels/.rels'] = encoder.encode('<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>')
-  files['word/_rels/document.xml.rels'] = encoder.encode(`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${relationships.join('')}</Relationships>`)
-  files['word/document.xml'] = encoder.encode(`<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:v="urn:schemas-microsoft-com:vml"><w:body>${body.join('')}<w:sectPr><w:pgSz w:w="${WEEKLY_PAGE_WIDTH_DXA}" w:h="${WEEKLY_PAGE_HEIGHT_DXA}"/><w:pgMar w:top="${WEEKLY_PAGE_MARGIN_DXA}" w:right="${WEEKLY_PAGE_MARGIN_DXA}" w:bottom="${WEEKLY_PAGE_MARGIN_DXA}" w:left="${WEEKLY_PAGE_MARGIN_DXA}" w:header="360" w:footer="360"/></w:sectPr></w:body></w:document>`)
+  files['word/_rels/document.xml.rels'] = encoder.encode(`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdWeeklyHeader" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/>${relationships.join('')}</Relationships>`)
+  files['word/document.xml'] = encoder.encode(`<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:v="urn:schemas-microsoft-com:vml"><w:body>${body.join('')}<w:sectPr><w:headerReference w:type="default" r:id="rIdWeeklyHeader"/><w:pgSz w:w="${WEEKLY_PAGE_WIDTH_DXA}" w:h="${WEEKLY_PAGE_HEIGHT_DXA}"/><w:pgMar w:top="${WEEKLY_PAGE_MARGIN_DXA}" w:right="${WEEKLY_PAGE_MARGIN_DXA}" w:bottom="${WEEKLY_PAGE_MARGIN_DXA}" w:left="${WEEKLY_PAGE_MARGIN_DXA}" w:header="180" w:footer="360"/></w:sectPr></w:body></w:document>`)
 
   return new Blob([zipSync(files)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
 }

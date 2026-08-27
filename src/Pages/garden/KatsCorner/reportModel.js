@@ -13,6 +13,7 @@ const HEADER_ALIASES = {
 }
 
 export const WEEKLY_RATINGS = ['great', 'good', 'ok', 'slow']
+export const WEEKLY_FABRICS = ['knit', 'woven']
 
 const IMAGE_EXTENSIONS = /\.(avif|gif|jpe?g|png|webp)$/i
 
@@ -117,6 +118,10 @@ export function weeklyRating(ss) {
   return 'slow'
 }
 
+export function fabricFromVin(vin) {
+  return String(vin ?? '').trim().toUpperCase().startsWith('MV') ? 'woven' : 'knit'
+}
+
 export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
   const groups = new Map()
 
@@ -128,12 +133,14 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
 
     const ss = roundSs(rawSs)
     const rating = weeklyRating(ss)
+    const fabric = fabricFromVin(vin)
     const key = `${rating}:${vin}`
     if (!groups.has(key)) {
       groups.set(key, {
         id: stableId([rating, vin]),
         vin,
         originalVin: vin,
+        fabric,
         classification: rating,
         totalUnits: 0,
         totalSs: ss,
@@ -155,6 +162,7 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
   })
 
   const ratingOrder = new Map(WEEKLY_RATINGS.map((rating, index) => [rating, index]))
+  const fabricOrder = new Map(WEEKLY_FABRICS.map((fabric, index) => [fabric, index]))
   return {
     id: stableId([sourceName, 'weekly', rows.length]),
     sourceName,
@@ -164,7 +172,7 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
         const styles = sortStylesBySs(group.styles)
         return { ...group, totalSs: styles[0]?.ss ?? group.totalSs, styles }
       })
-      .sort((a, b) => ratingOrder.get(a.classification) - ratingOrder.get(b.classification) || a.totalSs - b.totalSs || a.vin.localeCompare(b.vin)),
+      .sort((a, b) => fabricOrder.get(a.fabric) - fabricOrder.get(b.fabric) || ratingOrder.get(a.classification) - ratingOrder.get(b.classification) || a.totalSs - b.totalSs || a.vin.localeCompare(b.vin)),
   }
 }
 
@@ -191,6 +199,14 @@ export function groupMatchStatus(group) {
     return asset && (group.confirmedAssignments?.[style.id] || asset.manual || scoreImageCandidate(style, asset) >= 76)
   })
   return allStrong ? 'high' : 'low'
+}
+
+export function styleNeedsReview(group, style) {
+  const imageId = group.assignments[style.id]
+  if (!imageId) return true
+  const asset = group.candidates.find((candidate) => candidate.id === imageId)
+  if (!asset) return true
+  return !group.confirmedAssignments?.[style.id] && !asset.manual && scoreImageCandidate(style, asset) < 76
 }
 
 export function rankImageCandidates(style, assets) {
@@ -252,6 +268,7 @@ export function renameVinAndRematch(group, vin, assets) {
     ...group,
     vin: nextVin,
     originalVin: group.originalVin ?? group.vin,
+    ...(group.fabric ? { fabric: fabricFromVin(nextVin) } : {}),
     styles: group.styles.map((style) => ({ ...style, vin: nextVin })),
     candidates: [],
     assignments: {},

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
-import { WEEKLY_RATINGS, applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, scoreImageCandidate } from './reportModel'
+import { WEEKLY_FABRICS, WEEKLY_RATINGS, applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, scoreImageCandidate, styleNeedsReview } from './reportModel'
 import { readSpreadsheet } from './spreadsheet'
 import './FileWorkspace.css'
 import './FileWorkspaceSimplified.css'
@@ -39,6 +39,7 @@ export default function FileWorkspace() {
   const [exporting, setExporting] = useState(false)
   const [visibleCandidateCount, setVisibleCandidateCount] = useState(CANDIDATE_BATCH_SIZE)
   const [objectUrls, setObjectUrls] = useState(() => new Map())
+  const [reviewTargetStyleId, setReviewTargetStyleId] = useState(null)
   const state = reportMode === 'weekly' ? weeklyState : monthlyState
   const dispatch = reportMode === 'weekly' ? dispatchWeekly : dispatchMonthly
   const reportModeLabel = reportMode === 'weekly' ? 'Weekly' : 'Monthly'
@@ -46,6 +47,7 @@ export default function FileWorkspace() {
   const candidates = selectedGroup?.candidates ?? EMPTY_CANDIDATES
   const assignments = selectedGroup?.assignments ?? EMPTY_ASSIGNMENTS
   const allImagesConfirmed = state.report?.groups.every((group) => group.styles.every((style) => group.assignments[style.id])) ?? false
+  const actionableItems = useMemo(() => state.report?.groups.flatMap((group) => group.styles.filter((style) => styleNeedsReview(group, style)).map((style) => ({ groupId: group.id, styleId: style.id }))) ?? [], [state.report])
   const assetMap = useMemo(() => new Map(candidates.map((asset) => [asset.id, asset])), [candidates])
   const visibleCandidates = useMemo(() => candidates.slice(0, visibleCandidateCount), [candidates, visibleCandidateCount])
   const previewAssets = useMemo(() => {
@@ -56,7 +58,7 @@ export default function FileWorkspace() {
     }
     return [...assetsById.values()]
   }, [assetMap, assignments, visibleCandidates])
-  const classifications = reportMode === 'weekly' ? WEEKLY_RATINGS : ['knit', 'woven']
+  const classifications = ['knit', 'woven']
   const summaryItems = useMemo(() => {
     if (!state.report) return []
     if (reportMode === 'weekly') {
@@ -78,6 +80,15 @@ export default function FileWorkspace() {
 
   useEffect(() => setVisibleCandidateCount(CANDIDATE_BATCH_SIZE), [state.selectedGroupId])
 
+  useEffect(() => {
+    if (!reviewTargetStyleId) return
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(`style-${reviewTargetStyleId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      setReviewTargetStyleId(null)
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [reviewTargetStyleId, state.selectedGroupId])
+
   async function handleSpreadsheet(event) {
     const file = event.target.files?.[0]
     if (!file) return
@@ -91,6 +102,17 @@ export default function FileWorkspace() {
   function handleReportModeChange(mode) {
     if (mode === reportMode) return
     setReportMode(mode)
+  }
+
+  function handleReviewNext() {
+    const nextItem = actionableItems[0]
+    if (!nextItem) return
+    dispatch({ type: 'select', id: nextItem.groupId })
+    setReviewTargetStyleId(nextItem.styleId)
+  }
+
+  function vinButton(group) {
+    return <button className={`match-${groupMatchStatus(group)} ${group.id === state.selectedGroupId ? 'selected' : ''}`} key={group.id} onClick={() => dispatch({ type:'select', id:group.id })}><span>{group.vin}</span><small>{Object.keys(group.assignments).length}/{group.styles.length} matched</small></button>
   }
 
   async function handleDirectory(event) {
@@ -144,9 +166,9 @@ export default function FileWorkspace() {
     {(state.status || state.error) && <p className={state.error ? 'workspace-message error' : 'workspace-message'} role="status">{state.error || state.status}</p>}
     {state.report && <section className="report-summary">{summaryItems.map((item) => <div key={item.label}><span>{item.value}</span> {item.label}</div>)}</section>}
     {state.report && <section className="review-shell">
-      <nav className="vin-nav" aria-label="VIN groups">{classifications.map((classification) => <div key={classification}><h2>{reportMode === 'weekly' ? classification : `${classification}s`}</h2>{state.report.groups.filter((group) => group.classification === classification).map((group) => <button className={`match-${groupMatchStatus(group)} ${group.id === state.selectedGroupId ? 'selected' : ''}`} key={group.id} onClick={() => dispatch({ type:'select', id:group.id })}><span>{group.vin}</span><small>{Object.keys(group.assignments).length}/{group.styles.length} matched</small></button>)}</div>)}</nav>
-      {selectedGroup && <div className="vin-review"><header><p className="eyebrow">{selectedGroup.classification}</p><form className="vin-editor" onSubmit={(event) => { event.preventDefault(); dispatch({ type:'rename-vin', groupId:selectedGroup.id, vin:event.currentTarget.elements.vin.value }) }}><label><span>VIN</span><input name="vin" defaultValue={selectedGroup.vin} key={selectedGroup.vin} aria-label="VIN"/></label><button type="submit">Save &amp; re-match</button></form>{selectedGroup.originalVin !== selectedGroup.vin && <p className="vin-edited-badge">Edited from {selectedGroup.originalVin}</p>}</header>
-        <div className="style-list">{selectedGroup.styles.map((style, index) => { const asset = assetMap.get(selectedGroup.assignments[style.id]); const score = asset ? scoreImageCandidate(style, asset) : 0; const confirmed = Boolean(selectedGroup.confirmedAssignments?.[style.id] || asset?.manual); const displayedScore = confirmed ? 100 : score; return <article className={index === 0 ? 'style-card hero' : 'style-card'} key={style.id} onDragOver={(event) => event.preventDefault()} onDrop={(event) => dispatch({ type:'assign', groupId:selectedGroup.id, styleId:style.id, imageId:event.dataTransfer.getData('text/image-id') })}>
+      <nav className="vin-nav" aria-label="VIN groups"><button className={`review-queue-button ${actionableItems.length === 0 ? 'complete' : ''}`} disabled={actionableItems.length === 0} onClick={handleReviewNext} type="button"><strong>{actionableItems.length === 0 ? 'All images ready' : `${actionableItems.length} to review`}</strong><small>{actionableItems.length === 0 ? '✓ Complete' : 'Go to next →'}</small></button>{reportMode === 'weekly' ? WEEKLY_FABRICS.map((fabric) => <div className="weekly-fabric-group" key={fabric}><h2>{fabric}s</h2>{WEEKLY_RATINGS.map((rating) => <div className="weekly-rating-group" key={rating}><h3>{rating}</h3>{state.report.groups.filter((group) => group.fabric === fabric && group.classification === rating).map(vinButton)}</div>)}</div>) : classifications.map((classification) => <div key={classification}><h2>{classification}s</h2>{state.report.groups.filter((group) => group.classification === classification).map(vinButton)}</div>)}</nav>
+      {selectedGroup && <div className="vin-review"><header><p className="eyebrow">{reportMode === 'weekly' ? `${selectedGroup.fabric} · ${selectedGroup.classification}` : selectedGroup.classification}</p><form className="vin-editor" onSubmit={(event) => { event.preventDefault(); dispatch({ type:'rename-vin', groupId:selectedGroup.id, vin:event.currentTarget.elements.vin.value }) }}><label><span>VIN</span><input name="vin" defaultValue={selectedGroup.vin} key={selectedGroup.vin} aria-label="VIN"/></label><button type="submit">Save &amp; re-match</button></form>{selectedGroup.originalVin !== selectedGroup.vin && <p className="vin-edited-badge">Edited from {selectedGroup.originalVin}</p>}</header>
+        <div className="style-list">{selectedGroup.styles.map((style, index) => { const asset = assetMap.get(selectedGroup.assignments[style.id]); const score = asset ? scoreImageCandidate(style, asset) : 0; const confirmed = Boolean(selectedGroup.confirmedAssignments?.[style.id] || asset?.manual); const displayedScore = confirmed ? 100 : score; return <article className={index === 0 ? 'style-card hero' : 'style-card'} id={`style-${style.id}`} key={style.id} onDragOver={(event) => event.preventDefault()} onDrop={(event) => dispatch({ type:'assign', groupId:selectedGroup.id, styleId:style.id, imageId:event.dataTransfer.getData('text/image-id') })}>
           <div className="style-image">{asset && objectUrls.has(asset.id) ? <img src={objectUrls.get(asset.id)} alt=""/> : <span>No image matched</span>}<div className="image-label">{reportMode === 'monthly' && <strong>Units {style.units.toLocaleString()}</strong>}<strong>{reportMode === 'weekly' ? 'SS Ratio' : 'SS'} {formatSs(style.ss)}</strong></div></div>
           <div className="style-copy"><p className="rank">#{index + 1} {index === 0 && '· Best seller'}</p><h3>{style.description}</h3><p>{asset?.name ?? 'Select a candidate below'}</p><p className={`confidence score-${confirmed || score >= 76 ? 'high' : 'low'}`}>{confirmed ? 'Confirmed' : confidenceLabel(score)} · {displayedScore}%</p><select aria-label={`Image for ${style.description}`} value={asset?.id ?? ''} onChange={(event) => dispatch({ type:'assign', groupId:selectedGroup.id, styleId:style.id, imageId:event.target.value })}><option value="">Choose image</option>{previewAssets.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.name}</option>)}</select>{asset && !confirmed && score < 76 && <button className="confirm-image-button" type="button" onClick={() => dispatch({ type:'confirm-image', groupId:selectedGroup.id, styleId:style.id })}>Confirm image</button>}<details className="manual-image-fallback"><summary>Can’t find the right image?</summary><label className="manual-image-upload">Upload a specific image<input type="file" accept="image/*" onChange={(event) => handleManualImage(event, style)}/></label></details></div>
         </article>})}</div>

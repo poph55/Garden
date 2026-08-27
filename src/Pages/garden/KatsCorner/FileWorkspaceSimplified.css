@@ -159,6 +159,34 @@
   cursor: pointer;
 }
 
+.vin-nav .review-queue-button {
+  align-items: center;
+  background: #fff0c7;
+  border: 1px solid #d9b85f;
+  color: #63470f;
+  display: flex;
+  margin-bottom: 14px;
+  padding: 11px 12px;
+}
+
+.vin-nav .review-queue-button strong {
+  font-size: 0.82rem;
+}
+
+.vin-nav .review-queue-button small {
+  color: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.vin-nav .review-queue-button.complete {
+  background: #e3f2e8;
+  border-color: #65a87f;
+  color: #286044;
+  cursor: default;
+  opacity: 1;
+}
+
 .vin-nav button.match-high {
   background: #e7f2ea;
 }
@@ -182,6 +210,20 @@
 .vin-nav button.selected {
   box-shadow: inset 3px 0 #765565;
   filter: saturate(1.12);
+}
+
+.vin-nav .weekly-fabric-group + .weekly-fabric-group {
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+  padding-top: 4px;
+}
+
+.vin-nav .weekly-rating-group h3 {
+  color: var(--muted);
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  margin: 12px 8px 5px;
+  text-transform: uppercase;
 }
 
 .manual-image-fallback {

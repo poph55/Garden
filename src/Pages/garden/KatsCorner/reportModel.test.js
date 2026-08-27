@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, roundSs, sortStylesBySs, weeklyRating } from './reportModel'
+import { applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, roundSs, sortStylesBySs, styleNeedsReview, weeklyRating } from './reportModel'
 
 const rows = [
   { VIN: 'MK0009', Classification: 'Knits', 'Style Description': 'BLACK', 'SLS UNITS': '6,495', SS: '2.6' },
@@ -106,6 +106,18 @@ describe('monthly report model', () => {
     expect(Object.keys(confirmed.confirmedAssignments)).toHaveLength(group.styles.length)
   })
 
+  it('identifies missing and low-confidence styles as actionable', () => {
+    const report = associateImages(parseSpreadsheetRows(rows), [
+      { id: 'generic', name: 'MK0009.jpg', relativePath: 'knits/MK0009.jpg' },
+    ])
+    const group = report.groups[0]
+    const [firstStyle] = group.styles
+
+    expect(group.styles.every((style) => styleNeedsReview(group, style))).toBe(true)
+    expect(styleNeedsReview(confirmImage(group, firstStyle.id), firstStyle)).toBe(false)
+    expect(styleNeedsReview({ ...group, assignments: {} }, firstStyle)).toBe(true)
+  })
+
   it('re-runs image matching after a VIN is renamed', () => {
     const assets = [
       { id: 'black', name: 'MK0009_BLACK.jpg', relativePath: 'knits/MK0009_BLACK.jpg' },
@@ -183,6 +195,22 @@ describe('weekly report model', () => {
     ])
 
     expect(report.groups.map(({ vin }) => vin)).toEqual(['GREAT-LOW', 'GREAT-HIGH', 'GOOD-LOW', 'GOOD-HIGH'])
+  })
+
+  it('splits weekly VINs into knits first and wovens second', () => {
+    const report = parseWeeklySpreadsheetRows([
+      { VIN: 'MV0001', 'Style Description': 'Great woven', 'SS Ratio': 2.1 },
+      { VIN: 'MK0002', 'Style Description': 'Slow knit', 'SS Ratio': 4.2 },
+      { VIN: 'MV0002', 'Style Description': 'Good woven', 'SS Ratio': 3.2 },
+      { VIN: 'MK0001', 'Style Description': 'Great knit', 'SS Ratio': 2.2 },
+    ])
+
+    expect(report.groups.map(({ vin, fabric, classification }) => [vin, fabric, classification])).toEqual([
+      ['MK0001', 'knit', 'great'],
+      ['MK0002', 'knit', 'slow'],
+      ['MV0001', 'woven', 'great'],
+      ['MV0002', 'woven', 'good'],
+    ])
   })
 
   it('keeps a manually uploaded fallback attached after rematching', () => {
