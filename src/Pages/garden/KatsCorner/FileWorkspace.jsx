@@ -73,6 +73,19 @@ export default function FileWorkspace() {
       { label: 'Styles', value: state.report.groups.reduce((sum, group) => sum + group.styles.length, 0) },
     ]
   }, [reportMode, state.report])
+  const exportStatus = useMemo(() => {
+    if (!state.report) return null
+    return state.report.groups.reduce((status, group) => {
+      group.styles.forEach((style) => {
+        const imageId = group.assignments[style.id]
+        const asset = group.candidates.find((candidate) => candidate.id === imageId)
+        if (imageId && asset) status.matched += 1
+        if (styleNeedsReview(group, style)) status.needsConfirmation += 1
+        if (group.confirmedAssignments?.[style.id] || asset?.manual) status.confirmed += 1
+      })
+      return status
+    }, { matched: 0, needsConfirmation: 0, confirmed: 0 })
+  }, [state.report])
 
   useEffect(() => {
     const nextUrls = new Map(previewAssets.map((asset) => [asset.id, URL.createObjectURL(asset.file)]))
@@ -195,7 +208,7 @@ export default function FileWorkspace() {
       </div>}
     </section>}
     <section className="export-panel">
-      <h2>{reportMode === 'monthly' ? 'Monthly Word report' : 'Weekly Word report'}</h2>
+      <div><h2>{reportMode === 'monthly' ? 'Monthly Word report' : 'Weekly Word report'}</h2>{exportStatus && <div className="export-status" aria-label="Report status"><span><strong>{exportStatus.matched}</strong> matched</span><span className={exportStatus.needsConfirmation ? 'pending' : 'complete'}><strong>{exportStatus.needsConfirmation}</strong> left to confirm</span><span><strong>{exportStatus.confirmed}</strong> manually confirmed</span></div>}</div>
       <button disabled={!state.report || exporting || (reportMode === 'weekly' && !allImagesConfirmed)} onClick={handleExport}>{exporting ? 'Building…' : reportMode === 'weekly' && !allImagesConfirmed ? 'Confirm all images' : 'Export .docx'}</button>
     </section>
   </main>
