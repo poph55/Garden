@@ -6,6 +6,12 @@ const PAGE_MARGIN_DXA = 504
 const TABLE_WIDTH_DXA = 14380
 const HERO_COLUMN_DXA = 9740
 const TRAY_COLUMN_DXA = TABLE_WIDTH_DXA - HERO_COLUMN_DXA
+const WEEKLY_PAGE_WIDTH_DXA = 12240
+const WEEKLY_PAGE_HEIGHT_DXA = 15840
+const WEEKLY_PAGE_MARGIN_DXA = 720
+const WEEKLY_TABLE_WIDTH_DXA = 10800
+const WEEKLY_COLUMN_DXA = WEEKLY_TABLE_WIDTH_DXA / 2
+const WEEKLY_RATINGS = ['great', 'good', 'ok', 'slow']
 const escapeXml = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 const inchesToEmu = (inches) => Math.round(inches * EMU_PER_INCH)
 
@@ -32,10 +38,10 @@ function editableImageLabel(id, style, sizeInches) {
   return `<w:r><w:pict><v:shape id="label-${id}" type="#_x0000_t202" style="position:absolute;margin-left:${inset}in;margin-top:${inset}in;width:${width}in;height:${height}in;z-index:251659264;mso-position-horizontal-relative:char;mso-position-vertical-relative:line" filled="f" stroked="f"><v:textbox inset="0,0,0,0"><w:txbxContent>${labelParagraph(`UNITS: ${style.units.toLocaleString()}`)}${labelParagraph(`SS: ${style.ss}`)}</w:txbxContent></v:textbox></v:shape></w:pict></w:r>`
 }
 
-function drawing(id, sizeInches, style) {
+function drawing(id, sizeInches, style, { includeLabel = true } = {}) {
   const extent = inchesToEmu(sizeInches)
   const description = style.description
-  return `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0"/></w:pPr>${editableImageLabel(id, style, sizeInches)}<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${extent}" cy="${extent}"/><wp:docPr id="${id}" name="${escapeXml(description)}" descr="${escapeXml(description)}"/><wp:cNvGraphicFramePr/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="${escapeXml(description)}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId${id}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${extent}" cy="${extent}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`
+  return `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0"/></w:pPr>${includeLabel ? editableImageLabel(id, style, sizeInches) : ''}<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${extent}" cy="${extent}"/><wp:docPr id="${id}" name="${escapeXml(description)}" descr="${escapeXml(description)}"/><wp:cNvGraphicFramePr/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="${escapeXml(description)}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId${id}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${extent}" cy="${extent}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`
 }
 
 function cell(content, width) {
@@ -49,6 +55,24 @@ function table(rows, columnWidths, width = TABLE_WIDTH_DXA) {
 
 function tableRow(cells) {
   return `<w:tr><w:trPr><w:cantSplit/></w:trPr>${cells.join('')}</w:tr>`
+}
+
+function weeklyTableRow(cells) {
+  return `<w:tr><w:trPr><w:cantSplit/><w:trHeight w:val="6100" w:hRule="atLeast"/></w:trPr>${cells.join('')}</w:tr>`
+}
+
+function weeklyTitleParagraph(rating) {
+  const colors = { great: '276749', good: '2F6B85', ok: '9A6700', slow: '9B2C2C' }
+  return `<w:p><w:pPr><w:spacing w:after="100"/><w:keepNext/></w:pPr>${run(rating.toUpperCase(), { bold: true, size: 34, color: colors[rating] })}</w:p>`
+}
+
+function weeklyDetails(style) {
+  const paragraph = (text, options) => `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="35"/></w:pPr>${run(text, options)}</w:p>`
+  return `${paragraph(style.vin, { bold: true, size: 24 })}${paragraph(style.description, { size: 19 })}${paragraph(`SS RATIO: ${style.ss}`, { bold: true, size: 21, color: '4F3240' })}`
+}
+
+function pageBreak() {
+  return '<w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:br w:type="page"/></w:r></w:p>'
 }
 
 function imageExtension(name) {
@@ -128,12 +152,70 @@ export async function buildMonthlyReportDocx(report) {
   return new Blob([zipSync(files)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
 }
 
+export async function buildWeeklyReportDocx(report) {
+  const { zipSync } = await import('fflate')
+  const files = {}
+  const relationships = []
+  const body = []
+  const pages = []
+  let imageId = 0
+
+  for (const rating of WEEKLY_RATINGS) {
+    const styles = report.groups
+      .flatMap((group) => group.styles.map((style) => ({ ...style, group })))
+      .filter((style) => (style.rating ?? style.group.classification) === rating)
+      .sort((a, b) => a.ss - b.ss || a.vin.localeCompare(b.vin) || a.description.localeCompare(b.description))
+    for (let index = 0; index < styles.length; index += 4) pages.push({ rating, styles: styles.slice(index, index + 4) })
+  }
+
+  for (const [pageIndex, page] of pages.entries()) {
+    body.push(weeklyTitleParagraph(page.rating))
+    const cards = []
+    for (const style of page.styles) {
+      const asset = style.group.candidates.find((candidate) => candidate.id === style.group.assignments[style.id])
+      let imageContent = `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="1400" w:after="1400"/></w:pPr>${run('IMAGE NOT CONFIRMED', { bold: true, size: 20, color: '7B6870' })}</w:p>`
+      if (asset) {
+        imageId += 1
+        const prepared = await annotateImage(asset)
+        const target = `media/image${imageId}.${prepared.extension}`
+        files[`word/${target}`] = prepared.bytes
+        relationships.push(`<Relationship Id="rId${imageId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="${target}"/>`)
+        imageContent = drawing(imageId, 3.18, style, { includeLabel: false })
+      }
+      cards.push(imageContent + weeklyDetails(style))
+    }
+    while (cards.length < 4) cards.push('<w:p/>')
+    body.push(table([
+      weeklyTableRow([cell(cards[0], WEEKLY_COLUMN_DXA), cell(cards[1], WEEKLY_COLUMN_DXA)]),
+      weeklyTableRow([cell(cards[2], WEEKLY_COLUMN_DXA), cell(cards[3], WEEKLY_COLUMN_DXA)]),
+    ], [WEEKLY_COLUMN_DXA, WEEKLY_COLUMN_DXA], WEEKLY_TABLE_WIDTH_DXA))
+    if (pageIndex < pages.length - 1) body.push(pageBreak())
+  }
+
+  files['[Content_Types].xml'] = encoder.encode('<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>')
+  files['_rels/.rels'] = encoder.encode('<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>')
+  files['word/_rels/document.xml.rels'] = encoder.encode(`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${relationships.join('')}</Relationships>`)
+  files['word/document.xml'] = encoder.encode(`<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:v="urn:schemas-microsoft-com:vml"><w:body>${body.join('')}<w:sectPr><w:pgSz w:w="${WEEKLY_PAGE_WIDTH_DXA}" w:h="${WEEKLY_PAGE_HEIGHT_DXA}"/><w:pgMar w:top="${WEEKLY_PAGE_MARGIN_DXA}" w:right="${WEEKLY_PAGE_MARGIN_DXA}" w:bottom="${WEEKLY_PAGE_MARGIN_DXA}" w:left="${WEEKLY_PAGE_MARGIN_DXA}" w:header="360" w:footer="360"/></w:sectPr></w:body></w:document>`)
+
+  return new Blob([zipSync(files)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
+}
+
 export async function exportMonthlyReport(report) {
   const blob = await buildMonthlyReportDocx(report)
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
   anchor.href = url
   anchor.download = `${report.sourceName.replace(/\.[^.]+$/, '') || 'monthly-report'}.docx`
+  anchor.click()
+  setTimeout(() => URL.revokeObjectURL(url), 0)
+}
+
+export async function exportWeeklyReport(report) {
+  const blob = await buildWeeklyReportDocx(report)
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = url
+  anchor.download = `${report.sourceName.replace(/\.[^.]+$/, '') || 'weekly-report'}-weekly.docx`
   anchor.click()
   setTimeout(() => URL.revokeObjectURL(url), 0)
 }

@@ -28,9 +28,9 @@ function parseCsv(text) {
 export function rowsToObjects(rows) {
   const headerIndex = rows.findIndex((row) => {
     const headers = row.map((value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim())
-    return headers.includes('vin') && headers.some((header) => ['ss', 'sell through', 'sell through'].includes(header)) && headers.some((header) => ['sls units', 'sales units', 'units'].includes(header))
+    return headers.includes('vin') && headers.some((header) => ['ss', 'ss ratio', 'sell through'].includes(header))
   })
-  if (headerIndex < 0) throw new Error('Could not find VIN, Units, and SS columns in this spreadsheet.')
+  if (headerIndex < 0) throw new Error('Could not find VIN and SS columns in this spreadsheet.')
   const headers = rows[headerIndex]
   return rows.slice(headerIndex + 1).map((row) => Object.fromEntries(headers.map((header, index) => [String(header ?? ''), row[index] ?? ''])))
 }

@@ -9,8 +9,10 @@ const HEADER_ALIASES = {
   classification: ['classification', 'class', 'fabric'],
   description: ['style description', 'description', 'style', 'color description'],
   units: ['sls units', 'sales units', 'units', 'unit sales'],
-  ss: ['ss', 'sell through', 'sell-through'],
+  ss: ['ss', 'ss ratio', 'sell through', 'sell-through'],
 }
+
+export const WEEKLY_RATINGS = ['great', 'good', 'ok', 'slow']
 
 const IMAGE_EXTENSIONS = /\.(avif|gif|jpe?g|png|webp)$/i
 
@@ -98,6 +100,59 @@ export function parseSpreadsheetRows(rows, sourceName = 'Monthly report') {
   }
 }
 
+export function weeklyRating(ss) {
+  if (ss < 3) return 'great'
+  if (ss <= 3.5) return 'good'
+  if (ss <= 4) return 'ok'
+  return 'slow'
+}
+
+export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
+  const groups = new Map()
+
+  rows.forEach((row, rowIndex) => {
+    const vin = String(readValue(row, HEADER_ALIASES.vin) ?? '').trim().toUpperCase()
+    const description = String(readValue(row, HEADER_ALIASES.description) ?? '').trim()
+    const rawSs = readValue(row, HEADER_ALIASES.ss)
+    if (!vin || !description || rawSs === undefined || rawSs === null || String(rawSs).trim() === '') return
+
+    const ss = numberValue(rawSs)
+    const rating = weeklyRating(ss)
+    const key = `${rating}:${vin}`
+    if (!groups.has(key)) {
+      groups.set(key, {
+        id: stableId([rating, vin]),
+        vin,
+        classification: rating,
+        totalUnits: 0,
+        totalSs: ss,
+        styles: [],
+        candidates: [],
+        assignments: {},
+      })
+    }
+
+    groups.get(key).styles.push({
+      id: stableId([vin, description, ss, rowIndex]),
+      vin,
+      description,
+      units: numberValue(readValue(row, HEADER_ALIASES.units)),
+      ss,
+      rating,
+    })
+  })
+
+  const ratingOrder = new Map(WEEKLY_RATINGS.map((rating, index) => [rating, index]))
+  return {
+    id: stableId([sourceName, 'weekly', rows.length]),
+    sourceName,
+    type: 'weekly',
+    groups: [...groups.values()]
+      .map((group) => ({ ...group, styles: sortStylesBySs(group.styles) }))
+      .sort((a, b) => ratingOrder.get(a.classification) - ratingOrder.get(b.classification) || a.totalSs - b.totalSs || a.vin.localeCompare(b.vin)),
+  }
+}
+
 export function sortStylesBySs(styles) {
   return [...styles].sort((a, b) => a.ss - b.ss || b.units - a.units || a.description.localeCompare(b.description))
 }
@@ -149,6 +204,29 @@ export function associateImages(report, assets) {
 
 export function assignImage(group, styleId, imageId) {
   return { ...group, assignments: { ...group.assignments, [styleId]: imageId } }
+}
+
+export function manualImageKey(style) {
+  return `${normalized(style.vin)}::${normalized(style.description)}`
+}
+
+export function applyManualImages(report, manualImages) {
+  if (!report || !manualImages.length) return report
+  const manualByStyle = new Map(manualImages.map((entry) => [entry.key, entry.asset]))
+  return {
+    ...report,
+    groups: report.groups.map((group) => {
+      const candidatesById = new Map(group.candidates.map((asset) => [asset.id, asset]))
+      const assignments = { ...group.assignments }
+      for (const style of group.styles) {
+        const asset = manualByStyle.get(manualImageKey(style))
+        if (!asset) continue
+        candidatesById.set(asset.id, asset)
+        assignments[style.id] = asset.id
+      }
+      return { ...group, candidates: [...candidatesById.values()], assignments }
+    }),
+  }
 }
 
 export function createImageAssets(files) {

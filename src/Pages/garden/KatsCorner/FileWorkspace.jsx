@@ -1,17 +1,22 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
-import { assignImage, associateImages, createImageAssets, parseSpreadsheetRows, scoreImageCandidate } from './reportModel'
+import { WEEKLY_RATINGS, applyManualImages, assignImage, associateImages, createImageAssets, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, scoreImageCandidate } from './reportModel'
 import { readSpreadsheet } from './spreadsheet'
 import './FileWorkspace.css'
 import './FileWorkspaceSimplified.css'
 
-const initialState = { report: null, assets: [], imageFolderName: '', selectedGroupId: null, status: '', error: '' }
+const initialState = { report: null, assets: [], manualImages: [], imageFolderName: '', selectedGroupId: null, status: '', error: '' }
 const CANDIDATE_BATCH_SIZE = 120
 const EMPTY_CANDIDATES = []
 const EMPTY_ASSIGNMENTS = {}
+const REPORT_MODES = ['monthly', 'weekly']
 
 function reducer(state, action) {
-  if (action.type === 'report') return { ...state, report: associateImages(action.report, state.assets), selectedGroupId: action.report.groups[0]?.id ?? null, status: '', error: '' }
-  if (action.type === 'assets') return { ...state, assets: action.assets, imageFolderName: action.folderName, report: state.report ? associateImages(state.report, action.assets) : null, status: '', error: '' }
+  if (action.type === 'report') return { ...state, report: applyManualImages(associateImages(action.report, state.assets), state.manualImages), selectedGroupId: action.report.groups[0]?.id ?? null, status: '', error: '' }
+  if (action.type === 'assets') return { ...state, assets: action.assets, imageFolderName: action.folderName, report: state.report ? applyManualImages(associateImages(state.report, action.assets), state.manualImages) : null, status: '', error: '' }
+  if (action.type === 'manual-image') {
+    const manualImages = [...state.manualImages.filter((entry) => entry.key !== action.entry.key), action.entry]
+    return { ...state, manualImages, report: applyManualImages(state.report, manualImages), status: '', error: '' }
+  }
   if (action.type === 'select') return { ...state, selectedGroupId: action.id }
   if (action.type === 'assign') return { ...state, report: { ...state.report, groups: state.report.groups.map((group) => group.id === action.groupId ? assignImage(group, action.styleId, action.imageId) : group) } }
   if (action.type === 'status') return { ...state, status: action.message, error: '' }
@@ -26,13 +31,19 @@ function confidenceLabel(score) {
 }
 
 export default function FileWorkspace() {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [reportMode, setReportMode] = useState('monthly')
+  const [monthlyState, dispatchMonthly] = useReducer(reducer, initialState)
+  const [weeklyState, dispatchWeekly] = useReducer(reducer, initialState)
   const [exporting, setExporting] = useState(false)
   const [visibleCandidateCount, setVisibleCandidateCount] = useState(CANDIDATE_BATCH_SIZE)
   const [objectUrls, setObjectUrls] = useState(() => new Map())
+  const state = reportMode === 'weekly' ? weeklyState : monthlyState
+  const dispatch = reportMode === 'weekly' ? dispatchWeekly : dispatchMonthly
+  const reportModeLabel = reportMode === 'weekly' ? 'Weekly' : 'Monthly'
   const selectedGroup = state.report?.groups.find((group) => group.id === state.selectedGroupId) ?? null
   const candidates = selectedGroup?.candidates ?? EMPTY_CANDIDATES
   const assignments = selectedGroup?.assignments ?? EMPTY_ASSIGNMENTS
+  const allImagesConfirmed = state.report?.groups.every((group) => group.styles.every((style) => group.assignments[style.id])) ?? false
   const assetMap = useMemo(() => new Map(candidates.map((asset) => [asset.id, asset])), [candidates])
   const visibleCandidates = useMemo(() => candidates.slice(0, visibleCandidateCount), [candidates, visibleCandidateCount])
   const previewAssets = useMemo(() => {
@@ -43,6 +54,19 @@ export default function FileWorkspace() {
     }
     return [...assetsById.values()]
   }, [assetMap, assignments, visibleCandidates])
+  const classifications = reportMode === 'weekly' ? WEEKLY_RATINGS : ['knit', 'woven']
+  const summaryItems = useMemo(() => {
+    if (!state.report) return []
+    if (reportMode === 'weekly') {
+      return WEEKLY_RATINGS.map((rating) => ({ label: rating, value: state.report.groups.reduce((count, group) => count + (group.classification === rating ? group.styles.length : 0), 0) }))
+    }
+    return [
+      { label: 'VINs', value: state.report.groups.length },
+      { label: 'Knits', value: state.report.groups.filter((group) => group.classification === 'knit').length },
+      { label: 'Wovens', value: state.report.groups.filter((group) => group.classification === 'woven').length },
+      { label: 'Styles', value: state.report.groups.reduce((sum, group) => sum + group.styles.length, 0) },
+    ]
+  }, [reportMode, state.report])
 
   useEffect(() => {
     const nextUrls = new Map(previewAssets.map((asset) => [asset.id, URL.createObjectURL(asset.file)]))
@@ -55,8 +79,16 @@ export default function FileWorkspace() {
   async function handleSpreadsheet(event) {
     const file = event.target.files?.[0]
     if (!file) return
-    try { dispatch({ type: 'report', report: parseSpreadsheetRows(await readSpreadsheet(file), file.name) }) }
+    try {
+      const rows = await readSpreadsheet(file)
+      dispatch({ type: 'report', report: createReport(rows, file.name, reportMode) })
+    }
     catch (error) { dispatch({ type: 'error', message: error instanceof Error ? error.message : 'Could not read that spreadsheet.' }) }
+  }
+
+  function handleReportModeChange(mode) {
+    if (mode === reportMode) return
+    setReportMode(mode)
   }
 
   async function handleDirectory(event) {
@@ -69,31 +101,63 @@ export default function FileWorkspace() {
     dispatch({ type: 'assets', assets, folderName })
   }
 
+  function handleManualImage(event, style) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    const asset = createImageAssets([file])[0]
+    if (!asset) {
+      dispatch({ type: 'error', message: 'Please choose a supported image file.' })
+      return
+    }
+    dispatch({ type: 'manual-image', entry: { key: manualImageKey(style), asset: { ...asset, manual: true } } })
+    event.target.value = ''
+  }
+
   async function handleExport() {
     if (!state.report) return
     setExporting(true)
-    try { const { exportMonthlyReport } = await import('./exportReport'); await exportMonthlyReport(state.report) }
+    try {
+      const reportExporter = await import('./exportReport')
+      if (reportMode === 'weekly') await reportExporter.exportWeeklyReport(state.report)
+      else await reportExporter.exportMonthlyReport(state.report)
+    }
     catch (error) { dispatch({ type: 'error', message: error instanceof Error ? error.message : 'Export failed.' }) }
     finally { setExporting(false) }
   }
 
   return <main className="file-workspace">
+    <div className="report-mode-toggle" role="group" aria-label="Report frequency">
+      {REPORT_MODES.map((mode) => <button
+        aria-pressed={reportMode === mode}
+        className={reportMode === mode ? 'selected' : ''}
+        key={mode}
+        onClick={() => handleReportModeChange(mode)}
+        type="button"
+      >{mode}</button>)}
+    </div>
     <section className="import-grid">
-      <label className={`drop-card ${state.report ? 'uploaded' : ''}`}><span className="upload-status">{state.report ? '✓ Spreadsheet uploaded' : 'Sales spreadsheet'}</span><strong>{state.report?.sourceName ?? 'Choose CSV or Excel'}</strong><small>{state.report ? 'Click to replace' : 'CSV or XLSX'}</small><input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleSpreadsheet}/></label>
-      <label className={`drop-card ${state.assets.length ? 'uploaded' : ''}`}><span className="upload-status">{state.assets.length ? '✓ Image folder uploaded' : 'Product images'}</span><strong>{state.imageFolderName || 'Choose image folder'}</strong><small>{state.assets.length ? `${state.assets.length.toLocaleString()} images · Click to replace` : 'Subfolders included'}</small><input type="file" accept="image/*" webkitdirectory="" multiple onChange={handleDirectory}/></label>
+      <label className={`drop-card ${state.report ? 'uploaded' : ''}`}><span className="upload-status">{state.report ? `✓ ${reportModeLabel} spreadsheet uploaded` : `${reportModeLabel} sales spreadsheet`}</span><strong>{state.report?.sourceName ?? 'Choose CSV or Excel'}</strong><small>{state.report ? 'Click to replace' : 'CSV or XLSX'}</small><input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleSpreadsheet}/></label>
+      <label className={`drop-card ${state.assets.length ? 'uploaded' : ''}`}><span className="upload-status">{state.assets.length ? `✓ ${reportModeLabel} image folder uploaded` : `${reportModeLabel} product images`}</span><strong>{state.imageFolderName || 'Choose image folder'}</strong><small>{state.assets.length ? `${state.assets.length.toLocaleString()} images · Click to replace` : 'Subfolders included'}</small><input type="file" accept="image/*" webkitdirectory="" multiple onChange={handleDirectory}/></label>
     </section>
     {(state.status || state.error) && <p className={state.error ? 'workspace-message error' : 'workspace-message'} role="status">{state.error || state.status}</p>}
-    {state.report && <section className="report-summary"><div><span>{state.report.groups.length}</span> VINs</div><div><span>{state.report.groups.filter((group) => group.classification === 'knit').length}</span> Knits</div><div><span>{state.report.groups.filter((group) => group.classification === 'woven').length}</span> Wovens</div><div><span>{state.report.groups.reduce((sum, group) => sum + group.styles.length, 0)}</span> Styles</div></section>}
+    {state.report && <section className="report-summary">{summaryItems.map((item) => <div key={item.label}><span>{item.value}</span> {item.label}</div>)}</section>}
     {state.report && <section className="review-shell">
-      <nav className="vin-nav" aria-label="VIN groups">{['knit','woven'].map((classification) => <div key={classification}><h2>{classification}s</h2>{state.report.groups.filter((group) => group.classification === classification).map((group) => <button className={group.id === state.selectedGroupId ? 'selected' : ''} key={group.id} onClick={() => dispatch({ type:'select', id:group.id })}><span>{group.vin}</span><small>{Object.keys(group.assignments).length}/{group.styles.length} matched</small></button>)}</div>)}</nav>
+      <nav className="vin-nav" aria-label="VIN groups">{classifications.map((classification) => <div key={classification}><h2>{reportMode === 'weekly' ? classification : `${classification}s`}</h2>{state.report.groups.filter((group) => group.classification === classification).map((group) => <button className={group.id === state.selectedGroupId ? 'selected' : ''} key={group.id} onClick={() => dispatch({ type:'select', id:group.id })}><span>{group.vin}</span><small>{Object.keys(group.assignments).length}/{group.styles.length} matched</small></button>)}</div>)}</nav>
       {selectedGroup && <div className="vin-review"><header><p className="eyebrow">{selectedGroup.classification}</p><h2>{selectedGroup.vin}</h2></header>
         <div className="style-list">{selectedGroup.styles.map((style, index) => { const asset = assetMap.get(selectedGroup.assignments[style.id]); const score = asset ? scoreImageCandidate(style, asset) : 0; return <article className={index === 0 ? 'style-card hero' : 'style-card'} key={style.id} onDragOver={(event) => event.preventDefault()} onDrop={(event) => dispatch({ type:'assign', groupId:selectedGroup.id, styleId:style.id, imageId:event.dataTransfer.getData('text/image-id') })}>
-          <div className="style-image">{asset && objectUrls.has(asset.id) ? <img src={objectUrls.get(asset.id)} alt=""/> : <span>No image matched</span>}<div className="image-label"><strong>Units {style.units.toLocaleString()}</strong><strong>SS {style.ss}</strong></div></div>
-          <div className="style-copy"><p className="rank">#{index + 1} {index === 0 && '· Best seller'}</p><h3>{style.description}</h3><p>{asset?.name ?? 'Select a candidate below'}</p><p className={`confidence score-${score >= 76 ? 'high' : 'low'}`}>{confidenceLabel(score)} · {score}%</p><select aria-label={`Image for ${style.description}`} value={asset?.id ?? ''} onChange={(event) => dispatch({ type:'assign', groupId:selectedGroup.id, styleId:style.id, imageId:event.target.value })}><option value="">Choose image</option>{visibleCandidates.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.name}</option>)}</select></div>
+          <div className="style-image">{asset && objectUrls.has(asset.id) ? <img src={objectUrls.get(asset.id)} alt=""/> : <span>No image matched</span>}<div className="image-label">{reportMode === 'monthly' && <strong>Units {style.units.toLocaleString()}</strong>}<strong>{reportMode === 'weekly' ? 'SS Ratio' : 'SS'} {style.ss}</strong></div></div>
+          <div className="style-copy"><p className="rank">#{index + 1} {index === 0 && '· Best seller'}</p><h3>{style.description}</h3><p>{asset?.name ?? 'Select a candidate below'}</p><p className={`confidence score-${asset?.manual || score >= 76 ? 'high' : 'low'}`}>{asset?.manual ? 'Manual upload' : confidenceLabel(score)} · {asset?.manual ? 'confirmed' : `${score}%`}</p><select aria-label={`Image for ${style.description}`} value={asset?.id ?? ''} onChange={(event) => dispatch({ type:'assign', groupId:selectedGroup.id, styleId:style.id, imageId:event.target.value })}><option value="">Choose image</option>{previewAssets.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.name}</option>)}</select><details className="manual-image-fallback"><summary>Can’t find the right image?</summary><label className="manual-image-upload">Upload a specific image<input type="file" accept="image/*" onChange={(event) => handleManualImage(event, style)}/></label></details></div>
         </article>})}</div>
-        {candidates.length > 0 && <div className="candidate-tray"><h3>Images</h3><p>{visibleCandidates.length.toLocaleString()} of {candidates.length.toLocaleString()}</p><div>{visibleCandidates.map((asset) => <figure key={asset.id} draggable onDragStart={(event) => event.dataTransfer.setData('text/image-id', asset.id)}><img src={objectUrls.get(asset.id)} alt=""/><figcaption>{asset.name}</figcaption></figure>)}</div>{visibleCandidateCount < candidates.length && <button className="candidate-load-more" type="button" onClick={() => setVisibleCandidateCount((count) => count + CANDIDATE_BATCH_SIZE)}>Show 120 more</button>}</div>}
+        {candidates.length > 0 && <div className="candidate-tray"><h3>Images</h3><p>{previewAssets.length.toLocaleString()} of {candidates.length.toLocaleString()}</p><div>{previewAssets.map((asset) => <figure key={asset.id} draggable onDragStart={(event) => event.dataTransfer.setData('text/image-id', asset.id)}><img src={objectUrls.get(asset.id)} alt=""/><figcaption>{asset.name}{asset.manual && <span>Uploaded</span>}</figcaption></figure>)}</div>{visibleCandidateCount < candidates.length && <button className="candidate-load-more" type="button" onClick={() => setVisibleCandidateCount((count) => count + CANDIDATE_BATCH_SIZE)}>Show 120 more</button>}</div>}
       </div>}
     </section>}
-    <section className="export-panel"><h2>Word report</h2><button disabled={!state.report || exporting} onClick={handleExport}>{exporting ? 'Building…' : 'Export .docx'}</button></section>
+    <section className="export-panel">
+      <h2>{reportMode === 'monthly' ? 'Monthly Word report' : 'Weekly Word report'}</h2>
+      <button disabled={!state.report || exporting || (reportMode === 'weekly' && !allImagesConfirmed)} onClick={handleExport}>{exporting ? 'Building…' : reportMode === 'weekly' && !allImagesConfirmed ? 'Confirm all images' : 'Export .docx'}</button>
+    </section>
   </main>
+}
+
+function createReport(rows, sourceName, reportMode) {
+  return reportMode === 'weekly' ? parseWeeklySpreadsheetRows(rows, sourceName) : parseSpreadsheetRows(rows, sourceName)
 }
