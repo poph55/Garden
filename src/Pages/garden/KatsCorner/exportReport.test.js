@@ -13,7 +13,7 @@ describe('buildMonthlyReportDocx', () => {
           vin: 'MK0213C',
           classification: 'knit',
           totalUnits: 14062,
-          totalSs: 3.4,
+          totalSs: 3.44,
           candidates: [],
           assignments: {},
           styles: [
@@ -44,10 +44,10 @@ describe('buildMonthlyReportDocx', () => {
       id: 'february',
       sourceName: 'February.xlsx',
       groups: [{
-        id: 'knit-mk0009', vin: 'MK0009', classification: 'knit', totalUnits: 6495, totalSs: 2.6,
+        id: 'knit-mk0009', vin: 'MK0009', classification: 'knit', totalUnits: 6495, totalSs: 2.64,
         candidates: [{ id: 'image', name: 'MK0009.png', file: { arrayBuffer: async () => imageBytes.buffer } }],
         assignments: { best: 'image' },
-        styles: [{ id: 'best', vin: 'MK0009', description: 'BLACK', units: 6495, ss: 2.6 }],
+        styles: [{ id: 'best', vin: 'MK0009', description: 'BLACK', units: 6495, ss: 2.59999 }],
       }],
     }
 
@@ -71,7 +71,7 @@ describe('buildWeeklyReportDocx', () => {
       groups: [
         { id: 'great', vin: 'GREAT', classification: 'great', candidates: [], assignments: {}, styles: [1, 2, 3, 4, 5].map((id) => weeklyStyle(`g${id}`, 'great', 2 + id / 10)) },
         { id: 'good', vin: 'GOOD', classification: 'good', candidates: [], assignments: {}, styles: [weeklyStyle('d1', 'good', 3.2)] },
-        { id: 'slow', vin: 'SLOW', classification: 'slow', candidates: [], assignments: {}, styles: [weeklyStyle('s1', 'slow', 4.2)] },
+        { id: 'slow', vin: 'SLOW', classification: 'slow', candidates: [], assignments: {}, styles: [weeklyStyle('s1', 'slow', 4.19999)] },
       ],
     }
 
@@ -90,7 +90,7 @@ describe('buildWeeklyReportDocx', () => {
 
   it('keeps weekly image captions editable and omits the monthly image textbox', async () => {
     const bytes = new Uint8Array([137, 80, 78, 71])
-    const style = { id: 'style', vin: 'MK0213', description: 'Black knit', units: 0, ss: 2.8, rating: 'great' }
+    const style = { id: 'style', vin: 'MK0213', description: 'Black knit', units: 0, ss: 2.79999, rating: 'great' }
     const report = {
       sourceName: 'weekly.xlsx',
       groups: [{

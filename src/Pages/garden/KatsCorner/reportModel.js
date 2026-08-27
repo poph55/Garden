@@ -35,6 +35,14 @@ function numberValue(value) {
   return Number.isFinite(parsed) ? parsed : 0
 }
 
+export function roundSs(value) {
+  return Math.round((numberValue(value) + Number.EPSILON) * 10) / 10
+}
+
+export function formatSs(value) {
+  return roundSs(value).toFixed(1)
+}
+
 function classificationValue(value) {
   const token = normalized(value)
   if (token.includes('woven')) return 'woven'
@@ -57,7 +65,7 @@ export function parseSpreadsheetRows(rows, sourceName = 'Monthly report') {
     if (rawVin && !description) {
       totalsByVin.set(activeVin, {
         totalUnits: numberValue(readValue(row, HEADER_ALIASES.units)),
-        totalSs: numberValue(readValue(row, HEADER_ALIASES.ss)),
+        totalSs: roundSs(readValue(row, HEADER_ALIASES.ss)),
       })
       return
     }
@@ -83,7 +91,7 @@ export function parseSpreadsheetRows(rows, sourceName = 'Monthly report') {
       vin: activeVin,
       description,
       units: numberValue(readValue(row, HEADER_ALIASES.units)),
-      ss: numberValue(readValue(row, HEADER_ALIASES.ss)),
+      ss: roundSs(readValue(row, HEADER_ALIASES.ss)),
     })
   })
 
@@ -97,14 +105,15 @@ export function parseSpreadsheetRows(rows, sourceName = 'Monthly report') {
         totalSs: group.totalSs || group.styles[0]?.ss || 0,
         styles: sortStylesBySs(group.styles),
       }))
-      .sort((a, b) => a.classification.localeCompare(b.classification) || a.vin.localeCompare(b.vin)),
+      .sort((a, b) => a.classification.localeCompare(b.classification) || a.totalSs - b.totalSs || a.vin.localeCompare(b.vin)),
   }
 }
 
 export function weeklyRating(ss) {
-  if (ss < 3) return 'great'
-  if (ss <= 3.5) return 'good'
-  if (ss <= 4) return 'ok'
+  const roundedSs = roundSs(ss)
+  if (roundedSs < 3) return 'great'
+  if (roundedSs <= 3.5) return 'good'
+  if (roundedSs <= 4) return 'ok'
   return 'slow'
 }
 
@@ -117,7 +126,7 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
     const rawSs = readValue(row, HEADER_ALIASES.ss)
     if (!vin || !description || rawSs === undefined || rawSs === null || String(rawSs).trim() === '') return
 
-    const ss = numberValue(rawSs)
+    const ss = roundSs(rawSs)
     const rating = weeklyRating(ss)
     const key = `${rating}:${vin}`
     if (!groups.has(key)) {
@@ -151,7 +160,10 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
     sourceName,
     type: 'weekly',
     groups: [...groups.values()]
-      .map((group) => ({ ...group, styles: sortStylesBySs(group.styles) }))
+      .map((group) => {
+        const styles = sortStylesBySs(group.styles)
+        return { ...group, totalSs: styles[0]?.ss ?? group.totalSs, styles }
+      })
       .sort((a, b) => ratingOrder.get(a.classification) - ratingOrder.get(b.classification) || a.totalSs - b.totalSs || a.vin.localeCompare(b.vin)),
   }
 }

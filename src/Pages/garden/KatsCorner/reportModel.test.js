@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, sortStylesBySs, weeklyRating } from './reportModel'
+import { applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, roundSs, sortStylesBySs, weeklyRating } from './reportModel'
 
 const rows = [
   { VIN: 'MK0009', Classification: 'Knits', 'Style Description': 'BLACK', 'SLS UNITS': '6,495', SS: '2.6' },
@@ -23,10 +23,37 @@ describe('monthly report model', () => {
     expect(report.groups[0]).toMatchObject({ totalUnits: 14062, totalSs: 3.6 })
   })
 
+  it('rounds and formats every SS value to the nearest tenth', () => {
+    const report = parseSpreadsheetRows([
+      { VIN: 'MK0213C', Classification: '', 'Style Description': '', 'SLS UNITS': 100, SS: 3.49999 },
+      { VIN: '', Classification: 'Knits', 'Style Description': 'TEST', 'SLS UNITS': 100, SS: 3.04 },
+    ])
+
+    expect(report.groups[0].totalSs).toBe(3.5)
+    expect(report.groups[0].styles[0].ss).toBe(3)
+    expect(roundSs(3.49999)).toBe(3.5)
+    expect(formatSs(3.04)).toBe('3.0')
+  })
+
   it('sorts styles by the lowest SS without mutation', () => {
     const styles = [{ id: 'a', ss: 4, units: 1 }, { id: 'b', ss: 2, units: 1 }]
     expect(sortStylesBySs(styles).map(({ id }) => id)).toEqual(['b', 'a'])
     expect(styles.map(({ id }) => id)).toEqual(['a', 'b'])
+  })
+
+  it('orders monthly VINs by total SS within knits and wovens', () => {
+    const report = parseSpreadsheetRows([
+      { VIN: 'KNIT-HIGH', Classification: '', 'Style Description': '', 'SLS UNITS': 10, SS: 3.8 },
+      { VIN: '', Classification: 'Knits', 'Style Description': 'High knit', 'SLS UNITS': 10, SS: 3.8 },
+      { VIN: 'WOVEN-LOW', Classification: '', 'Style Description': '', 'SLS UNITS': 10, SS: 2.1 },
+      { VIN: '', Classification: 'Wovens', 'Style Description': 'Low woven', 'SLS UNITS': 10, SS: 2.1 },
+      { VIN: 'KNIT-LOW', Classification: '', 'Style Description': '', 'SLS UNITS': 10, SS: 2.4 },
+      { VIN: '', Classification: 'Knits', 'Style Description': 'Low knit', 'SLS UNITS': 10, SS: 2.4 },
+      { VIN: 'WOVEN-HIGH', Classification: '', 'Style Description': '', 'SLS UNITS': 10, SS: 3.6 },
+      { VIN: '', Classification: 'Wovens', 'Style Description': 'High woven', 'SLS UNITS': 10, SS: 3.6 },
+    ])
+
+    expect(report.groups.map(({ vin }) => vin)).toEqual(['KNIT-LOW', 'KNIT-HIGH', 'WOVEN-LOW', 'WOVEN-HIGH'])
   })
 
   it('allows one image to be assigned to multiple styles', () => {
@@ -134,7 +161,7 @@ describe('weekly report model', () => {
   })
 
   it('uses complete, gap-free SS thresholds', () => {
-    expect([2.9, 3, 3.5, 3.51, 4, 4.1].map(weeklyRating)).toEqual(['great', 'good', 'good', 'ok', 'ok', 'slow'])
+    expect([2.9, 3, 3.5, 3.51, 3.55, 4, 4.01, 4.1].map(weeklyRating)).toEqual(['great', 'good', 'good', 'good', 'ok', 'ok', 'ok', 'slow'])
   })
 
   it('groups duplicate VIN rows while keeping every style', () => {
@@ -145,6 +172,17 @@ describe('weekly report model', () => {
 
     expect(report.groups).toHaveLength(1)
     expect(report.groups[0].styles.map(({ description }) => description)).toEqual(['Black', 'Ivory'])
+  })
+
+  it('orders weekly VIN groups by their lowest SS within each rating', () => {
+    const report = parseWeeklySpreadsheetRows([
+      { VIN: 'GOOD-HIGH', 'Style Description': 'Higher good', 'SS Ratio': 3.5 },
+      { VIN: 'GREAT-HIGH', 'Style Description': 'Higher great', 'SS Ratio': 2.9 },
+      { VIN: 'GOOD-LOW', 'Style Description': 'Lower good', 'SS Ratio': 3.1 },
+      { VIN: 'GREAT-LOW', 'Style Description': 'Lower great', 'SS Ratio': 2.1 },
+    ])
+
+    expect(report.groups.map(({ vin }) => vin)).toEqual(['GREAT-LOW', 'GREAT-HIGH', 'GOOD-LOW', 'GOOD-HIGH'])
   })
 
   it('keeps a manually uploaded fallback attached after rematching', () => {

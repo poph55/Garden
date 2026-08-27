@@ -1,3 +1,5 @@
+import { formatSs } from './reportModel'
+
 const encoder = new TextEncoder()
 const EMU_PER_INCH = 914400
 const PAGE_WIDTH_DXA = 15840
@@ -23,7 +25,7 @@ function titleParagraph(group) {
   const isGreat = group.totalSs < 3.5
   const rating = isGreat ? 'GREAT' : 'OK'
   const color = isGreat ? '276749' : '7A4A00'
-  return `<w:p><w:pPr><w:spacing w:after="80"/><w:keepNext/></w:pPr>${run(`${rating} - ${group.vin} - TTL UNITS: ${group.totalUnits.toLocaleString()} - SS: ${group.totalSs}`, { bold: true, size: 30, color })}</w:p>`
+  return `<w:p><w:pPr><w:spacing w:after="80"/><w:keepNext/></w:pPr>${run(`${rating} - ${group.vin} - TTL UNITS: ${group.totalUnits.toLocaleString()} - SS: ${formatSs(group.totalSs)}`, { bold: true, size: 30, color })}</w:p>`
 }
 
 function editableImageLabel(id, style, sizeInches) {
@@ -35,7 +37,7 @@ function editableImageLabel(id, style, sizeInches) {
   const fontSize = isHero ? 20 : isCompact ? 16 : 18
   const lineHeight = isHero ? 240 : isCompact ? 190 : 215
   const labelParagraph = (text) => `<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="${lineHeight}" w:lineRule="exact"/></w:pPr>${run(text, { bold: true, size: fontSize })}</w:p>`
-  return `<w:r><w:pict><v:shape id="label-${id}" type="#_x0000_t202" style="position:absolute;margin-left:${inset}in;margin-top:${inset}in;width:${width}in;height:${height}in;z-index:251659264;mso-position-horizontal-relative:char;mso-position-vertical-relative:line" filled="f" stroked="f"><v:textbox inset="0,0,0,0"><w:txbxContent>${labelParagraph(`UNITS: ${style.units.toLocaleString()}`)}${labelParagraph(`SS: ${style.ss}`)}</w:txbxContent></v:textbox></v:shape></w:pict></w:r>`
+  return `<w:r><w:pict><v:shape id="label-${id}" type="#_x0000_t202" style="position:absolute;margin-left:${inset}in;margin-top:${inset}in;width:${width}in;height:${height}in;z-index:251659264;mso-position-horizontal-relative:char;mso-position-vertical-relative:line" filled="f" stroked="f"><v:textbox inset="0,0,0,0"><w:txbxContent>${labelParagraph(`UNITS: ${style.units.toLocaleString()}`)}${labelParagraph(`SS: ${formatSs(style.ss)}`)}</w:txbxContent></v:textbox></v:shape></w:pict></w:r>`
 }
 
 function drawing(id, sizeInches, style, { includeLabel = true } = {}) {
@@ -68,7 +70,7 @@ function weeklyTitleParagraph(rating) {
 
 function weeklyDetails(style) {
   const paragraph = (text, options) => `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="35"/></w:pPr>${run(text, options)}</w:p>`
-  return `${paragraph(style.vin, { bold: true, size: 24 })}${paragraph(style.description, { size: 19 })}${paragraph(`SS RATIO: ${style.ss}`, { bold: true, size: 21, color: '4F3240' })}`
+  return `${paragraph(style.vin, { bold: true, size: 24 })}${paragraph(style.description, { size: 19 })}${paragraph(`SS RATIO: ${formatSs(style.ss)}`, { bold: true, size: 21, color: '4F3240' })}`
 }
 
 function pageBreak() {
@@ -122,7 +124,7 @@ export async function buildMonthlyReportDocx(report) {
     for (const style of group.styles) {
       const asset = group.candidates.find((candidate) => candidate.id === group.assignments[style.id])
       if (!asset) {
-        styleDrawings.push({ style, content: `<w:p><w:pPr><w:jc w:val="center"/></w:pPr>${run(`${style.description} | UNITS: ${style.units.toLocaleString()} | SS: ${style.ss}`, { bold: true, size: 20 })}</w:p>` })
+        styleDrawings.push({ style, content: `<w:p><w:pPr><w:jc w:val="center"/></w:pPr>${run(`${style.description} | UNITS: ${style.units.toLocaleString()} | SS: ${formatSs(style.ss)}`, { bold: true, size: 20 })}</w:p>` })
         continue
       }
       imageId += 1
