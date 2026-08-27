@@ -79,8 +79,12 @@
 }
 
 .export-panel {
+  position: sticky;
+  z-index: 8;
+  bottom: 16px;
   padding: 28px 38px;
   align-items: center;
+  box-shadow: 0 14px 36px rgba(49, 27, 38, 0.24);
 }
 
 .export-panel h2 {
@@ -97,6 +101,52 @@
   max-height: calc(100vh - 36px);
   overflow-y: auto;
   scrollbar-width: thin;
+}
+
+.vin-search {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+.vin-search span {
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vin-search input {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.vin-search input:focus {
+  border-color: #765565;
+  box-shadow: 0 0 0 3px rgba(118, 85, 101, 0.13);
+  outline: none;
+}
+
+.vin-nav .vin-section-toggle {
+  align-items: center;
+  padding: 9px 8px;
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.vin-section-toggle small {
+  color: var(--muted);
+  font-size: 0.65rem;
+  letter-spacing: 0;
 }
 
 .vin-review {

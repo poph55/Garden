@@ -40,6 +40,8 @@ export default function FileWorkspace() {
   const [visibleCandidateCount, setVisibleCandidateCount] = useState(CANDIDATE_BATCH_SIZE)
   const [objectUrls, setObjectUrls] = useState(() => new Map())
   const [reviewTargetStyleId, setReviewTargetStyleId] = useState(null)
+  const [queueQuery, setQueueQuery] = useState('')
+  const [collapsedSections, setCollapsedSections] = useState(() => new Set())
   const state = reportMode === 'weekly' ? weeklyState : monthlyState
   const dispatch = reportMode === 'weekly' ? dispatchWeekly : dispatchMonthly
   const reportModeLabel = reportMode === 'weekly' ? 'Weekly' : 'Monthly'
@@ -102,6 +104,8 @@ export default function FileWorkspace() {
   function handleReportModeChange(mode) {
     if (mode === reportMode) return
     setReportMode(mode)
+    setQueueQuery('')
+    setCollapsedSections(new Set())
   }
 
   function handleReviewNext() {
@@ -113,6 +117,21 @@ export default function FileWorkspace() {
 
   function vinButton(group) {
     return <button className={`match-${groupMatchStatus(group)} ${group.id === state.selectedGroupId ? 'selected' : ''}`} key={group.id} onClick={() => dispatch({ type:'select', id:group.id })}><span>{group.vin}</span><small>{Object.keys(group.assignments).length}/{group.styles.length} matched</small></button>
+  }
+
+  function matchingGroups(groups) {
+    const query = queueQuery.trim().toLowerCase()
+    if (!query) return groups
+    return groups.filter((group) => `${group.vin} ${group.styles.map((style) => style.description).join(' ')}`.toLowerCase().includes(query))
+  }
+
+  function toggleSection(section) {
+    setCollapsedSections((current) => {
+      const next = new Set(current)
+      if (next.has(section)) next.delete(section)
+      else next.add(section)
+      return next
+    })
   }
 
   async function handleDirectory(event) {
@@ -166,7 +185,7 @@ export default function FileWorkspace() {
     {(state.status || state.error) && <p className={state.error ? 'workspace-message error' : 'workspace-message'} role="status">{state.error || state.status}</p>}
     {state.report && <section className="report-summary">{summaryItems.map((item) => <div key={item.label}><span>{item.value}</span> {item.label}</div>)}</section>}
     {state.report && <section className="review-shell">
-      <nav className="vin-nav" aria-label="VIN groups"><button className={`review-queue-button ${actionableItems.length === 0 ? 'complete' : ''}`} disabled={actionableItems.length === 0} onClick={handleReviewNext} type="button"><strong>{actionableItems.length === 0 ? 'All images ready' : `${actionableItems.length} to review`}</strong><small>{actionableItems.length === 0 ? '✓ Complete' : 'Go to next →'}</small></button>{reportMode === 'weekly' ? WEEKLY_FABRICS.map((fabric) => <div className="weekly-fabric-group" key={fabric}><h2>{fabric}s</h2>{WEEKLY_RATINGS.map((rating) => <div className="weekly-rating-group" key={rating}><h3>{rating}</h3>{state.report.groups.filter((group) => group.fabric === fabric && group.classification === rating).map(vinButton)}</div>)}</div>) : classifications.map((classification) => <div key={classification}><h2>{classification}s</h2>{state.report.groups.filter((group) => group.classification === classification).map(vinButton)}</div>)}</nav>
+      <nav className="vin-nav" aria-label="VIN groups"><button className={`review-queue-button ${actionableItems.length === 0 ? 'complete' : ''}`} disabled={actionableItems.length === 0} onClick={handleReviewNext} type="button"><strong>{actionableItems.length === 0 ? 'All images ready' : `${actionableItems.length} to review`}</strong><small>{actionableItems.length === 0 ? '✓ Complete' : 'Go to next →'}</small></button><label className="vin-search"><span>Search VINs and styles</span><input type="search" value={queueQuery} onChange={(event) => setQueueQuery(event.target.value)} placeholder="Search VIN or style"/></label>{reportMode === 'weekly' ? WEEKLY_FABRICS.map((fabric) => { const section = `weekly-${fabric}`; const collapsed = collapsedSections.has(section); const groups = matchingGroups(state.report.groups.filter((group) => group.fabric === fabric)); return <div className="weekly-fabric-group" key={fabric}><button aria-expanded={!collapsed} className="vin-section-toggle" onClick={() => toggleSection(section)} type="button"><span>{fabric}s</span><small>{groups.length} {collapsed ? '+' : '−'}</small></button>{!collapsed && WEEKLY_RATINGS.map((rating) => { const ratingGroups = groups.filter((group) => group.classification === rating); return ratingGroups.length > 0 && <div className="weekly-rating-group" key={rating}><h3>{rating}</h3>{ratingGroups.map(vinButton)}</div> })}</div> }) : classifications.map((classification) => { const collapsed = collapsedSections.has(classification); const groups = matchingGroups(state.report.groups.filter((group) => group.classification === classification)); return <div key={classification}><button aria-expanded={!collapsed} className="vin-section-toggle" onClick={() => toggleSection(classification)} type="button"><span>{classification}s</span><small>{groups.length} {collapsed ? '+' : '−'}</small></button>{!collapsed && groups.map(vinButton)}</div> })}</nav>
       {selectedGroup && <div className="vin-review"><header><p className="eyebrow">{reportMode === 'weekly' ? `${selectedGroup.fabric} · ${selectedGroup.classification}` : selectedGroup.classification}</p><form className="vin-editor" onSubmit={(event) => { event.preventDefault(); dispatch({ type:'rename-vin', groupId:selectedGroup.id, vin:event.currentTarget.elements.vin.value }) }}><label><span>VIN</span><input name="vin" defaultValue={selectedGroup.vin} key={selectedGroup.vin} aria-label="VIN"/></label><button type="submit">Save &amp; re-match</button></form>{selectedGroup.originalVin !== selectedGroup.vin && <p className="vin-edited-badge">Edited from {selectedGroup.originalVin}</p>}</header>
         <div className="style-list">{selectedGroup.styles.map((style, index) => { const asset = assetMap.get(selectedGroup.assignments[style.id]); const score = asset ? scoreImageCandidate(style, asset) : 0; const confirmed = Boolean(selectedGroup.confirmedAssignments?.[style.id] || asset?.manual); const displayedScore = confirmed ? 100 : score; return <article className={index === 0 ? 'style-card hero' : 'style-card'} id={`style-${style.id}`} key={style.id} onDragOver={(event) => event.preventDefault()} onDrop={(event) => dispatch({ type:'assign', groupId:selectedGroup.id, styleId:style.id, imageId:event.dataTransfer.getData('text/image-id') })}>
           <div className="style-image">{asset && objectUrls.has(asset.id) ? <img src={objectUrls.get(asset.id)} alt=""/> : <span>No image matched</span>}<div className="image-label">{reportMode === 'monthly' && <strong>Units {style.units.toLocaleString()}</strong>}<strong>{reportMode === 'weekly' ? 'SS Ratio' : 'SS'} {formatSs(style.ss)}</strong></div></div>
