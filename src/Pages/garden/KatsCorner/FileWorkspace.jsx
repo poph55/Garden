@@ -88,6 +88,23 @@ export default function FileWorkspace() {
   }, [state.report])
 
   useEffect(() => {
+    const regions = Array.from(document.querySelectorAll('.vin-nav, .style-list, .candidate-tray'))
+    const update = (element) => element.classList.toggle('has-more-below', element.scrollHeight - element.scrollTop - element.clientHeight > 4)
+    const cleanups = regions.map((element) => {
+      const handleScroll = () => update(element)
+      handleScroll()
+      element.addEventListener('scroll', handleScroll, { passive: true })
+      return () => element.removeEventListener('scroll', handleScroll)
+    })
+    const observer = new ResizeObserver(() => regions.forEach(update))
+    regions.forEach((element) => observer.observe(element))
+    return () => {
+      cleanups.forEach((cleanup) => cleanup())
+      observer.disconnect()
+    }
+  }, [collapsedSections, previewAssets.length, queueQuery, state.report, state.selectedGroupId])
+
+  useEffect(() => {
     const nextUrls = new Map(previewAssets.map((asset) => [asset.id, URL.createObjectURL(asset.file)]))
     setObjectUrls(nextUrls)
     return () => nextUrls.forEach((url) => URL.revokeObjectURL(url))
