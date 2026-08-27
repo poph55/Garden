@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyManualImages, assignImage, associateImages, createImageAssets, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, sortStylesBySs, weeklyRating } from './reportModel'
+import { applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, sortStylesBySs, weeklyRating } from './reportModel'
 
 const rows = [
   { VIN: 'MK0009', Classification: 'Knits', 'Style Description': 'BLACK', 'SLS UNITS': '6,495', SS: '2.6' },
@@ -40,6 +40,7 @@ describe('monthly report model', () => {
     const reused = assignImage(matched, matched.styles[1].id, 'black')
     expect(reused.assignments[matched.styles[0].id]).toBe('black')
     expect(reused.assignments[matched.styles[1].id]).toBe('black')
+    expect(reused.confirmedAssignments[matched.styles[1].id]).toBe(true)
   })
 
   it('can automatically reuse the best candidate across styles', () => {
@@ -49,6 +50,57 @@ describe('monthly report model', () => {
     ]).groups[0]
 
     expect(Object.values(matched.assignments)).toEqual(['shared', 'shared'])
+  })
+
+  it('summarizes VIN match confidence for navigation highlights', () => {
+    const report = parseSpreadsheetRows(rows)
+    const emptyGroup = report.groups[0]
+    expect(groupMatchStatus(emptyGroup)).toBe('none')
+
+    const highGroup = associateImages(report, [
+      { id: 'black', name: 'MK0009_BLACK.jpg', relativePath: 'knits/MK0009_BLACK.jpg', manual: true },
+      { id: 'mole', name: 'MK0009_MOLE.jpg', relativePath: 'knits/MK0009_MOLE.jpg', manual: true },
+    ]).groups[0]
+    expect(groupMatchStatus(highGroup)).toBe('high')
+
+    const partialGroup = { ...highGroup, assignments: { [highGroup.styles[0].id]: 'black' } }
+    expect(groupMatchStatus(partialGroup)).toBe('low')
+  })
+
+  it('turns low-confidence automatic matches into confirmed matches', () => {
+    const report = associateImages(parseSpreadsheetRows(rows), [
+      { id: 'generic', name: 'MK0009.jpg', relativePath: 'knits/MK0009.jpg' },
+    ])
+    const group = report.groups[0]
+    expect(groupMatchStatus(group)).toBe('low')
+
+    const confirmed = group.styles.reduce((current, style) => confirmImage(current, style.id), group)
+    expect(groupMatchStatus(confirmed)).toBe('high')
+    expect(Object.keys(confirmed.confirmedAssignments)).toHaveLength(group.styles.length)
+  })
+
+  it('re-runs image matching after a VIN is renamed', () => {
+    const assets = [
+      { id: 'black', name: 'MK0009_BLACK.jpg', relativePath: 'knits/MK0009_BLACK.jpg' },
+      { id: 'replacement', name: 'MK9999_BLACK.jpg', relativePath: 'knits/MK9999_BLACK.jpg' },
+    ]
+    const report = associateImages(parseSpreadsheetRows(rows), assets)
+    const group = report.groups[0]
+    const renamed = renameVinAndRematch(group, 'mk9999', assets)
+
+    expect(renamed).toMatchObject({ vin: 'MK9999', originalVin: 'MK0009' })
+    expect(renamed.styles.every(({ vin }) => vin === 'MK9999')).toBe(true)
+    expect(renamed.candidates.map(({ id }) => id)).toEqual(['replacement'])
+    expect(Object.values(renamed.assignments)).toEqual(['replacement', 'replacement'])
+  })
+
+  it('clears automatic matches when an edited VIN has no candidates', () => {
+    const assets = [{ id: 'black', name: 'MK0009_BLACK.jpg', relativePath: 'knits/MK0009_BLACK.jpg' }]
+    const group = associateImages(parseSpreadsheetRows(rows), assets).groups[0]
+    const renamed = renameVinAndRematch(group, 'MK9999', assets)
+
+    expect(renamed.candidates).toEqual([])
+    expect(renamed.assignments).toEqual({})
   })
 
   it('indexes 50,000 filenames without creating image URLs', () => {

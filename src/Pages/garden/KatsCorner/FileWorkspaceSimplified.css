@@ -159,10 +159,160 @@
   cursor: pointer;
 }
 
+.vin-nav button.match-high {
+  background: #e7f2ea;
+}
+
+.vin-nav button.match-low {
+  background: #f7efd8;
+}
+
+.vin-nav button.match-none {
+  background: #f6e5e4;
+}
+
+.vin-nav button + button {
+  margin-top: 3px;
+}
+
+.vin-nav button:hover {
+  filter: saturate(1.15) brightness(0.98);
+}
+
+.vin-nav button.selected {
+  box-shadow: inset 3px 0 #765565;
+  filter: saturate(1.12);
+}
+
 .manual-image-fallback {
   margin-top: 12px;
   color: var(--muted);
   font-size: 0.78rem;
+}
+
+.confirm-image-button {
+  border: 1px solid #4b8c69;
+  border-radius: 0.55rem;
+  background: #e7f4eb;
+  color: #286044;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 750;
+  margin-top: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  width: 100%;
+}
+
+.confirm-image-button:hover {
+  background: #d8eddf;
+}
+
+.confirm-image-button:focus-visible {
+  outline: 3px solid rgba(75, 140, 105, 0.24);
+  outline-offset: 2px;
+}
+
+.vin-editor {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 0.25rem;
+}
+
+.vin-editor label {
+  display: grid;
+  gap: 0.25rem;
+  min-width: min(100%, 280px);
+}
+
+.vin-editor span {
+  color: #765e68;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vin-editor input {
+  border: 1px solid #d8c7cf;
+  border-radius: 0.65rem 0 0 0.65rem;
+  color: #33262c;
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 700;
+  height: 46px;
+  padding: 0 0.8rem;
+  width: 100%;
+}
+
+.vin-editor input:focus {
+  border-color: #765565;
+  box-shadow: 0 0 0 3px rgba(118, 85, 101, 0.13);
+  outline: none;
+  position: relative;
+  z-index: 1;
+}
+
+.vin-editor button {
+  border: 1px solid #4f3240;
+  border-radius: 0 0.65rem 0.65rem 0;
+  background: #4f3240;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 750;
+  height: 46px;
+  letter-spacing: 0.01em;
+  margin-left: -1px;
+  padding: 0 1rem;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.vin-editor button:hover {
+  border-color: #684456;
+  background: #684456;
+}
+
+.vin-editor button:active {
+  transform: translateY(1px);
+}
+
+.vin-editor button:focus-visible {
+  outline: 3px solid rgba(118, 85, 101, 0.25);
+  outline-offset: 2px;
+}
+
+.vin-edited-badge {
+  background: #fff0c7;
+  border-radius: 999px;
+  color: #76551a;
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin: 0.5rem 0 0;
+  padding: 0.3rem 0.6rem;
+}
+
+@media (max-width: 520px) {
+  .vin-editor {
+    gap: 0.45rem;
+  }
+
+  .vin-editor label {
+    width: 100%;
+  }
+
+  .vin-editor input,
+  .vin-editor button {
+    border-radius: 0.65rem;
+  }
+
+  .vin-editor button {
+    margin-left: 0;
+  }
 }
 
 .manual-image-fallback summary {

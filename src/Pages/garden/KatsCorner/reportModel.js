@@ -68,6 +68,7 @@ export function parseSpreadsheetRows(rows, sourceName = 'Monthly report') {
       groups.set(key, {
         id: stableId([activeClassification, activeVin]),
         vin: activeVin,
+        originalVin: activeVin,
         classification: activeClassification,
         totalUnits: totalsByVin.get(activeVin)?.totalUnits ?? 0,
         totalSs: totalsByVin.get(activeVin)?.totalSs ?? 0,
@@ -123,12 +124,14 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
       groups.set(key, {
         id: stableId([rating, vin]),
         vin,
+        originalVin: vin,
         classification: rating,
         totalUnits: 0,
         totalSs: ss,
         styles: [],
         candidates: [],
         assignments: {},
+        confirmedAssignments: {},
       })
     }
 
@@ -166,6 +169,18 @@ export function scoreImageCandidate(style, asset) {
   return Math.min(100, vinScore + tokenScore)
 }
 
+export function groupMatchStatus(group) {
+  const assetsById = new Map(group.candidates.map((asset) => [asset.id, asset]))
+  const matchedStyles = group.styles.filter((style) => group.assignments[style.id])
+  if (matchedStyles.length === 0) return 'none'
+
+  const allStrong = matchedStyles.length === group.styles.length && matchedStyles.every((style) => {
+    const asset = assetsById.get(group.assignments[style.id])
+    return asset && (group.confirmedAssignments?.[style.id] || asset.manual || scoreImageCandidate(style, asset) >= 76)
+  })
+  return allStrong ? 'high' : 'low'
+}
+
 export function rankImageCandidates(style, assets) {
   return assets
     .filter((asset) => (asset.searchName ?? normalized(asset.name)).includes(normalized(style.vin)))
@@ -197,13 +212,40 @@ export function associateImages(report, assets) {
           assignments[style.id] = best.asset.id
         }
       })
-      return { ...group, candidates, assignments }
+      return { ...group, candidates, assignments, confirmedAssignments: {} }
     }),
   }
 }
 
-export function assignImage(group, styleId, imageId) {
-  return { ...group, assignments: { ...group.assignments, [styleId]: imageId } }
+export function assignImage(group, styleId, imageId, confirmed = true) {
+  const assignments = { ...group.assignments }
+  const confirmedAssignments = { ...group.confirmedAssignments }
+  if (imageId) assignments[styleId] = imageId
+  else delete assignments[styleId]
+  if (imageId && confirmed) confirmedAssignments[styleId] = true
+  else delete confirmedAssignments[styleId]
+  return { ...group, assignments, confirmedAssignments }
+}
+
+export function confirmImage(group, styleId) {
+  if (!group.assignments[styleId]) return group
+  return { ...group, confirmedAssignments: { ...group.confirmedAssignments, [styleId]: true } }
+}
+
+export function renameVinAndRematch(group, vin, assets) {
+  const nextVin = String(vin ?? '').trim().toUpperCase()
+  if (!nextVin) return group
+
+  const updatedGroup = {
+    ...group,
+    vin: nextVin,
+    originalVin: group.originalVin ?? group.vin,
+    styles: group.styles.map((style) => ({ ...style, vin: nextVin })),
+    candidates: [],
+    assignments: {},
+    confirmedAssignments: {},
+  }
+  return associateImages({ groups: [updatedGroup] }, assets).groups[0]
 }
 
 export function manualImageKey(style) {
@@ -218,13 +260,15 @@ export function applyManualImages(report, manualImages) {
     groups: report.groups.map((group) => {
       const candidatesById = new Map(group.candidates.map((asset) => [asset.id, asset]))
       const assignments = { ...group.assignments }
+      const confirmedAssignments = { ...group.confirmedAssignments }
       for (const style of group.styles) {
         const asset = manualByStyle.get(manualImageKey(style))
         if (!asset) continue
         candidatesById.set(asset.id, asset)
         assignments[style.id] = asset.id
+        confirmedAssignments[style.id] = true
       }
-      return { ...group, candidates: [...candidatesById.values()], assignments }
+      return { ...group, candidates: [...candidatesById.values()], assignments, confirmedAssignments }
     }),
   }
 }
