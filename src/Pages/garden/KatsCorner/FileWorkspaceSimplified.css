@@ -175,9 +175,30 @@
 }
 
 .vin-section-toggle small {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   color: var(--muted);
   font-size: 0.65rem;
   letter-spacing: 0;
+  text-transform: none;
+}
+
+.vin-section-toggle small i {
+  font-style: normal;
+  font-size: 0.8rem;
+}
+
+.vin-nav .vin-section-toggle[aria-expanded="false"] {
+  margin: 4px 0;
+  border: 1px dashed #a88494;
+  background: #f1e5ea;
+  color: #4f3240;
+}
+
+.vin-section-toggle[aria-expanded="false"] small {
+  color: #765565;
+  font-weight: 800;
 }
 
 .vin-review {
