@@ -45,10 +45,12 @@ export default function Home() {
           <Link to="/" className="professional-link">Palmer Hudson</Link>
           <h1 className="page-title hero-title">
             the garden
-            <span
+            <Link
+              to="/garden/kats-corner"
               className="cat-sprite"
-              aria-hidden="true"
+              aria-label="Open Kat's Corner"
               style={{ backgroundImage: `url(${catSheet})` }}
+              {...preloadOnIntent('kats-corner')}
             />
           </h1>
         </div>

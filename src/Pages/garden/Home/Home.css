@@ -48,6 +48,12 @@
   image-rendering: pixelated;
   animation: cat-walk 3s steps(4) infinite;
   flex-shrink: 0;
+  cursor: pointer;
+}
+
+.cat-sprite:focus-visible {
+  outline: 3px solid var(--text);
+  outline-offset: 4px;
 }
 
 /* bubble */
