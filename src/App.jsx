@@ -5,6 +5,8 @@ import { routeLoaders } from './routeLoaders'
 
 const Projects = lazy(routeLoaders.projects)
 const GardenHome = lazy(routeLoaders.garden)
+const KatsCorner = lazy(routeLoaders['kats-corner'])
+const FileWorkspace = lazy(routeLoaders['file-workspace'])
 const Movies = lazy(routeLoaders.movies)
 const Music = lazy(routeLoaders.music)
 const Books = lazy(routeLoaders.books)
@@ -36,6 +38,8 @@ export default function App() {
         <Route path="/projects/subway-live" element={<SubwayLive />} />
         <Route path="/projects/overgrown" element={<Overgrown />} />
         <Route path="/garden"              element={<GardenHome />} />
+        <Route path="/garden/kats-corner" element={<KatsCorner />} />
+        <Route path="/garden/kats-corner/file-workspace" element={<FileWorkspace />} />
         <Route path="/garden/movies"       element={<Movies />} />
         <Route path="/garden/music"        element={<Music />} />
         <Route path="/garden/books"        element={<Books />} />

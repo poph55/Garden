@@ -1,6 +1,8 @@
 export const routeLoaders = {
   projects: () => import('./Pages/projects/Projects'),
   garden: () => import('./Pages/garden/Home/Home'),
+  'kats-corner': () => import('./Pages/garden/KatsCorner/KatsCorner'),
+  'file-workspace': () => import('./Pages/garden/KatsCorner/FileWorkspace'),
   movies: () => import('./Pages/garden/Movies/Movies'),
   music: () => import('./Pages/garden/Music/Music'),
   books: () => import('./Pages/garden/Books/Books'),

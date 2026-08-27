@@ -1,0 +1,168 @@
+.file-workspace {
+  padding: clamp(24px, 4vw, 56px);
+}
+
+.import-grid {
+  padding: 0 0 32px;
+}
+
+.drop-card {
+  min-height: 150px;
+  justify-content: center;
+  border-width: 2px;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.drop-card:hover {
+  box-shadow: 0 8px 24px rgba(79, 50, 64, 0.08);
+}
+
+.drop-card.uploaded {
+  border-style: solid;
+  border-color: #58a47d;
+  background: #eaf6ef;
+  box-shadow: inset 5px 0 #39745d;
+}
+
+.drop-card.uploaded .upload-status {
+  color: #286044;
+  font-weight: 800;
+}
+
+.drop-card strong {
+  overflow-wrap: anywhere;
+}
+
+.drop-card.uploaded strong {
+  color: #214f3b;
+}
+
+.drop-card.uploaded small {
+  color: #39745d;
+}
+
+.export-panel {
+  padding: 28px 38px;
+  align-items: center;
+}
+
+.export-panel h2 {
+  margin: 0;
+}
+
+/* Three-pane review: VINs, style matches, and image candidates. */
+.review-shell {
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 28px;
+}
+
+.vin-nav {
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.vin-review {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-rows: auto minmax(0, calc(100vh - 150px));
+  column-gap: 22px;
+  min-width: 0;
+}
+
+.vin-review > header {
+  grid-column: 1 / -1;
+}
+
+.style-list {
+  grid-column: 1;
+  grid-row: 2;
+  grid-auto-rows: max-content;
+  align-content: start;
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+}
+
+.candidate-tray {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  max-height: 100%;
+  margin-top: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.candidate-tray > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: visible;
+}
+
+.candidate-tray figure {
+  width: 100%;
+  margin: 0;
+}
+
+.candidate-tray img {
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
+}
+
+.candidate-load-more {
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+@media (max-width: 1050px) {
+  .vin-review {
+    grid-template-columns: minmax(0, 1fr) 230px;
+  }
+}
+
+@media (max-width: 850px) {
+  .vin-nav {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .vin-review {
+    display: block;
+  }
+
+  .style-list {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .candidate-tray {
+    max-height: none;
+    margin-top: 32px;
+    overflow: visible;
+  }
+
+  .candidate-tray > div {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .candidate-tray figure {
+    flex: 0 0 130px;
+    width: 130px;
+  }
+
+  .candidate-tray img {
+    width: 130px;
+    height: 110px;
+    object-fit: cover;
+  }
+}
