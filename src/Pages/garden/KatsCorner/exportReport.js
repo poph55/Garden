@@ -1,4 +1,5 @@
-import { WEEKLY_FABRICS, fabricFromVin, formatSs } from './reportModel'
+import { WEEKLY_FABRICS, formatSs, weeklyStylesInExportOrder } from './reportModel'
+import { buildWeeklyWorkbookXlsx } from './weeklyWorkbook'
 import weeklyLogoDataUrl from './modern-works-logo.png?inline'
 
 const encoder = new TextEncoder()
@@ -180,11 +181,8 @@ export async function buildWeeklyReportDocx(report) {
 
   for (const fabric of WEEKLY_FABRICS) {
     for (const rating of WEEKLY_RATINGS) {
-      const styles = report.groups
-        .filter((group) => (group.fabric ?? fabricFromVin(group.vin)) === fabric)
-        .flatMap((group) => group.styles.map((style) => ({ ...style, group })))
+      const styles = weeklyStylesInExportOrder(report, fabric)
         .filter((style) => (style.rating ?? style.group.classification) === rating)
-        .sort((a, b) => a.ss - b.ss || a.vin.localeCompare(b.vin) || a.description.localeCompare(b.description))
       for (let index = 0; index < styles.length; index += 4) pages.push({ fabric, rating, styles: styles.slice(index, index + 4) })
     }
   }
@@ -232,11 +230,17 @@ export async function exportMonthlyReport(report) {
 }
 
 export async function exportWeeklyReport(report) {
-  const blob = await buildWeeklyReportDocx(report)
+  const baseName = report.sourceName.replace(/\.[^.]+$/, '') || 'weekly-report'
+  const [docx, workbook] = await Promise.all([buildWeeklyReportDocx(report), buildWeeklyWorkbookXlsx(report)])
+  downloadBlob(docx, `${baseName}-weekly.docx`)
+  downloadBlob(workbook, `${baseName}-weekly-sorted.xlsx`)
+}
+
+function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
   anchor.href = url
-  anchor.download = `${report.sourceName.replace(/\.[^.]+$/, '') || 'weekly-report'}-weekly.docx`
+  anchor.download = filename
   anchor.click()
   setTimeout(() => URL.revokeObjectURL(url), 0)
 }

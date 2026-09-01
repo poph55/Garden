@@ -225,8 +225,8 @@ export default function FileWorkspace() {
       </div>}
     </section>}
     <section className="export-panel">
-      <div><h2>{reportMode === 'monthly' ? 'Monthly Word report' : 'Weekly Word report'}</h2>{exportStatus && <div className="export-status" aria-label="Report status"><span><strong>{exportStatus.matched}</strong> matched</span><span className={exportStatus.needsConfirmation ? 'pending' : 'complete'}><strong>{exportStatus.needsConfirmation}</strong> left to confirm</span><span><strong>{exportStatus.confirmed}</strong> manually confirmed</span></div>}</div>
-      <button disabled={!state.report || exporting || (reportMode === 'weekly' && !allImagesConfirmed)} onClick={handleExport}>{exporting ? 'Building…' : reportMode === 'weekly' && !allImagesConfirmed ? 'Confirm all images' : 'Export .docx'}</button>
+      <div><h2>{reportMode === 'monthly' ? 'Monthly Word report' : 'Weekly report files'}</h2>{exportStatus && <div className="export-status" aria-label="Report status"><span><strong>{exportStatus.matched}</strong> matched</span><span className={exportStatus.needsConfirmation ? 'pending' : 'complete'}><strong>{exportStatus.needsConfirmation}</strong> left to confirm</span><span><strong>{exportStatus.confirmed}</strong> manually confirmed</span></div>}</div>
+      <button disabled={!state.report || exporting || (reportMode === 'weekly' && !allImagesConfirmed)} onClick={handleExport}>{exporting ? 'Building…' : reportMode === 'weekly' && !allImagesConfirmed ? 'Confirm all images' : reportMode === 'weekly' ? 'Export Word + Excel' : 'Export .docx'}</button>
     </section>
   </main>
 }

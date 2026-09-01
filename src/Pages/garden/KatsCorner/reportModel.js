@@ -158,6 +158,7 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
       units: numberValue(readValue(row, HEADER_ALIASES.units)),
       ss,
       rating,
+      sourceRow: { ...row },
     })
   })
 
@@ -178,6 +179,14 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
 
 export function sortStylesBySs(styles) {
   return [...styles].sort((a, b) => a.ss - b.ss || b.units - a.units || a.description.localeCompare(b.description))
+}
+
+export function weeklyStylesInExportOrder(report, fabric) {
+  return WEEKLY_RATINGS.flatMap((rating) => report.groups
+    .filter((group) => (group.fabric ?? fabricFromVin(group.vin)) === fabric)
+    .flatMap((group) => group.styles.map((style) => ({ ...style, group })))
+    .filter((style) => (style.rating ?? style.group.classification) === rating)
+    .sort((a, b) => a.ss - b.ss || a.vin.localeCompare(b.vin) || a.description.localeCompare(b.description)))
 }
 
 export function scoreImageCandidate(style, asset) {
