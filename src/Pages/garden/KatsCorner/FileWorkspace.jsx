@@ -16,7 +16,9 @@ function WorkweekPicker({ value, onChange }) {
   const pickerRef = useRef(null)
   const selectedStart = parseDateValue(value) || new Date()
   const [viewMonth, setViewMonth] = useState(() => new Date(Date.UTC(selectedStart.getUTCFullYear(), selectedStart.getUTCMonth(), 1)))
+  const [hoveredWeek, setHoveredWeek] = useState(null)
   const selectedDates = new Set(workweekDates(value).map(dateValue))
+  const hoveredDates = new Set(workweekDates(hoveredWeek).map(dateValue))
   const gridStart = new Date(Date.UTC(viewMonth.getUTCFullYear(), viewMonth.getUTCMonth(), 1 - viewMonth.getUTCDay()))
   const days = Array.from({ length: 42 }, (_, index) => new Date(Date.UTC(gridStart.getUTCFullYear(), gridStart.getUTCMonth(), gridStart.getUTCDate() + index)))
   const monthLabel = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(viewMonth)
@@ -36,12 +38,13 @@ function WorkweekPicker({ value, onChange }) {
 
   return <details className="workweek-picker" ref={pickerRef}>
     <summary aria-label={`Report week ${formatWorkweekRange(value)}`}><span>{formatWorkweekRange(value)}</span><i aria-hidden="true">▾</i></summary>
-    <div className="workweek-calendar">
+    <div className="workweek-calendar" onMouseLeave={() => setHoveredWeek(null)}>
       <header><button aria-label="Previous month" onClick={() => changeMonth(-1)} type="button">‹</button><strong>{monthLabel}</strong><button aria-label="Next month" onClick={() => changeMonth(1)} type="button">›</button></header>
       <div className="workweek-grid">{WEEKDAY_LABELS.map((label, index) => <span className="weekday" key={`${label}-${index}`}>{label}</span>)}{days.map((date) => {
         const dateKey = dateValue(date)
         const selected = selectedDates.has(dateKey)
-        return <button aria-label={new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeZone: 'UTC' }).format(date)} className={`${date.getUTCMonth() !== viewMonth.getUTCMonth() ? 'outside-month ' : ''}${selected ? 'selected-workweek' : ''}`} key={dateKey} onClick={(event) => { onChange(dateValue(startOfWorkweek(date))); event.currentTarget.closest('details').removeAttribute('open') }} type="button">{date.getUTCDate()}</button>
+        const hovered = hoveredDates.has(dateKey)
+        return <button aria-label={new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeZone: 'UTC' }).format(date)} className={`${date.getUTCMonth() !== viewMonth.getUTCMonth() ? 'outside-month ' : ''}${hovered ? 'hovered-workweek ' : ''}${selected ? 'selected-workweek' : ''}`} key={dateKey} onClick={(event) => { onChange(dateValue(startOfWorkweek(date))); event.currentTarget.closest('details').removeAttribute('open') }} onMouseEnter={() => setHoveredWeek(dateValue(startOfWorkweek(date)))} type="button">{date.getUTCDate()}</button>
       })}</div>
       <p>Choose any day to select Monday–Friday</p>
     </div>
