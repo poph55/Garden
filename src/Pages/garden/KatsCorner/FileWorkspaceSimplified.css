@@ -127,6 +127,81 @@
   outline-offset: 2px;
 }
 
+.workweek-picker {
+  position: relative;
+}
+
+.workweek-picker summary {
+  display: flex;
+  min-width: 150px;
+  min-height: 38px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 9px;
+  color: #4f3240;
+  background: #fff8f2;
+  font: 700 0.82rem Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+  list-style: none;
+}
+
+.workweek-picker summary::-webkit-details-marker { display: none; }
+.workweek-picker summary:focus-visible { outline: 3px solid #f7dce5; outline-offset: 2px; }
+.workweek-picker summary i { font-style: normal; }
+
+.workweek-calendar {
+  position: absolute;
+  z-index: 20;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: 288px;
+  padding: 14px;
+  border: 1px solid #d7c5cc;
+  border-radius: 14px;
+  color: #4f3240;
+  background: #fffaf6;
+  box-shadow: 0 16px 40px rgba(49, 27, 38, 0.28);
+  font-family: Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.workweek-calendar header {
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  align-items: center;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.workweek-calendar header button,
+.workweek-grid button {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+}
+
+.workweek-calendar header button { height: 32px; font-size: 1.35rem; }
+.workweek-grid { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 3px; }
+.workweek-grid .weekday { padding: 5px 0; color: #8c747e; text-align: center; font-size: 0.65rem; }
+.workweek-grid button { height: 34px; border-radius: 0; font-size: 0.78rem; }
+.workweek-grid button:nth-child(7n + 8),
+.workweek-grid button:nth-child(7n + 14) { color: #aa949d; }
+.workweek-grid button:hover { position: relative; z-index: 1; outline: 2px solid #765565; }
+.workweek-grid button.selected-workweek { color: #fff; background: #765565; }
+.workweek-grid button.selected-workweek:nth-child(7n + 9) { border-radius: 8px 0 0 8px; }
+.workweek-grid button.selected-workweek:nth-child(7n + 13) { border-radius: 0 8px 8px 0; }
+.workweek-grid button.outside-month { opacity: 0.42; }
+.workweek-calendar p { margin: 10px 2px 0; color: #846c76; font-size: 0.68rem; }
+
 @media (max-width: 760px) {
   .report-period-picker { margin-left: 0; }
 }

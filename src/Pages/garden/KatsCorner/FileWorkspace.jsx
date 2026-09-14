@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { WEEKLY_FABRICS, WEEKLY_RATINGS, applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, scoreImageCandidate, styleNeedsReview } from './reportModel'
 import { readSpreadsheet } from './spreadsheet'
-import { currentMonthValue, currentWeekValue, formatReportPeriod } from './reportPeriod'
+import { currentMonthValue, currentWeekValue, dateValue, formatReportPeriod, formatWorkweekRange, parseDateValue, startOfWorkweek, workweekDates } from './reportPeriod'
 import './FileWorkspace.css'
 import './FileWorkspaceSimplified.css'
 
@@ -10,6 +10,33 @@ const CANDIDATE_BATCH_SIZE = 120
 const EMPTY_CANDIDATES = []
 const EMPTY_ASSIGNMENTS = {}
 const REPORT_MODES = ['monthly', 'weekly']
+const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+
+function WorkweekPicker({ value, onChange }) {
+  const selectedStart = parseDateValue(value) || new Date()
+  const [viewMonth, setViewMonth] = useState(() => new Date(Date.UTC(selectedStart.getUTCFullYear(), selectedStart.getUTCMonth(), 1)))
+  const selectedDates = new Set(workweekDates(value).map(dateValue))
+  const gridStart = new Date(Date.UTC(viewMonth.getUTCFullYear(), viewMonth.getUTCMonth(), 1 - viewMonth.getUTCDay()))
+  const days = Array.from({ length: 42 }, (_, index) => new Date(Date.UTC(gridStart.getUTCFullYear(), gridStart.getUTCMonth(), gridStart.getUTCDate() + index)))
+  const monthLabel = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(viewMonth)
+
+  function changeMonth(offset) {
+    setViewMonth(new Date(Date.UTC(viewMonth.getUTCFullYear(), viewMonth.getUTCMonth() + offset, 1)))
+  }
+
+  return <details className="workweek-picker">
+    <summary aria-label={`Report week ${formatWorkweekRange(value)}`}><span>{formatWorkweekRange(value)}</span><i aria-hidden="true">▾</i></summary>
+    <div className="workweek-calendar">
+      <header><button aria-label="Previous month" onClick={() => changeMonth(-1)} type="button">‹</button><strong>{monthLabel}</strong><button aria-label="Next month" onClick={() => changeMonth(1)} type="button">›</button></header>
+      <div className="workweek-grid">{WEEKDAY_LABELS.map((label, index) => <span className="weekday" key={`${label}-${index}`}>{label}</span>)}{days.map((date) => {
+        const dateKey = dateValue(date)
+        const selected = selectedDates.has(dateKey)
+        return <button aria-label={new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeZone: 'UTC' }).format(date)} className={`${date.getUTCMonth() !== viewMonth.getUTCMonth() ? 'outside-month ' : ''}${selected ? 'selected-workweek' : ''}`} key={dateKey} onClick={(event) => { onChange(dateValue(startOfWorkweek(date))); event.currentTarget.closest('details').removeAttribute('open') }} type="button">{date.getUTCDate()}</button>
+      })}</div>
+      <p>Choose any day to select Monday–Friday</p>
+    </div>
+  </details>
+}
 
 function reducer(state, action) {
   if (action.type === 'report') return { ...state, report: applyManualImages(associateImages(action.report, state.assets), state.manualImages), selectedGroupId: action.report.groups[0]?.id ?? null, status: '', error: '' }
@@ -229,7 +256,7 @@ export default function FileWorkspace() {
     </section>}
     <section className="export-panel">
       <div><h2>{reportMode === 'monthly' ? 'Monthly Word report' : 'Weekly report files'}</h2>{exportStatus && <div className="export-status" aria-label="Report status"><span><strong>{exportStatus.matched}</strong> matched</span><span className={exportStatus.needsConfirmation ? 'pending' : 'complete'}><strong>{exportStatus.needsConfirmation}</strong> left to confirm</span><span><strong>{exportStatus.confirmed}</strong> manually confirmed</span></div>}</div>
-      <label className="report-period-picker"><span>{reportMode === 'monthly' ? 'Report month' : 'Report week'}</span><input type={reportMode === 'monthly' ? 'month' : 'week'} value={reportPeriods[reportMode]} onChange={(event) => setReportPeriods((current) => ({ ...current, [reportMode]: event.target.value }))}/></label>
+      <label className="report-period-picker"><span>{reportMode === 'monthly' ? 'Report month' : 'Report week'}</span>{reportMode === 'monthly' ? <input type="month" value={reportPeriods.monthly} onChange={(event) => setReportPeriods((current) => ({ ...current, monthly: event.target.value }))}/> : <WorkweekPicker value={reportPeriods.weekly} onChange={(value) => setReportPeriods((current) => ({ ...current, weekly: value }))}/>}</label>
       <button disabled={!state.report || exporting || (reportMode === 'weekly' && !allImagesConfirmed)} onClick={handleExport}>{exporting ? 'Building…' : reportMode === 'weekly' && !allImagesConfirmed ? 'Confirm all images' : reportMode === 'weekly' ? 'Export 2 Word + Excel' : 'Export 2 Word files'}</button>
     </section>
   </main>

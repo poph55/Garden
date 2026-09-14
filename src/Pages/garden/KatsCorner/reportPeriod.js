@@ -7,19 +7,49 @@ export function currentMonthValue(date = new Date()) {
 }
 
 export function currentWeekValue(date = new Date()) {
-  const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
-  const day = utcDate.getUTCDay() || 7
-  utcDate.setUTCDate(utcDate.getUTCDate() + 4 - day)
-  const year = utcDate.getUTCFullYear()
-  const yearStart = new Date(Date.UTC(year, 0, 1))
-  const week = Math.ceil((((utcDate - yearStart) / 86400000) + 1) / 7)
-  return `${year}-W${pad(week)}`
+  const monday = startOfWorkweek(new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())))
+  return dateValue(monday)
+}
+
+export function dateValue(date) {
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`
+}
+
+export function parseDateValue(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+  if (match) return new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])))
+  const legacyWeek = /^(\d{4})-W(\d{2})$/.exec(value)
+  if (!legacyWeek) return null
+  const januaryFourth = new Date(Date.UTC(Number(legacyWeek[1]), 0, 4))
+  const firstMonday = startOfWorkweek(januaryFourth)
+  firstMonday.setUTCDate(firstMonday.getUTCDate() + (Number(legacyWeek[2]) - 1) * 7)
+  return firstMonday
+}
+
+export function startOfWorkweek(date) {
+  const monday = new Date(date)
+  const day = monday.getUTCDay() || 7
+  monday.setUTCDate(monday.getUTCDate() - day + 1)
+  return monday
+}
+
+export function workweekDates(value) {
+  const start = parseDateValue(value)
+  if (!start) return []
+  return Array.from({ length: 5 }, (_, index) => new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate() + index)))
+}
+
+export function formatWorkweekRange(value, includeYear = false) {
+  const dates = workweekDates(value)
+  if (!dates.length) return 'Choose week'
+  const short = (date) => `${date.getUTCMonth() + 1}/${date.getUTCDate()}`
+  const year = dates[4].getUTCFullYear()
+  return `${short(dates[0])} - ${short(dates[4])}${includeYear ? ` ${year}` : ''}`
 }
 
 export function formatReportPeriod(mode, value) {
   if (mode === 'weekly') {
-    const match = /^(\d{4})-W(\d{2})$/.exec(value)
-    return match ? `Week ${Number(match[2])} ${match[1]}` : 'Week'
+    return formatWorkweekRange(value, true)
   }
 
   const match = /^(\d{4})-(\d{2})$/.exec(value)
