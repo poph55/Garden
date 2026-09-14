@@ -5,7 +5,7 @@ import { buildMonthlyReportDocx, buildWeeklyReportDocx } from './exportReport'
 describe('buildMonthlyReportDocx', () => {
   it('packages ordered VIN pages with a monthly footer', async () => {
     const report = {
-      id: 'february', sourceName: 'February.xlsx',
+      id: 'february', sourceName: 'February.xlsx', periodLabel: 'February 2026',
       groups: [{
         id: 'knit-mk0213c', vin: 'MK0213C', classification: 'knit', totalUnits: 14062, totalSs: 3.44,
         candidates: [], assignments: {},
@@ -19,19 +19,19 @@ describe('buildMonthlyReportDocx', () => {
     const blob = await buildMonthlyReportDocx(report)
     const files = unzipSync(new Uint8Array(await blob.arrayBuffer()))
     const documentXml = strFromU8(files['word/document.xml'])
-    const footer = strFromU8(files['word/footer1.xml'])
+    const footer = strFromU8(files['word/footer-knit.xml'])
     const relationships = strFromU8(files['word/_rels/document.xml.rels'])
 
     expect(blob.type).toBe('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    expect(Object.keys(files)).toEqual(expect.arrayContaining(['[Content_Types].xml', '_rels/.rels', 'word/document.xml', 'word/footer1.xml']))
+    expect(Object.keys(files)).toEqual(expect.arrayContaining(['[Content_Types].xml', '_rels/.rels', 'word/document.xml', 'word/footer-knit.xml', 'word/footer-woven.xml']))
     expect(documentXml.indexOf('UNKNOWN SUNDAY')).toBeLessThan(documentXml.indexOf('IVORY BLACK'))
     expect(documentXml).toContain('GREAT - MK0213C - TTL UNITS: 14,062 - SS: 3.4')
     expect(documentXml).toContain('w:orient="landscape"')
     expect(documentXml).toContain('<w:tblLayout w:type="fixed"/>')
     expect(documentXml).not.toContain('<w:pageBreakBefore/>')
-    expect(documentXml).toContain('<w:footerReference w:type="default" r:id="rIdReportFooter"/>')
-    expect(relationships).toContain('Target="footer1.xml"')
-    expect(footer).toContain('MONTHLY SELLING REPORT')
+    expect(documentXml).toContain('<w:footerReference w:type="default" r:id="rIdFooterKnit"/>')
+    expect(relationships).toContain('Target="footer-knit.xml"')
+    expect(footer).toContain('MW Selling Report February 2026 - Knits')
     expect(footer).toContain('<w:jc w:val="left"/>')
   })
 
@@ -63,25 +63,29 @@ describe('buildWeeklyReportDocx', () => {
   it('uses the monthly landscape layout with a weekly footer', async () => {
     const style = (id, ss) => ({ id, vin: id.toUpperCase(), description: `style ${id}`, units: 0, ss })
     const report = {
-      sourceName: 'Week 8.xlsx',
+      sourceName: 'Week 8.xlsx', periodLabel: 'Week 8 2026',
       groups: [
-        { id: 'great', vin: 'MK-GREAT', classification: 'great', totalUnits: 0, totalSs: 2.1, candidates: [], assignments: {}, styles: [style('g1', 2.1), style('g2', 2.2)] },
-        { id: 'good', vin: 'MK-GOOD', classification: 'good', totalUnits: 0, totalSs: 3.2, candidates: [], assignments: {}, styles: [style('d1', 3.2)] },
+        { id: 'great', vin: 'MK-GREAT', fabric: 'knit', classification: 'great', totalUnits: 0, totalSs: 2.1, candidates: [], assignments: {}, styles: [style('g1', 2.1), style('g2', 2.2)] },
+        { id: 'good', vin: 'MV-GOOD', fabric: 'woven', classification: 'good', totalUnits: 0, totalSs: 3.2, candidates: [], assignments: {}, styles: [style('d1', 3.2)] },
       ],
     }
 
     const blob = await buildWeeklyReportDocx(report)
     const files = unzipSync(new Uint8Array(await blob.arrayBuffer()))
     const documentXml = strFromU8(files['word/document.xml'])
-    const footer = strFromU8(files['word/footer1.xml'])
+    const knitFooter = strFromU8(files['word/footer-knit.xml'])
+    const wovenFooter = strFromU8(files['word/footer-woven.xml'])
     const relationships = strFromU8(files['word/_rels/document.xml.rels'])
 
-    expect(documentXml.match(/<w:br w:type="page"\/>/g)).toHaveLength(1)
+    expect(documentXml.match(/<w:type w:val="nextPage"\/>/g)).toHaveLength(1)
     expect(documentXml).toContain('w:orient="landscape"')
     expect(documentXml).toContain('<w:tblLayout w:type="fixed"/>')
-    expect(documentXml).toContain('<w:footerReference w:type="default" r:id="rIdReportFooter"/>')
-    expect(relationships).toContain('Target="footer1.xml"')
-    expect(footer).toContain('WEEKLY SELLING REPORT')
+    expect(documentXml).toContain('r:id="rIdFooterKnit"')
+    expect(documentXml).toContain('r:id="rIdFooterWoven"')
+    expect(relationships).toContain('Target="footer-knit.xml"')
+    expect(relationships).toContain('Target="footer-woven.xml"')
+    expect(knitFooter).toContain('MW Selling Report Week 8 2026 - Knits')
+    expect(wovenFooter).toContain('MW Selling Report Week 8 2026 - Woven')
     expect(files['word/header1.xml']).toBeUndefined()
   })
 

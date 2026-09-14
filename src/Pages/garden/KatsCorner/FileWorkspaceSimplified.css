@@ -99,6 +99,38 @@
   font-size: 1.55rem;
 }
 
+.report-period-picker {
+  display: grid;
+  gap: 3px;
+  margin-left: auto;
+  color: #eadde2;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.report-period-picker input {
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 9px;
+  color: #4f3240;
+  background: #fff8f2;
+  font: 700 0.82rem Arial, sans-serif;
+  color-scheme: light;
+  cursor: pointer;
+}
+
+.report-period-picker input:focus-visible {
+  outline: 3px solid #f7dce5;
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .report-period-picker { margin-left: 0; }
+}
+
 .export-status {
   display: flex;
   flex-wrap: wrap;

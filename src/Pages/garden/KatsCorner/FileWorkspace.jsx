@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { WEEKLY_FABRICS, WEEKLY_RATINGS, applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, scoreImageCandidate, styleNeedsReview } from './reportModel'
 import { readSpreadsheet } from './spreadsheet'
+import { currentMonthValue, currentWeekValue, formatReportPeriod } from './reportPeriod'
 import './FileWorkspace.css'
 import './FileWorkspaceSimplified.css'
 
@@ -42,6 +43,7 @@ export default function FileWorkspace() {
   const [reviewTargetStyleId, setReviewTargetStyleId] = useState(null)
   const [queueQuery, setQueueQuery] = useState('')
   const [collapsedSections, setCollapsedSections] = useState(() => new Set())
+  const [reportPeriods, setReportPeriods] = useState(() => ({ monthly: currentMonthValue(), weekly: currentWeekValue() }))
   const state = reportMode === 'weekly' ? weeklyState : monthlyState
   const dispatch = reportMode === 'weekly' ? dispatchWeekly : dispatchMonthly
   const reportModeLabel = reportMode === 'weekly' ? 'Weekly' : 'Monthly'
@@ -191,8 +193,9 @@ export default function FileWorkspace() {
     setExporting(true)
     try {
       const reportExporter = await import('./exportReport')
-      if (reportMode === 'weekly') await reportExporter.exportWeeklyReport(state.report)
-      else await reportExporter.exportMonthlyReport(state.report)
+      const report = { ...state.report, periodLabel: formatReportPeriod(reportMode, reportPeriods[reportMode]), periodValue: reportPeriods[reportMode] }
+      if (reportMode === 'weekly') await reportExporter.exportWeeklyReport(report)
+      else await reportExporter.exportMonthlyReport(report)
     }
     catch (error) { dispatch({ type: 'error', message: error instanceof Error ? error.message : 'Export failed.' }) }
     finally { setExporting(false) }
@@ -226,6 +229,7 @@ export default function FileWorkspace() {
     </section>}
     <section className="export-panel">
       <div><h2>{reportMode === 'monthly' ? 'Monthly Word report' : 'Weekly report files'}</h2>{exportStatus && <div className="export-status" aria-label="Report status"><span><strong>{exportStatus.matched}</strong> matched</span><span className={exportStatus.needsConfirmation ? 'pending' : 'complete'}><strong>{exportStatus.needsConfirmation}</strong> left to confirm</span><span><strong>{exportStatus.confirmed}</strong> manually confirmed</span></div>}</div>
+      <label className="report-period-picker"><span>{reportMode === 'monthly' ? 'Report month' : 'Report week'}</span><input type={reportMode === 'monthly' ? 'month' : 'week'} value={reportPeriods[reportMode]} onChange={(event) => setReportPeriods((current) => ({ ...current, [reportMode]: event.target.value }))}/></label>
       <button disabled={!state.report || exporting || (reportMode === 'weekly' && !allImagesConfirmed)} onClick={handleExport}>{exporting ? 'Building…' : reportMode === 'weekly' && !allImagesConfirmed ? 'Confirm all images' : reportMode === 'weekly' ? 'Export Word + Excel' : 'Export .docx'}</button>
     </section>
   </main>

@@ -58,6 +58,14 @@ function footerXml(reportLabel) {
   return `<?xml version="1.0"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:before="0" w:after="0"/></w:pPr>${run(reportLabel, { bold: true, size: 18, color: '7B6870' })}</w:p></w:ftr>`
 }
 
+function groupFabric(group) {
+  return group.fabric === 'woven' || group.classification === 'woven' ? 'woven' : 'knit'
+}
+
+function sectionProperties(footerRelationshipId, nextPage = false) {
+  return `<w:sectPr>${nextPage ? '<w:type w:val="nextPage"/>' : ''}<w:footerReference w:type="default" r:id="${footerRelationshipId}"/><w:pgSz w:w="${PAGE_WIDTH_DXA}" w:h="${PAGE_HEIGHT_DXA}" w:orient="landscape"/><w:pgMar w:top="${PAGE_MARGIN_DXA}" w:right="${PAGE_MARGIN_DXA}" w:bottom="${PAGE_MARGIN_DXA}" w:left="${PAGE_MARGIN_DXA}" w:header="360" w:footer="360"/></w:sectPr>`
+}
+
 function imageExtension(name) {
   const ext = name.toLowerCase().match(/\.(png|jpe?g|gif)$/)?.[1] ?? 'png'
   return ext === 'jpg' ? 'jpeg' : ext
@@ -92,14 +100,16 @@ async function annotateImage(asset) {
   }
 }
 
-export async function buildMonthlyReportDocx(report, reportLabel = 'MONTHLY SELLING REPORT') {
+export async function buildMonthlyReportDocx(report) {
   const { zipSync } = await import('fflate')
   const files = {}
   const relationships = []
   const body = []
   let imageId = 0
 
-  files['word/footer1.xml'] = encoder.encode(footerXml(reportLabel))
+  const periodLabel = report.periodLabel || 'Report period'
+  files['word/footer-knit.xml'] = encoder.encode(footerXml(`MW Selling Report ${periodLabel} - Knits`))
+  files['word/footer-woven.xml'] = encoder.encode(footerXml(`MW Selling Report ${periodLabel} - Woven`))
 
   for (const [groupIndex, group] of report.groups.entries()) {
     body.push(titleParagraph(group))
@@ -126,19 +136,24 @@ export async function buildMonthlyReportDocx(report, reportLabel = 'MONTHLY SELL
       ? remaining.map((item) => item.imageId ? drawing(item.imageId, secondarySize, item.style) : item.content).join('')
       : '<w:p/>'
     body.push(table([tableRow([cell(heroContent, HERO_COLUMN_DXA), cell(secondaryContent, TRAY_COLUMN_DXA)])], [HERO_COLUMN_DXA, TRAY_COLUMN_DXA]))
-    if (groupIndex < report.groups.length - 1) body.push('<w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:br w:type="page"/></w:r></w:p>')
+    if (groupIndex < report.groups.length - 1) {
+      const footerId = groupFabric(group) === 'woven' ? 'rIdFooterWoven' : 'rIdFooterKnit'
+      body.push(`<w:p><w:pPr><w:spacing w:before="0" w:after="0"/>${sectionProperties(footerId, true)}</w:pPr></w:p>`)
+    }
   }
 
-  files['[Content_Types].xml'] = encoder.encode('<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/></Types>')
+  files['[Content_Types].xml'] = encoder.encode('<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/footer-knit.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/footer-woven.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/></Types>')
   files['_rels/.rels'] = encoder.encode('<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>')
-  files['word/_rels/document.xml.rels'] = encoder.encode(`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdReportFooter" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>${relationships.join('')}</Relationships>`)
-  files['word/document.xml'] = encoder.encode(`<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:v="urn:schemas-microsoft-com:vml"><w:body>${body.join('')}<w:sectPr><w:footerReference w:type="default" r:id="rIdReportFooter"/><w:pgSz w:w="${PAGE_WIDTH_DXA}" w:h="${PAGE_HEIGHT_DXA}" w:orient="landscape"/><w:pgMar w:top="${PAGE_MARGIN_DXA}" w:right="${PAGE_MARGIN_DXA}" w:bottom="${PAGE_MARGIN_DXA}" w:left="${PAGE_MARGIN_DXA}" w:header="360" w:footer="360"/></w:sectPr></w:body></w:document>`)
+  files['word/_rels/document.xml.rels'] = encoder.encode(`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdFooterKnit" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer-knit.xml"/><Relationship Id="rIdFooterWoven" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer-woven.xml"/>${relationships.join('')}</Relationships>`)
+  const finalGroup = report.groups.at(-1)
+  const finalFooterId = groupFabric(finalGroup || {}) === 'woven' ? 'rIdFooterWoven' : 'rIdFooterKnit'
+  files['word/document.xml'] = encoder.encode(`<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:v="urn:schemas-microsoft-com:vml"><w:body>${body.join('')}${sectionProperties(finalFooterId)}</w:body></w:document>`)
 
   return new Blob([zipSync(files)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
 }
 
 export async function buildWeeklyReportDocx(report) {
-  return buildMonthlyReportDocx(report, 'WEEKLY SELLING REPORT')
+  return buildMonthlyReportDocx(report)
 }
 
 export async function exportMonthlyReport(report) {
@@ -146,7 +161,7 @@ export async function exportMonthlyReport(report) {
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
   anchor.href = url
-  anchor.download = `${report.sourceName.replace(/\.[^.]+$/, '') || 'selling-report'}-monthly.docx`
+  anchor.download = `${report.sourceName.replace(/\.[^.]+$/, '') || 'selling-report'}-monthly-${report.periodValue || 'period'}.docx`
   anchor.click()
   setTimeout(() => URL.revokeObjectURL(url), 0)
 }
@@ -154,8 +169,9 @@ export async function exportMonthlyReport(report) {
 export async function exportWeeklyReport(report) {
   const baseName = report.sourceName.replace(/\.[^.]+$/, '') || 'weekly-report'
   const [docx, workbook] = await Promise.all([buildWeeklyReportDocx(report), buildWeeklyWorkbookXlsx(report)])
-  downloadBlob(docx, `${baseName}-weekly.docx`)
-  downloadBlob(workbook, `${baseName}-weekly-sorted.xlsx`)
+  const period = report.periodValue || 'period'
+  downloadBlob(docx, `${baseName}-weekly-${period}.docx`)
+  downloadBlob(workbook, `${baseName}-weekly-${period}-sorted.xlsx`)
 }
 
 function downloadBlob(blob, filename) {
