@@ -54,8 +54,14 @@ function tableRow(cells) {
   return `<w:tr><w:trPr><w:cantSplit/></w:trPr>${cells.join('')}</w:tr>`
 }
 
-function footerXml(reportLabel) {
-  return `<?xml version="1.0"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:before="0" w:after="0"/></w:pPr>${run(reportLabel, { bold: true, size: 18, color: '7B6870' })}</w:p></w:ftr>`
+function pageField(instruction, fallback) {
+  return `<w:fldSimple w:instr="${instruction}">${run(fallback, { bold: true, size: 18, color: '7B6870' })}</w:fldSimple>`
+}
+
+function footerXml(reportLabel, totalPages) {
+  const label = `<w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr>${run(reportLabel, { bold: true, size: 18, color: '7B6870' })}</w:p>`
+  const pageNumber = `<w:p><w:pPr><w:jc w:val="right"/><w:spacing w:before="0" w:after="0"/></w:pPr>${pageField('PAGE', '1')}${run(' of ', { bold: true, size: 18, color: '7B6870' })}${pageField('NUMPAGES', String(totalPages))}</w:p>`
+  return `<?xml version="1.0"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:tbl><w:tblPr><w:tblW w:w="14380" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders><w:top w:val="nil"/><w:left w:val="nil"/><w:bottom w:val="nil"/><w:right w:val="nil"/><w:insideH w:val="nil"/><w:insideV w:val="nil"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="11000"/><w:gridCol w:w="3380"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="11000" w:type="dxa"/></w:tcPr>${label}</w:tc><w:tc><w:tcPr><w:tcW w:w="3380" w:type="dxa"/></w:tcPr>${pageNumber}</w:tc></w:tr></w:tbl></w:ftr>`
 }
 
 function groupFabric(group) {
@@ -100,18 +106,20 @@ async function annotateImage(asset) {
   }
 }
 
-export async function buildMonthlyReportDocx(report) {
+export async function buildMonthlyReportDocx(report, fabric = groupFabric(report.groups[0] || {})) {
   const { zipSync } = await import('fflate')
   const files = {}
   const relationships = []
   const body = []
+  const groups = report.groups.filter((group) => groupFabric(group) === fabric)
   let imageId = 0
 
   const periodLabel = report.periodLabel || 'Report period'
-  files['word/footer-knit.xml'] = encoder.encode(footerXml(`MW Selling Report ${periodLabel} - Knits`))
-  files['word/footer-woven.xml'] = encoder.encode(footerXml(`MW Selling Report ${periodLabel} - Woven`))
+  const fabricLabel = fabric === 'woven' ? 'Woven' : 'Knits'
+  files['word/footer.xml'] = encoder.encode(footerXml(`MW Selling Report ${periodLabel} - ${fabricLabel}`, groups.length))
+  files['word/settings.xml'] = encoder.encode('<?xml version="1.0"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:updateFields w:val="true"/></w:settings>')
 
-  for (const [groupIndex, group] of report.groups.entries()) {
+  for (const [groupIndex, group] of groups.entries()) {
     body.push(titleParagraph(group))
     const styleDrawings = []
     for (const style of group.styles) {
@@ -136,41 +144,35 @@ export async function buildMonthlyReportDocx(report) {
       ? remaining.map((item) => item.imageId ? drawing(item.imageId, secondarySize, item.style) : item.content).join('')
       : '<w:p/>'
     body.push(table([tableRow([cell(heroContent, HERO_COLUMN_DXA), cell(secondaryContent, TRAY_COLUMN_DXA)])], [HERO_COLUMN_DXA, TRAY_COLUMN_DXA]))
-    if (groupIndex < report.groups.length - 1) {
-      const footerId = groupFabric(group) === 'woven' ? 'rIdFooterWoven' : 'rIdFooterKnit'
-      body.push(`<w:p><w:pPr><w:spacing w:before="0" w:after="0"/>${sectionProperties(footerId, true)}</w:pPr></w:p>`)
-    }
+    if (groupIndex < groups.length - 1) body.push('<w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:br w:type="page"/></w:r></w:p>')
   }
 
-  files['[Content_Types].xml'] = encoder.encode('<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/footer-knit.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/footer-woven.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/></Types>')
+  files['[Content_Types].xml'] = encoder.encode('<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/footer.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>')
   files['_rels/.rels'] = encoder.encode('<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>')
-  files['word/_rels/document.xml.rels'] = encoder.encode(`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdFooterKnit" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer-knit.xml"/><Relationship Id="rIdFooterWoven" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer-woven.xml"/>${relationships.join('')}</Relationships>`)
-  const finalGroup = report.groups.at(-1)
-  const finalFooterId = groupFabric(finalGroup || {}) === 'woven' ? 'rIdFooterWoven' : 'rIdFooterKnit'
-  files['word/document.xml'] = encoder.encode(`<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:v="urn:schemas-microsoft-com:vml"><w:body>${body.join('')}${sectionProperties(finalFooterId)}</w:body></w:document>`)
+  files['word/_rels/document.xml.rels'] = encoder.encode(`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdReportFooter" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer.xml"/><Relationship Id="rIdSettings" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>${relationships.join('')}</Relationships>`)
+  files['word/document.xml'] = encoder.encode(`<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:v="urn:schemas-microsoft-com:vml"><w:body>${body.join('')}${sectionProperties('rIdReportFooter')}</w:body></w:document>`)
 
   return new Blob([zipSync(files)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
 }
 
-export async function buildWeeklyReportDocx(report) {
-  return buildMonthlyReportDocx(report)
+export async function buildWeeklyReportDocx(report, fabric) {
+  return buildMonthlyReportDocx(report, fabric)
 }
 
 export async function exportMonthlyReport(report) {
-  const blob = await buildMonthlyReportDocx(report)
-  const url = URL.createObjectURL(blob)
-  const anchor = document.createElement('a')
-  anchor.href = url
-  anchor.download = `${report.sourceName.replace(/\.[^.]+$/, '') || 'selling-report'}-monthly-${report.periodValue || 'period'}.docx`
-  anchor.click()
-  setTimeout(() => URL.revokeObjectURL(url), 0)
+  const baseName = report.sourceName.replace(/\.[^.]+$/, '') || 'selling-report'
+  const period = report.periodValue || 'period'
+  const [knits, woven] = await Promise.all([buildMonthlyReportDocx(report, 'knit'), buildMonthlyReportDocx(report, 'woven')])
+  downloadBlob(knits, `${baseName}-monthly-${period}-knits.docx`)
+  downloadBlob(woven, `${baseName}-monthly-${period}-woven.docx`)
 }
 
 export async function exportWeeklyReport(report) {
   const baseName = report.sourceName.replace(/\.[^.]+$/, '') || 'weekly-report'
-  const [docx, workbook] = await Promise.all([buildWeeklyReportDocx(report), buildWeeklyWorkbookXlsx(report)])
+  const [knits, woven, workbook] = await Promise.all([buildWeeklyReportDocx(report, 'knit'), buildWeeklyReportDocx(report, 'woven'), buildWeeklyWorkbookXlsx(report)])
   const period = report.periodValue || 'period'
-  downloadBlob(docx, `${baseName}-weekly-${period}.docx`)
+  downloadBlob(knits, `${baseName}-weekly-${period}-knits.docx`)
+  downloadBlob(woven, `${baseName}-weekly-${period}-woven.docx`)
   downloadBlob(workbook, `${baseName}-weekly-${period}-sorted.xlsx`)
 }
 

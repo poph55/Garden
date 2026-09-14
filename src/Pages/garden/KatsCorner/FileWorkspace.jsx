@@ -230,7 +230,7 @@ export default function FileWorkspace() {
     <section className="export-panel">
       <div><h2>{reportMode === 'monthly' ? 'Monthly Word report' : 'Weekly report files'}</h2>{exportStatus && <div className="export-status" aria-label="Report status"><span><strong>{exportStatus.matched}</strong> matched</span><span className={exportStatus.needsConfirmation ? 'pending' : 'complete'}><strong>{exportStatus.needsConfirmation}</strong> left to confirm</span><span><strong>{exportStatus.confirmed}</strong> manually confirmed</span></div>}</div>
       <label className="report-period-picker"><span>{reportMode === 'monthly' ? 'Report month' : 'Report week'}</span><input type={reportMode === 'monthly' ? 'month' : 'week'} value={reportPeriods[reportMode]} onChange={(event) => setReportPeriods((current) => ({ ...current, [reportMode]: event.target.value }))}/></label>
-      <button disabled={!state.report || exporting || (reportMode === 'weekly' && !allImagesConfirmed)} onClick={handleExport}>{exporting ? 'Building…' : reportMode === 'weekly' && !allImagesConfirmed ? 'Confirm all images' : reportMode === 'weekly' ? 'Export Word + Excel' : 'Export .docx'}</button>
+      <button disabled={!state.report || exporting || (reportMode === 'weekly' && !allImagesConfirmed)} onClick={handleExport}>{exporting ? 'Building…' : reportMode === 'weekly' && !allImagesConfirmed ? 'Confirm all images' : reportMode === 'weekly' ? 'Export 2 Word + Excel' : 'Export 2 Word files'}</button>
     </section>
   </main>
 }
