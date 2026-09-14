@@ -182,11 +182,9 @@ export function sortStylesBySs(styles) {
 }
 
 export function weeklyStylesInExportOrder(report, fabric) {
-  return WEEKLY_RATINGS.flatMap((rating) => report.groups
+  return report.groups
     .filter((group) => (group.fabric ?? fabricFromVin(group.vin)) === fabric)
     .flatMap((group) => group.styles.map((style) => ({ ...style, group })))
-    .filter((style) => (style.rating ?? style.group.classification) === rating)
-    .sort((a, b) => a.ss - b.ss || a.vin.localeCompare(b.vin) || a.description.localeCompare(b.description)))
 }
 
 export function scoreImageCandidate(style, asset) {

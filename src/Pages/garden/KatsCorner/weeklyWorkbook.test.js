@@ -14,6 +14,8 @@ describe('buildWeeklyWorkbookXlsx', () => {
       { VIN: 'MV0001', 'Style Description': 'Great woven', 'SS Ratio': 2.4, Buyer: 'B' },
       { VIN: 'MK0003', 'Style Description': 'Ok knit', 'SS Ratio': 3.8, Buyer: 'A' },
       { VIN: 'MK0001', 'Style Description': 'Great knit', 'SS Ratio': 2.2, Buyer: 'A' },
+      { VIN: 'MK0001', 'Style Description': 'Second great knit', 'SS Ratio': 2.4, Buyer: 'A' },
+      { VIN: 'MK0004', 'Style Description': 'Middle great knit', 'SS Ratio': 2.3, Buyer: 'A' },
     ], 'weekly.xlsx')
 
     const blob = await buildWeeklyWorkbookXlsx(report)
@@ -40,6 +42,6 @@ describe('buildWeeklyWorkbookXlsx', () => {
 
     const parsedSheets = await readXlsxFile(Readable.from(Buffer.from(await blob.arrayBuffer())), { getSheets: true })
     const knitRows = parsedSheets.find((sheet) => sheet.sheet === 'Knits').data
-    expect(knitRows.map((row) => row[0])).toEqual(['VIN', 'MK0001', 'MK0002', 'MK0003'])
+    expect(knitRows.map((row) => row[0])).toEqual(['VIN', 'MK0001', 'MK0001', 'MK0004', 'MK0002', 'MK0003'])
   })
 })
