@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useState } from 'react'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { WEEKLY_FABRICS, WEEKLY_RATINGS, applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, scoreImageCandidate, styleNeedsReview } from './reportModel'
 import { readSpreadsheet } from './spreadsheet'
 import { currentMonthValue, currentWeekValue, dateValue, formatReportPeriod, formatWorkweekRange, parseDateValue, startOfWorkweek, workweekDates } from './reportPeriod'
@@ -13,6 +13,7 @@ const REPORT_MODES = ['monthly', 'weekly']
 const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
 function WorkweekPicker({ value, onChange }) {
+  const pickerRef = useRef(null)
   const selectedStart = parseDateValue(value) || new Date()
   const [viewMonth, setViewMonth] = useState(() => new Date(Date.UTC(selectedStart.getUTCFullYear(), selectedStart.getUTCMonth(), 1)))
   const selectedDates = new Set(workweekDates(value).map(dateValue))
@@ -20,11 +21,20 @@ function WorkweekPicker({ value, onChange }) {
   const days = Array.from({ length: 42 }, (_, index) => new Date(Date.UTC(gridStart.getUTCFullYear(), gridStart.getUTCMonth(), gridStart.getUTCDate() + index)))
   const monthLabel = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(viewMonth)
 
+  useEffect(() => {
+    function closeOnOutsideClick(event) {
+      const picker = pickerRef.current
+      if (picker?.open && !picker.contains(event.target)) picker.open = false
+    }
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    return () => document.removeEventListener('pointerdown', closeOnOutsideClick)
+  }, [])
+
   function changeMonth(offset) {
     setViewMonth(new Date(Date.UTC(viewMonth.getUTCFullYear(), viewMonth.getUTCMonth() + offset, 1)))
   }
 
-  return <details className="workweek-picker">
+  return <details className="workweek-picker" ref={pickerRef}>
     <summary aria-label={`Report week ${formatWorkweekRange(value)}`}><span>{formatWorkweekRange(value)}</span><i aria-hidden="true">▾</i></summary>
     <div className="workweek-calendar">
       <header><button aria-label="Previous month" onClick={() => changeMonth(-1)} type="button">‹</button><strong>{monthLabel}</strong><button aria-label="Next month" onClick={() => changeMonth(1)} type="button">›</button></header>
