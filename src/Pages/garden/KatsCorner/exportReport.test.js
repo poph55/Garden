@@ -3,46 +3,42 @@ import { describe, expect, it } from 'vitest'
 import { buildMonthlyReportDocx, buildWeeklyReportDocx } from './exportReport'
 
 describe('buildMonthlyReportDocx', () => {
-  it('packages ordered VIN pages as an editable Word document', async () => {
+  it('packages ordered VIN pages with a monthly footer', async () => {
     const report = {
-      id: 'february',
-      sourceName: 'February.xlsx',
-      groups: [
-        {
-          id: 'knit-mk0213c',
-          vin: 'MK0213C',
-          classification: 'knit',
-          totalUnits: 14062,
-          totalSs: 3.44,
-          candidates: [],
-          assignments: {},
-          styles: [
-            { id: 'best', vin: 'MK0213C', description: 'UNKNOWN SUNDAY', units: 7772, ss: 2.8 },
-            { id: 'next', vin: 'MK0213C', description: 'IVORY BLACK', units: 4721, ss: 3.8 },
-          ],
-        },
-      ],
+      id: 'february', sourceName: 'February.xlsx',
+      groups: [{
+        id: 'knit-mk0213c', vin: 'MK0213C', classification: 'knit', totalUnits: 14062, totalSs: 3.44,
+        candidates: [], assignments: {},
+        styles: [
+          { id: 'best', vin: 'MK0213C', description: 'UNKNOWN SUNDAY', units: 7772, ss: 2.8 },
+          { id: 'next', vin: 'MK0213C', description: 'IVORY BLACK', units: 4721, ss: 3.8 },
+        ],
+      }],
     }
 
     const blob = await buildMonthlyReportDocx(report)
     const files = unzipSync(new Uint8Array(await blob.arrayBuffer()))
     const documentXml = strFromU8(files['word/document.xml'])
+    const footer = strFromU8(files['word/footer1.xml'])
+    const relationships = strFromU8(files['word/_rels/document.xml.rels'])
 
     expect(blob.type).toBe('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    expect(Object.keys(files)).toEqual(expect.arrayContaining(['[Content_Types].xml', '_rels/.rels', 'word/document.xml']))
+    expect(Object.keys(files)).toEqual(expect.arrayContaining(['[Content_Types].xml', '_rels/.rels', 'word/document.xml', 'word/footer1.xml']))
     expect(documentXml.indexOf('UNKNOWN SUNDAY')).toBeLessThan(documentXml.indexOf('IVORY BLACK'))
     expect(documentXml).toContain('GREAT - MK0213C - TTL UNITS: 14,062 - SS: 3.4')
     expect(documentXml).toContain('w:orient="landscape"')
     expect(documentXml).toContain('<w:tblLayout w:type="fixed"/>')
     expect(documentXml).not.toContain('<w:pageBreakBefore/>')
-    expect(documentXml).not.toContain('KNIT')
+    expect(documentXml).toContain('<w:footerReference w:type="default" r:id="rIdReportFooter"/>')
+    expect(relationships).toContain('Target="footer1.xml"')
+    expect(footer).toContain('MONTHLY SELLING REPORT')
+    expect(footer).toContain('<w:jc w:val="left"/>')
   })
 
   it('adds units and SS as a borderless editable upper-left text box', async () => {
     const imageBytes = new Uint8Array([137, 80, 78, 71])
     const report = {
-      id: 'february',
-      sourceName: 'February.xlsx',
+      id: 'february', sourceName: 'February.xlsx',
       groups: [{
         id: 'knit-mk0009', vin: 'MK0009', classification: 'knit', totalUnits: 6495, totalSs: 2.64,
         candidates: [{ id: 'image', name: 'MK0009.png', file: { arrayBuffer: async () => imageBytes.buffer } }],
@@ -64,49 +60,39 @@ describe('buildMonthlyReportDocx', () => {
 })
 
 describe('buildWeeklyReportDocx', () => {
-  it('creates four-up pages without mixing seller ratings', async () => {
-    const weeklyStyle = (id, rating, ss) => ({ id, vin: id.toUpperCase(), description: `${rating} style ${id}`, units: 0, ss, rating })
+  it('uses the monthly landscape layout with a weekly footer', async () => {
+    const style = (id, ss) => ({ id, vin: id.toUpperCase(), description: `style ${id}`, units: 0, ss })
     const report = {
       sourceName: 'Week 8.xlsx',
       groups: [
-        { id: 'great', vin: 'MK-GREAT', fabric: 'knit', classification: 'great', candidates: [], assignments: {}, styles: [1, 2, 3, 4, 5].map((id) => weeklyStyle(`g${id}`, 'great', 2 + id / 10)) },
-        { id: 'good', vin: 'MK-GOOD', fabric: 'knit', classification: 'good', candidates: [], assignments: {}, styles: [weeklyStyle('d1', 'good', 3.2)] },
-        { id: 'slow', vin: 'MK-SLOW', fabric: 'knit', classification: 'slow', candidates: [], assignments: {}, styles: [weeklyStyle('s1', 'slow', 4.19999)] },
-        { id: 'woven-great', vin: 'MV-GREAT', fabric: 'woven', classification: 'great', candidates: [], assignments: {}, styles: [weeklyStyle('mv1', 'great', 2.1)] },
+        { id: 'great', vin: 'MK-GREAT', classification: 'great', totalUnits: 0, totalSs: 2.1, candidates: [], assignments: {}, styles: [style('g1', 2.1), style('g2', 2.2)] },
+        { id: 'good', vin: 'MK-GOOD', classification: 'good', totalUnits: 0, totalSs: 3.2, candidates: [], assignments: {}, styles: [style('d1', 3.2)] },
       ],
     }
 
     const blob = await buildWeeklyReportDocx(report)
     const files = unzipSync(new Uint8Array(await blob.arrayBuffer()))
     const documentXml = strFromU8(files['word/document.xml'])
-    const headerXml = strFromU8(files['word/header1.xml'])
-    const documentRels = strFromU8(files['word/_rels/document.xml.rels'])
+    const footer = strFromU8(files['word/footer1.xml'])
+    const relationships = strFromU8(files['word/_rels/document.xml.rels'])
 
-    expect(documentXml.match(/<w:br w:type="page"\/>/g)).toHaveLength(4)
-    expect(documentXml.match(/>GREAT<\/w:t>/g)).toHaveLength(3)
-    expect(documentXml.match(/>GOOD<\/w:t>/g)).toHaveLength(1)
-    expect(documentXml.match(/>SLOW<\/w:t>/g)).toHaveLength(1)
-    expect(documentXml.indexOf('GREAT')).toBeLessThan(documentXml.indexOf('GOOD'))
-    expect(documentXml.indexOf('GOOD')).toBeLessThan(documentXml.indexOf('SLOW'))
-    expect(documentXml.indexOf('S1')).toBeLessThan(documentXml.indexOf('MV1'))
-    expect(documentXml.match(/>KNITS<\/w:t>/g)).toHaveLength(4)
-    expect(documentXml.match(/>WOVENS<\/w:t>/g)).toHaveLength(1)
-    expect(documentXml).toContain('SS RATIO: 4.2')
-    expect(documentXml).not.toContain('w:orient="landscape"')
-    expect(documentXml).toContain('<w:headerReference w:type="default" r:id="rIdWeeklyHeader"/>')
-    expect(documentRels).toContain('Target="header1.xml"')
-    expect(headerXml).toContain('name="Modern Works logo"')
-    expect(headerXml).toContain('<w:jc w:val="center"/>')
-    expect(files['word/media/modern-works-logo.png'].byteLength).toBeGreaterThan(1000)
+    expect(documentXml.match(/<w:br w:type="page"\/>/g)).toHaveLength(1)
+    expect(documentXml).toContain('w:orient="landscape"')
+    expect(documentXml).toContain('<w:tblLayout w:type="fixed"/>')
+    expect(documentXml).toContain('<w:footerReference w:type="default" r:id="rIdReportFooter"/>')
+    expect(relationships).toContain('Target="footer1.xml"')
+    expect(footer).toContain('WEEKLY SELLING REPORT')
+    expect(files['word/header1.xml']).toBeUndefined()
   })
 
-  it('keeps weekly image captions editable and omits the monthly image textbox', async () => {
+  it('uses the same editable image labels as the monthly report', async () => {
     const bytes = new Uint8Array([137, 80, 78, 71])
     const style = { id: 'style', vin: 'MK0213', description: 'Black knit', units: 0, ss: 2.79999, rating: 'great' }
     const report = {
       sourceName: 'weekly.xlsx',
       groups: [{
-        id: 'group', vin: 'MK0213', classification: 'great', styles: [style], assignments: { style: 'image' },
+        id: 'group', vin: 'MK0213', classification: 'great', totalUnits: 0, totalSs: 2.8,
+        styles: [style], assignments: { style: 'image' },
         candidates: [{ id: 'image', name: 'MK0213.png', file: { arrayBuffer: async () => bytes.buffer } }],
       }],
     }
@@ -114,9 +100,8 @@ describe('buildWeeklyReportDocx', () => {
     const blob = await buildWeeklyReportDocx(report)
     const documentXml = strFromU8(unzipSync(new Uint8Array(await blob.arrayBuffer()))['word/document.xml'])
 
-    expect(documentXml).toContain('MK0213')
-    expect(documentXml).toContain('Black knit')
-    expect(documentXml).toContain('SS RATIO: 2.8')
-    expect(documentXml).not.toContain('<v:textbox')
+    expect(documentXml).toContain('GREAT - MK0213 - TTL UNITS: 0 - SS: 2.8')
+    expect(documentXml).toContain('SS: 2.8')
+    expect(documentXml).toContain('<v:textbox')
   })
 })
