@@ -25,7 +25,7 @@ describe('buildMonthlyReportDocx', () => {
     expect(blob.type).toBe('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     expect(Object.keys(files)).toEqual(expect.arrayContaining(['[Content_Types].xml', '_rels/.rels', 'word/document.xml', 'word/footer.xml', 'word/settings.xml']))
     expect(documentXml.indexOf('UNKNOWN SUNDAY')).toBeLessThan(documentXml.indexOf('IVORY BLACK'))
-    expect(documentXml).toContain('GREAT - MK0213C - TTL UNITS: 14,062 - SS: 3.4')
+    expect(documentXml).toContain('KNITS - GREAT - MK0213C - TTL UNITS: 14,062 - SS: 3.4')
     expect(documentXml).toContain('w:orient="landscape"')
     expect(documentXml).toContain('<w:tblLayout w:type="fixed"/>')
     expect(documentXml).not.toContain('<w:pageBreakBefore/>')
@@ -80,6 +80,7 @@ describe('buildWeeklyReportDocx', () => {
 
     expect(documentXml).not.toContain('MK-GREAT')
     expect(documentXml).toContain('MV-GOOD')
+    expect(documentXml).toContain('WOVENS - GREAT - MV-GOOD - TTL UNITS: 0 - SS: 3.2')
     expect(documentXml).toContain('w:orient="landscape"')
     expect(documentXml).toContain('<w:tblLayout w:type="fixed"/>')
     expect(relationships).toContain('Target="footer.xml"')
@@ -104,7 +105,7 @@ describe('buildWeeklyReportDocx', () => {
     const blob = await buildWeeklyReportDocx(report)
     const documentXml = strFromU8(unzipSync(new Uint8Array(await blob.arrayBuffer()))['word/document.xml'])
 
-    expect(documentXml).toContain('GREAT - MK0213 - TTL UNITS: 0 - SS: 2.8')
+    expect(documentXml).toContain('KNITS - GREAT - MK0213 - TTL UNITS: 0 - SS: 2.8')
     expect(documentXml).toContain('SS: 2.8')
     expect(documentXml).toContain('<v:textbox')
   })

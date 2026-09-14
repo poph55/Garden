@@ -20,7 +20,8 @@ function titleParagraph(group) {
   const isGreat = group.totalSs < 3.5
   const rating = isGreat ? 'GREAT' : 'OK'
   const color = isGreat ? '276749' : '7A4A00'
-  return `<w:p><w:pPr><w:spacing w:after="80"/><w:keepNext/></w:pPr>${run(`${rating} - ${group.vin} - TTL UNITS: ${group.totalUnits.toLocaleString()} - SS: ${formatSs(group.totalSs)}`, { bold: true, size: 30, color })}</w:p>`
+  const fabric = groupFabric(group) === 'woven' ? 'WOVENS' : 'KNITS'
+  return `<w:p><w:pPr><w:spacing w:after="80"/><w:keepNext/></w:pPr>${run(`${fabric} - ${rating} - ${group.vin} - TTL UNITS: ${group.totalUnits.toLocaleString()} - SS: ${formatSs(group.totalSs)}`, { bold: true, size: 30, color })}</w:p>`
 }
 
 function editableImageLabel(id, style, sizeInches) {
