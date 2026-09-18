@@ -2,16 +2,18 @@ import { useState } from 'react'
 import Layout from '../../../components/Layout'
 import PokemonChampions from './pokemon-champions/PokemonChampions'
 import TypeChart from './type-chart/TypeChart'
+import HeroesOfTheStorm from './heroes-of-the-storm/HeroesOfTheStorm'
 import videoGameIcon from '../../../assets/optimized/videogame-icon-Original.webp'
 import './VideoGames.css'
 
 const TABS = [
+  { id: 'heroes-of-the-storm', label: 'heroes of the storm' },
   { id: 'pokemon-champions', label: 'pokemon champions' },
   { id: 'type-chart',        label: 'pokemon type chart' },
 ]
 
 export default function VideoGames() {
-  const [activeTab, setActiveTab] = useState('pokemon-champions')
+  const [activeTab, setActiveTab] = useState('heroes-of-the-storm')
 
   return (
     <Layout showBack>
@@ -39,6 +41,14 @@ export default function VideoGames() {
         <section className="vg-list">
           <div className="container">
             <PokemonChampions />
+          </div>
+        </section>
+      )}
+
+      {activeTab === 'heroes-of-the-storm' && (
+        <section className="vg-list vg-list--hots">
+          <div className="container">
+            <HeroesOfTheStorm />
           </div>
         </section>
       )}
