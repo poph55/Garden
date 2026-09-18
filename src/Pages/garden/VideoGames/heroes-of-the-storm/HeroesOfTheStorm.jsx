@@ -16,6 +16,13 @@ import anduinE from './assets/anduin-e.jpg'
 import anduinD from './assets/anduin-d.jpg'
 import anduinLightbomb from './assets/anduin-lightbomb.jpg'
 import anduinLightwell from './assets/anduin-lightwell.jpg'
+import jainaQ from './assets/jaina-q.jpg'
+import jainaW from './assets/jaina-w.jpg'
+import jainaE from './assets/jaina-e.jpg'
+import jainaD from './assets/jaina-d.jpg'
+import jainaRing from './assets/jaina-ring.jpg'
+import jainaElemental from './assets/jaina-elemental.jpg'
+import jainaVeins from './assets/jaina-veins.jpg'
 import './HeroesOfTheStorm.css'
 
 const HEROES = [
@@ -47,6 +54,16 @@ const HEROES = [
     builds:[
       { title:'Lightwell', subtitle:'Sustain healing', icon:anduinLightwell, summary:'Efficient long-fight healing for teams that can hold a position around an objective.', bestFor:'Sustain damage · stationary fights · objective control', gameplan:'Place Lightwell where allies can fight without abandoning it. Spread Renew with Flash Heal, then use Moral Compass attacks to refresh those effects while staying at safe range.', reminder:'Lightbomb is the default Heroic; save Salvation for drafts that cannot interrupt the channel.', talents:[[1,'Lightwell','1','Free healing in a fixed area.',anduinLightwell],[4,'Moral Compass','W','Safer range and extra attacks.',anduinW],[7,'Binding Heal','Q','Heal yourself while healing allies.',anduinQ],[10,'Lightbomb','R','Shield and area stun.',anduinLightbomb],[13,'Speed of the Pious','W','Speed and Divine Star cooldown.',anduinW],[16,'Renew','Q','Refreshable healing over time.',anduinQ],[20,"Varian's Legacy",'AA','Damage and self-sustain.',anduinD]] },
       { title:'Leap of Faith', subtitle:'Burst rescue', icon:anduinD, summary:'Sacrifices some sustain to answer crowd control, dive, and lethal burst windows.', bestFor:'Burst damage · heavy crowd control · saving divers', gameplan:'Hold Leap of Faith until enemy crowd control commits; pulling too early wastes its Unstoppable. Cast Desperate Prayer from maximum range, when the two-second lockout is safe.', reminder:'At level 16, two Leap charges change fights—position far enough back to make both pulls useful.', talents:[[1,'Power Word: Shield','W','Shield allies and Anduin.',anduinW],[4,'Moral Compass','W','Contribute safely from range.',anduinW],[7,'Desperate Prayer','1','Emergency burst heal.',anduinQ],[10,'Lightbomb','R','Counter-engage and protection.',anduinLightbomb],[13,"Lion's Speed",'D','Speed and post-pull healing.',anduinD],[16,'Glyph of Faith','D','Gain a second rescue charge.',anduinD],[20,'Inner Fire','R','Armor and speed for Lightbomb.',anduinLightbomb]] },
+    ],
+  },
+  {
+    id:'jaina', name:'Jaina', title:'Archmage', role:'Ranged Assassin', universe:'Warcraft', accent:'#72c9ee', portrait:jainaD,
+    source:'https://www.icy-veins.com/heroes/jaina-build-guide', reviewed:'March 16, 2026 · balance patch',
+    overview:'A combo-focused Frost Mage with exceptional burst, area control, and waveclear—but very little margin for poor positioning.',
+    abilities:[['Q','Frostbolt',jainaQ],['W','Blizzard',jainaW],['E','Cone of Cold',jainaE],['D','Frostbite',jainaD]],
+    builds:[
+      { title:'Frostbolt', subtitle:'Single-target pressure', icon:jainaQ, summary:'Reliable sustained poke that becomes lethal once Frostbolt repeatedly connects with Chilled targets.', bestFor:'Standard games · frontline pressure · safe poke', gameplan:'Apply Chill before each Frostbolt so Ice Lance refunds cooldown and Mana. Summon Water Elemental early in the fight to keep targets Chilled, then use Icy Veins when you have room to keep casting.', reminder:'Frostbolt can pierce with Frost Shards—line up a second Hero instead of treating the frontline as a blocker.', talents:[[1,'Fingers of Frost','D','Mana regeneration and bonus damage.',jainaD],[4,'Frost Shards','Q','Frostbolt pierces two targets.',jainaQ],[7,'Ice Lance','Q','Faster Frostbolts on Chilled targets.',jainaQ],[10,'Water Elemental','R','Reliable Chill and sustained pressure.',jainaElemental],[13,'Icy Veins','1','Rapid, cheaper Basic Abilities.',jainaVeins],[16,'Northern Exposure','E','Reduce Armor for the burst window.',jainaE],[20,'Wintermute','R','Elemental mirrors Basic Abilities.',jainaElemental]] },
+      { title:'Cone of Cold', subtitle:'Anti-melee control', icon:jainaE, summary:'Turns repeated Cone of Cold casts into a punishing root-and-burst cycle against grouped melee Heroes.', bestFor:'Multiple melee enemies · dive defense · wombo combos', gameplan:'Chill enemies before Cone of Cold so Numbing Blast roots them. Activate Icy Veins only after enemies commit, then chain wide Cones and Blizzards while the root keeps every wave on target.', reminder:'Ring of Frost needs setup—cast it after allied control or your own Numbing Blast, not as an opener.', talents:[[1,'Fingers of Frost','D','Mana and stronger Frostbite.',jainaD],[4,'Arcane Intellect','D','Mana returns and high-Mana power.',jainaD],[7,'Ice Floes','E','Wider Cone with cooldown refunds.',jainaE],[10,'Ring of Frost','R','Long area root for committed fights.',jainaRing],[13,'Icy Veins','1','Fuel the control-and-burst cycle.',jainaVeins],[16,'Numbing Blast','E','Root targets already Chilled.',jainaE],[20,'Cold Snap','R','Upgrade Ring and reset Frostbolt.',jainaRing]] },
     ],
   },
 ]
