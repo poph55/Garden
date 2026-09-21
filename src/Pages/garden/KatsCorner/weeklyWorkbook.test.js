@@ -26,6 +26,7 @@ describe('buildWeeklyWorkbookXlsx', () => {
       const files = unzipSync(new Uint8Array(await template.arrayBuffer()))
       const rows = data.map((row, i) => `<row r="${i + 1}">${row.map((value, j) => {
         if (i === 6 && j === 0) return '' // A missing cell must be inserted in column order.
+        if (value === '') return `<c r="${String.fromCharCode(65 + j)}${i + 1}" s="1"/>`
         const content = typeof value === 'number' ? `<v>${value}</v>` : `<is><t>${value.replaceAll('&', '&amp;')}</t></is>`
         return `<c r="${String.fromCharCode(65 + j)}${i + 1}" s="1"${typeof value === 'number' ? '' : ' t="inlineStr"'}>${content}</c>`
       }).join('')}</row>`).join('')
@@ -37,6 +38,8 @@ describe('buildWeeklyWorkbookXlsx', () => {
     const sheets = await readXlsxFile(Readable.from(output))
     expect(sheets[0].data.map(row => row[0])).toEqual(['VENDOR_NAME', null, null, 'R & O / Modern Works', null])
     expect(sheets[1].data.map(row => row[0])).toEqual(['VENDOR_NAME', null, 'R & O / Modern Works', null])
+    expect(sheets[0].data.map(row => row[1])).toEqual(['VIN', 'MK-EARLY', 'MK-EARLY Total', 'MK-LATE', 'MK-LATE Total'])
+    expect(sheets[1].data.map(row => row[1])).toEqual(['VIN', 'MV1', 'MV1', 'MV1 Total'])
     if (formatted) {
       const files = unzipSync(output)
       expect(strFromU8(files['xl/worksheets/sheet1.xml'])).toContain('<c r="A4" s="1" t="inlineStr">')

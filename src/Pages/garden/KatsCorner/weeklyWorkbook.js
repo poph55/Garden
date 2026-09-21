@@ -70,9 +70,7 @@ function originalRowXml(formatting, sourceRowNumber, rowNumber, style) {
     .replace(/<f\b[^>]*(?:\/>|>[\s\S]*?<\/f>)/g, '')
   if (style && style.vin !== style.group.originalVin) {
     const vinIndex = formatting.headers.findIndex(header => ['vin', 'vendor item number', 'item'].includes(normalized(header)))
-    const reference = `${columnName(vinIndex)}${rowNumber}`
-    const replacement = cellXml(style.isTotal ? `${style.vin} Total` : style.vin, reference, sourceCellStyle(formatting, sourceRowNumber, vinIndex))
-    xml = xml.replace(new RegExp(`<c\\b[^>]*\\br="${reference}"[^>]*(?:/>|>[\\s\\S]*?</c>)`), replacement)
+    xml = setRowCell(xml, vinIndex, rowNumber, style.isTotal ? `${style.vin} Total` : style.vin, sourceCellStyle(formatting, sourceRowNumber, vinIndex))
   }
   return xml
 }
@@ -89,7 +87,8 @@ function setRowCell(xml, columnIndex, rowNumber, value, cellStyle) {
   const column = columnName(columnIndex)
   const reference = `${column}${rowNumber}`
   const replacement = cellXml(value, reference, cellStyle)
-  const pattern = new RegExp(`<c\\b[^>]*\\br="${reference}"[^>]*(?:/>|>[\\s\\S]*?</c>)`)
+  // Stop at a self-closing cell instead of consuming the following cell's closing tag.
+  const pattern = new RegExp(`<c\\b[^>]*\\br="${reference}"[^>]*?(?:/>|>[\\s\\S]*?</c>)`)
   if (pattern.test(xml)) return xml.replace(pattern, () => replacement)
   // Sparse source rows may not contain an empty vendor cell at all.
   const nextCell = [...xml.matchAll(/<c\b[^>]*\br="([A-Z]+)\d+"/g)].find(match => match[1].length > column.length || (match[1].length === column.length && match[1] > column))
