@@ -35,6 +35,71 @@ import lucioD from './assets/lucio-d.png'
 import lucioBarrier from './assets/lucio-barrier.png'
 import lucioFive from './assets/lucio-five.png'
 import lucioPortrait from './assets/optimized/lucio-portrait-800.webp'
+import johannaQ from './assets/johanna-punish_hexagon.png'
+import johannaW from './assets/johanna-condemn_hexagon.png'
+import johannaE from './assets/johanna-shield-glare_hexagon.png'
+import johannaD from './assets/johanna-iron-skin_hexagon.png'
+import johannaShield from './assets/johanna-blessed-shield_hexagon.png'
+import johannaPortrait from './assets/optimized/johanna-portrait-800.webp'
+import hoggerQ from './assets/hogger-staggering-blow.png'
+import hoggerW from './assets/hogger-ez-thro-dynamite.png'
+import hoggerE from './assets/hogger-hogg-wild.png'
+import hoggerD from './assets/hogger-loot-hoard.png'
+import hoggerHoard from './assets/hogger-hoardapult.png'
+import hoggerPortrait from './assets/optimized/hogger-portrait-800.webp'
+import yrelQ from './assets/yrel-vindication_hexagon.png'
+import yrelW from './assets/yrel-righteous-hammer_hexagon.png'
+import yrelE from './assets/yrel-avenging-wrath_hexagon.png'
+import yrelD from './assets/yrel-divine-purpose_hexagon.png'
+import yrelArdent from './assets/yrel-ardent-defender_hexagon.png'
+import yrelGround from './assets/yrel-sacred-ground_hexagon.png'
+import yrelPortrait from './assets/optimized/yrel-portrait-800.webp'
+import qhiraQ from './assets/qhira-carnage_hexagon.png'
+import qhiraW from './assets/qhira-blood-rage_hexagon.png'
+import qhiraE from './assets/qhira-revolving-sweep_hexagon.png'
+import qhiraD from './assets/qhira-grappling-hook_hexagon.png'
+import qhiraFinal from './assets/qhira-final-strike_hexagon.png'
+import qhiraStrikes from './assets/qhira-unrelenting-strikes_hexagon.png'
+import qhiraPortrait from './assets/optimized/qhira-portrait-800.webp'
+import falstadQ from './assets/falstad-hammerang_hexagon.png'
+import falstadW from './assets/falstad-lightning-rod_hexagon.png'
+import falstadE from './assets/falstad-barrel-roll_hexagon.png'
+import falstadZ from './assets/falstad-flight_hexagon.png'
+import falstadGust from './assets/falstad-mighty-gust_hexagon.png'
+import falstadPortrait from './assets/optimized/falstad-portrait-800.webp'
+import sylvanasQ from './assets/sylvanas-withering-fire_hexagon.png'
+import sylvanasW from './assets/sylvanas-shadow-dagger_hexagon.png'
+import sylvanasE from './assets/sylvanas-haunting-wave_hexagon.png'
+import sylvanasD from './assets/sylvanas-black-arrows_hexagon.png'
+import sylvanasMind from './assets/sylvanas-mind-control_hexagon.png'
+import sylvanasArrow from './assets/sylvanas-wailing-arrow_hexagon.png'
+import sylvanasPortrait from './assets/optimized/sylvanas-portrait-800.webp'
+import brightwingQ from './assets/brightwing-arcane-flare_hexagon.png'
+import brightwingW from './assets/brightwing-polymorph_hexagon.png'
+import brightwingE from './assets/brightwing-pixie-dust_hexagon.png'
+import brightwingZ from './assets/brightwing-phase-shift_hexagon.png'
+import brightwingD from './assets/brightwing-soothing-mist_hexagon.png'
+import brightwingBlink from './assets/brightwing-blink-heal_hexagon.png'
+import brightwingPortrait from './assets/optimized/brightwing-portrait-800.webp'
+import rehgarQ from './assets/rehgar-chain-heal_hexagon.png'
+import rehgarW from './assets/rehgar-lightning-shield_hexagon.png'
+import rehgarE from './assets/rehgar-earthbind-totem_hexagon.png'
+import rehgarD from './assets/rehgar-ghost-wolf_hexagon.png'
+import rehgarAncestral from './assets/rehgar-ancestral-healing_hexagon.png'
+import rehgarPortrait from './assets/optimized/rehgar-portrait-800.webp'
+import mephistoQ from './assets/mephisto-skull-missile_hexagon.png'
+import mephistoW from './assets/mephisto-lightning-nova_hexagon.png'
+import mephistoE from './assets/mephisto-shade-of-mephisto_hexagon.png'
+import mephistoD from './assets/mephisto-lord-of-hatred_hexagon.png'
+import mephistoDurance from './assets/mephisto-durance-of-hate_hexagon.png'
+import mephistoPortrait from './assets/optimized/mephisto-portrait-800.webp'
+import aurielQ from './assets/auriel-sacred-sweep_hexagon.png'
+import aurielW from './assets/auriel-ray-of-heaven_hexagon.png'
+import aurielE from './assets/auriel-detainment-strike_hexagon.png'
+import aurielD from './assets/auriel-bestow-hope_hexagon.png'
+import aurielAegis from './assets/auriel-crystal-aegis_hexagon.png'
+import aurielResurrect from './assets/auriel-resurrect_hexagon.png'
+import aurielPortrait from './assets/optimized/auriel-portrait-800.webp'
 import './HeroesOfTheStorm.css'
 
 const HEROES = [
@@ -96,6 +161,106 @@ const HEROES = [
     builds:[
       { title:'Advanced', subtitle:'Mobile playmaker', icon:lucioFive, summary:'Turns Wall Ride, constant attacks, and High Five into aggressive mobility, cooldown reduction, and clutch cleanses.', bestFor:'Experienced players · dive teams · active peel', gameplan:'Maintain Wall Ride for Accelerando, harass safely, and keep Basic Attacks flowing to refresh Amp It Up. High Five a safe nearby ally first when you need Unstoppable before crossing enemy control to rescue someone deeper.', reminder:'Do not chase damage at the cost of your aura—your team still needs to remain inside Crossfade.', talents:[[1,'Accelerando','Z','Ramp Wall Ride speed to 40%.',lucioD],[4,'Off the Wall','Q','Wall Ride hits refresh Soundwave.',lucioQ],[7,'Reverse Amp','1','Damage or Slow with the active track.',lucioE],[10,'High Five','R','Heal and grant Unstoppable.',lucioFive],[13,'Heavy Casters','D','Push Off briefly Stuns.',lucioD],[16,'Up the Frequency','AA','Attacks refresh Amp It Up.',lucioE],[20,'Mixing Fire','R','Upgrade High Five and add anti-heal.',lucioFive]] },
       { title:'Crossfade', subtitle:'Reliable team sustain', icon:lucioW, summary:'Expands and strengthens Lúcio’s healing aura for a simpler defensive style that keeps the whole team moving.', bestFor:'Newer players · grouped teams · sustained damage', gameplan:'Finish Party Mix by staying near allies, swap to Speed Boost for engages and retreats, then return to Healing Boost before using Amp It Up. Place Boombox where it safely extends coverage around an objective.', reminder:'Sound Barrier is strongest just before predictable burst lands—the shield decays quickly after the cast.', talents:[[1,'Party Mix','W','Grow Mana and Crossfade radius.',lucioW],[4,'Off the Wall','Q','More frequent peel from terrain.',lucioQ],[7,'Boombox','1','Extend aura coverage and grant Armor.',lucioW],[10,'Sound Barrier','R','Large team shield against burst.',lucioBarrier],[13,'All Together','W','Gain speed for each nearby ally.',lucioW],[16,'Rejuvenescência','E','Add percent-Health healing.',lucioE],[20,'House Party','W','Scale healing with nearby allies.',lucioW]] },
+    ],
+  },
+  {
+    id:'johanna', name:'Johanna', title:'Crusader of Zakarum', role:'Tank', universe:'Diablo', accent:'#e6c66d', portrait:johannaPortrait,
+    source:'https://www.icy-veins.com/heroes/johanna-build-guide', reviewed:'July 20, 2026 · latest guide update',
+    overview:'A resilient frontline anchor with superb waveclear, reliable blinds, and one of the safest initiation tools in the Nexus.',
+    abilities:[['Q','Punish',johannaQ],['W','Condemn',johannaW],['E','Shield Glare',johannaE],['D','Iron Skin',johannaD]],
+    builds:[
+      { title:'Shield Glare', subtitle:'Reliable team protection', icon:johannaE, summary:'Frequent blinds shut down Basic Attack threats while Blessed Shield supplies a clean, ranged engage.', bestFor:'Basic Attack teams · main tank · safe initiation', gameplan:'Use Shield Glare to deny meaningful attack windows, not just for poke. Walk in with Iron Skin, pull enemies together with Condemn, then hold Blessed Shield until your team can follow the stun.', reminder:'Iron Skin prevents crowd control; activate it before crossing the enemy frontline, not after you are locked down.', talents:[[1,'Zealous Glare','E','Longer blinds with extra charges.',johannaE],[4,'Subdue','Q','Punish slows harder after its quest.',johannaQ],[7,'Sins Exposed','E','Mark enemies for team burst.',johannaE],[10,'Blessed Shield','R','Fast ranged engage and peel.',johannaShield],[13,'Holy Fury','W','Area damage around Johanna.',johannaW],[16,'Holy Renewal','E','Shield Glare restores Health.',johannaE],[20,'Blinded by the Light','1','Give nearby allies a large Shield.',johannaE]] },
+      { title:'Basic Attacks', subtitle:'Durable brawler', icon:johannaD, summary:'Trades some blind frequency for self-sustain and persistent frontline pressure in extended fights.', bestFor:'Long fights · mixed damage · independent frontline', gameplan:'Build Laws of Hope between fights and use Blessed Momentum attacks to cycle Punish and Condemn. Fanaticism turns Iron Skin into a repositioning tool when the enemy commits.', reminder:'Your damage is gradual—stay between threats and your backline instead of chasing low-health targets.', talents:[[1,'Laws of Hope','1','Passive regeneration and burst healing.',johannaD],[4,'Hold Your Ground','D','Stronger, faster Iron Skin.',johannaD],[7,'Steed Charge','D','Mobility while Iron Skin is active.',johannaD],[10,'Blessed Shield','R','Start or interrupt priority plays.',johannaShield],[13,'Roar','Q','Punish deals more Hero damage.',johannaQ],[16,'Fanaticism','D','Iron Skin grants Movement Speed.',johannaD],[20,'Indestructible','D','Survive otherwise lethal damage.',johannaD]] },
+    ],
+  },
+  {
+    id:'hogger', name:'Hogger', title:'Scourge of Elwynn', role:'Bruiser', universe:'Warcraft', accent:'#e08743', portrait:hoggerPortrait,
+    source:'https://www.icy-veins.com/heroes/hogger-build-guide', reviewed:'September 11, 2026 · latest guide update',
+    overview:'A disruptive Bruiser whose Rage, terrain angles, and chaotic spins convert tight spaces into overwhelming pressure.',
+    abilities:[['Q','Staggering Blow',hoggerQ],['W','Ez-Thro Dynamite',hoggerW],['E','Hogg Wild',hoggerE],['D','Loot Hoard',hoggerD]],
+    builds:[
+      { title:'Hoardapult Rage', subtitle:'Teamfight disruption', icon:hoggerHoard, summary:'Creates instant terrain, spreads fire, and rewards high Rage with devastating wall stuns.', bestFor:'Objective fights · tight spaces · enemy backlines', gameplan:'Hoardapult behind the enemy team, drop Loot Hoard to create an angle, then knock a target into terrain with Staggering Blow. Spin only when the route is predictable enough to escape or re-engage.', reminder:'Headbanger needs terrain—place Loot Hoard first when the map does not provide a wall.', talents:[[1,'On The Prowl','D','Manage Rage and heal on demand.',hoggerD],[4,'Aggro Range','E','Longer spins with more Rage.',hoggerE],[7,'Garbage Fire','D','Loot Hoard ignites the area.',hoggerD],[10,'Hoardapult','R','Global engage with fresh Loot Hoard.',hoggerHoard],[13,'Pummel','Q','Reduce damage from displaced Heroes.',hoggerQ],[16,'Headbanger','Q','Wall hits deal percent damage.',hoggerQ],[20,'No Control','1','Unleash autonomous Hogg Wild spins.',hoggerE]] },
+      { title:'Ez-Thro Dynamite', subtitle:'Safer ranged pressure', icon:hoggerW, summary:'Builds repeatable poke and sustain while keeping Hogger useful when terrain does not favor long spins.', bestFor:'Open maps · poke fights · safer offlane play', gameplan:'Keep Dynamite between Hogger and the target so a Basic Attack detonates it instantly. Build Rage before committing, then use Hogg Wild as a short damage-and-escape tool rather than gambling on a long route.', reminder:'A direct Dynamite hit is less important than detonating it at the right moment with a Basic Attack.', talents:[[1,'Journeyman Cooking','W','Stack Dynamite damage and healing.',hoggerW],[4,'Brute Force','D','Empower attacks after Loot Hoard.',hoggerD],[7,'Dense Blasting Powder','W','Create two extra explosions.',hoggerW],[10,'Hoardapult','R','Flexible engage and escape.',hoggerHoard],[13,'Dust Devil','E','Gain Armor during Hogg Wild.',hoggerE],[16,'Kablooie!','W','Reward central Dynamite hits.',hoggerW],[20,'Power Spike','Q','Staggering Blow gains reach.',hoggerQ]] },
+    ],
+  },
+  {
+    id:'yrel', name:'Yrel', title:'Light of Hope', role:'Bruiser', universe:'Warcraft', accent:'#f1ce67', portrait:yrelPortrait,
+    source:'https://www.icy-veins.com/heroes/yrel-build-guide', reviewed:'September 11, 2026 · latest guide update',
+    overview:'A durable support Bruiser who charges powerful abilities to peel, reposition enemies, and protect nearby allies.',
+    abilities:[['Q','Vindication',yrelQ],['W','Righteous Hammer',yrelW],['E','Avenging Wrath',yrelE],['D','Divine Purpose',yrelD]],
+    builds:[
+      { title:'Team Utility', subtitle:'Protective bruiser', icon:yrelQ, summary:'Adds healing, Armor, damage reduction, and displacement to keep a grouped team standing.', bestFor:'Teamfights · allied carries · heavy frontline pressure', gameplan:'Jump onto allies with Avenging Wrath to grant Armor, then turn and Hammer threats away from them. Use Divine Purpose for an instant Vindication heal or an emergency knockback when charging is unsafe.', reminder:'Aegis of Light only protects allies—land near teammates rather than diving past them.', talents:[[1,'Light of Karabor','Q','Larger Vindication and stronger healing.',yrelQ],[4,'Aegis of Light','E','Grant Armor to nearby allies.',yrelE],[7,'Righteous Momentum','W','Move quickly while charging Hammer.',yrelW],[10,'Ardent Defender','R','Convert incoming damage into healing.',yrelArdent],[13,'Aldor Peacekeeper','Q','Reduce damage from Heroes hit.',yrelQ],[16,"Templar's Verdict",'W','Percent damage and Armor reduction.',yrelW],[20,'Seraphim','1','Short, frequent Unstoppable.',yrelD]] },
+      { title:'Holy Avenger', subtitle:'Mobile offlaner', icon:yrelE, summary:'Repeated leaps create lane pressure and let Yrel stick to vulnerable backliners without giving up durability.', bestFor:'Offlane · split pressure · immobile backlines', gameplan:'Fully charge Avenging Wrath onto an enemy Hero to trigger Holy Avenger, then use Divine Purpose to leap again immediately. Sacred Ground is strongest when an objective forces enemies to contest your area.', reminder:'Do not pair Holy Avenger with Aegis of Light—their ideal landing targets pull you in opposite directions.', talents:[[1,'Dauntless','E','Gain Physical Armor after abilities.',yrelE],[4,'Hand of Freedom','1','Give an ally speed and cleanse Slows.',yrelD],[7,'Holy Avenger','E','Charged Hero hits reset the leap.',yrelE],[10,'Sacred Ground','R','Hold territory with 50 Armor.',yrelGround],[13,"Velen's Chosen",'D','Basic hits build Spell Power.',yrelD],[16,"Templar's Verdict",'W','Shred durable targets.',yrelW],[20,'Hallowed Ground','R','Move Sacred Ground with leaps.',yrelGround]] },
+    ],
+  },
+  {
+    id:'qhira', name:'Qhira', title:'Realmless Bounty Hunter', role:'Melee Assassin', universe:'Nexus', accent:'#db5f78', portrait:qhiraPortrait,
+    source:'https://www.icy-veins.com/heroes/qhira-build-guide', reviewed:'September 11, 2026 · latest guide update',
+    overview:'A high-risk melee Assassin who stacks bleeding, swings through danger, and heals by cashing in Blood Rage at the right instant.',
+    abilities:[['Q','Carnage',qhiraQ],['W','Blood Rage',qhiraW],['E','Revolving Sweep',qhiraE],['D','Grappling Hook',qhiraD]],
+    builds:[
+      { title:'Heavy Bleeding', subtitle:'Reliable sustain damage', icon:qhiraW, summary:'Maximizes bleed pressure and self-healing while Final Strike finishes targets escaping the fight.', bestFor:'Standard games · durable teams · extended fights', gameplan:'Apply bleed with Carnage and Basic Attacks, wait for high stacks, then activate Blood Rage for the larger heal. Use Revolving Sweep to dodge key abilities or hold a target for allied follow-up.', reminder:'Blood Rage healing scales with stacks—do not cash it in immediately unless the small heal prevents death.', talents:[[1,'Fatal Wounds','W','Stack and extend Blood Rage damage.',qhiraW],[4,'Upstage','W','Gain Evasion after Blood Rage hits.',qhiraW],[7,'Healmonger','W','Heal more against low-health Heroes.',qhiraW],[10,'Final Strike','R','Long-range execute pressure.',qhiraFinal],[13,'The Hunted','AA','Attack speed against bleeding targets.',qhiraW],[16,'Booming Kick','E','Stun enemies around your target.',qhiraE],[20,'Utility Belt','D','More Grappling Hook mobility.',qhiraD]] },
+      { title:'Basic Attacks', subtitle:'Single-target pursuit', icon:qhiraD, summary:'Uses slows, attack speed, and swing resets to stay attached to one priority target.', bestFor:'Isolated targets · mobile fights · enemy backlines', gameplan:'Open with Grappling Hook or Revolving Sweep, reactivate behind the target, then keep attacking while Blood Rage ticks. Save Unrelenting Strikes for allied crowd control so its final stun lands.', reminder:'Revolving Sweep makes Qhira untargetable, but the landing point can still leave her isolated—plan the exit first.', talents:[[1,'Finishing Touch','AA','Empower attacks against low Health.',qhiraD],[4,'Ensnaring Swing','E','Slow during and after the swing.',qhiraE],[7,'The Thirst','Q','Carnage grants healing and speed.',qhiraQ],[10,'Unrelenting Strikes','R','Area damage followed by a stun.',qhiraStrikes],[13,'Pulsing Pain','E','Damage the attached target repeatedly.',qhiraE],[16,'Swing Life Away','E','Spell Armor and healing after Sweep.',qhiraE],[20,'Utility Belt','D','Hook cooldown and extra escape.',qhiraD]] },
+    ],
+  },
+  {
+    id:'falstad', name:'Falstad', title:'Wildhammer Thane', role:'Ranged Assassin', universe:'Warcraft', accent:'#70c7ea', portrait:falstadPortrait,
+    source:'https://www.icy-veins.com/heroes/falstad-build-guide', reviewed:'September 11, 2026 · latest guide update',
+    overview:'A global Ranged Assassin who converts map pressure into timely objective arrivals and fight-winning Mighty Gusts.',
+    abilities:[['Q','Hammerang',falstadQ],['W','Lightning Rod',falstadW],['E','Barrel Roll',falstadE],['Z','Flight',falstadZ]],
+    builds:[
+      { title:'Lightning Rod', subtitle:'Single-target pressure', icon:falstadW, summary:'Locks reliable damage onto one Hero while shields and mobility keep Falstad alive through the channel.', bestFor:'Mobile targets · skirmishes · dependable damage', gameplan:'Apply Lightning Rod after enemy mobility is spent and move with the target to preserve every strike. Fly to fights from a side lane, but arrive before your team is forced to engage four-versus-five.', reminder:'Lightning Rod ends if the target leaves range—Barrel Roll forward only when enemy crowd control is accounted for.', talents:[[1,'Dishonorable Discharge','W','Stack Lightning Rod damage.',falstadW],[4,'Static Shield','W','Gain Shields from Rod strikes.',falstadW],[7,'Charged Up','W','Add strikes and increase range.',falstadW],[10,'Mighty Gust','R','Disengage or isolate enemies.',falstadGust],[13,'Thunderstrikes','W','Each Rod strike grows stronger.',falstadW],[16,'Afterburner','E','Barrel Roll grants Movement Speed.',falstadE],[20,'Wind Tunnel','R','Mighty Gust repeatedly pushes.',falstadGust]] },
+      { title:'Hammerang', subtitle:'Ranged poke and waveclear', icon:falstadQ, summary:'Improves safe poke and area damage for grouped fights where Lightning Rod range is dangerous.', bestFor:'Grouped enemies · waveclear · long standoffs', gameplan:'Throw Hammerang through the wave or frontline and detonate BOOMerang when it overlaps multiple targets. Use Mighty Gust to pin enemies against terrain or reset a losing fight.', reminder:'The return path can hit twice—reposition so Hammerang crosses the target again on its way back.', talents:[[1,'Frequent Flyer','AA','Attacks build speed and damage.',falstadZ],[4,'Hammer Gains','AA','Basic Attacks restore Health.',falstadQ],[7,'BOOMerang','Q','Reactivate for area damage.',falstadQ],[10,'Mighty Gust','R','Control the shape of the fight.',falstadGust],[13,'Flow Rider','D','Tailwind reduces ability cooldowns.',falstadZ],[16,'Aerie Gusts','D','Tailwind activates sooner.',falstadZ],[20,'Wind Tunnel','R','Create a sustained displacement wall.',falstadGust]] },
+    ],
+  },
+  {
+    id:'sylvanas', name:'Sylvanas', title:'The Banshee Queen', role:'Ranged Assassin', universe:'Warcraft', accent:'#a879d4', portrait:sylvanasPortrait,
+    source:'https://www.icy-veins.com/heroes/sylvanas-build-guide', reviewed:'March 11, 2026 · latest guide update',
+    overview:'A flexible ranged carry who disables enemy structures, spreads pressure through teams, and turns good positioning into relentless damage.',
+    abilities:[['Q','Withering Fire',sylvanasQ],['W','Shadow Dagger',sylvanasW],['E','Haunting Wave',sylvanasE],['D','Black Arrows',sylvanasD]],
+    builds:[
+      { title:'Sustained Damage', subtitle:'Shadow Dagger pressure', icon:sylvanasW, summary:'Spreads marks through clustered teams and converts them into strong, repeatable Basic Attack damage.', bestFor:'Standard games · grouped fights · steady pressure', gameplan:'Apply three Banshee’s Curse stacks before using Shadow Dagger, then attack the marked target so Festering Wounds and Lost Soul keep your abilities cycling. Use Haunting Wave primarily as an escape.', reminder:'Black Arrows is an active—turn it on for a coordinated structure push rather than leaving it unused.', talents:[[1,'Unrelenting Torment','W','Shadow Dagger deals more damage.',sylvanasW],[4,'Unstable Poison','D','Marked minions explode on death.',sylvanasD],[7,'Lost Soul','W','Attacks reduce Dagger cooldown.',sylvanasW],[10,'Mind Control','R','Force a target out of position.',sylvanasMind],[13,'Cold Embrace','W','Shadow Dagger reduces Armor.',sylvanasW],[16,'Remorseless','AA','Attacks gain range and spread Curse.',sylvanasD],[20,'Dark Lady’s Call','R','Upgrade Mind Control and debuff.',sylvanasMind]] },
+      { title:'Burst Damage', subtitle:'Advanced dive execution', icon:sylvanasArrow, summary:'Uses Haunting Wave resets and Armor reduction to deliver a dangerous but explosive close-range sequence.', bestFor:'Advanced players · pick comps · vulnerable backlines', gameplan:'Stack the target first, cast Haunting Wave through them, reactivate only when the enemy’s control is committed, then unload Withering Fire and Wailing Arrow. Windrunner gives a second Wave to leave.', reminder:'Haunting Wave is your only real escape—diving without Windrunner’s reset is usually a one-way trip.', talents:[[1,'Might of the Banshee Queen','Q','Withering Fire grants power and speed.',sylvanasQ],[4,'Mercenary Queen','D','Improve macro and mercenary pressure.',sylvanasD],[7,'Festering Wounds','E','Wave applies full Curse stacks.',sylvanasE],[10,'Wailing Arrow','R','Burst damage and area Silence.',sylvanasArrow],[13,'Windrunner','E','Haunting Wave resets after teleport.',sylvanasE],[16,'Evasive Fire','Q','Withering Fire grants speed.',sylvanasQ],[20,'Bolt of the Storm','1','Blink for engage or escape.',sylvanasE]] },
+    ],
+  },
+  {
+    id:'brightwing', name:'Brightwing', title:'Faerie Dragon', role:'Healer', universe:'Warcraft', accent:'#67d7a2', portrait:brightwingPortrait,
+    source:'https://www.icy-veins.com/heroes/brightwing-build-guide', reviewed:'September 11, 2026 · latest guide update',
+    overview:'A global Healer who passively sustains nearby allies, neutralizes divers with Polymorph, and teleports to emergencies.',
+    abilities:[['Q','Arcane Flare',brightwingQ],['W','Polymorph',brightwingW],['E','Pixie Dust',brightwingE],['D','Soothing Mist',brightwingD]],
+    builds:[
+      { title:'Critical Mist', subtitle:'Cleanse and sustain', icon:brightwingZ, summary:'Adds a strong area cleanse to Soothing Mist while preserving Brightwing’s global healing and defensive utility.', bestFor:'Heavy crowd control · grouped teams · standard play', gameplan:'Stay near multiple allies for Soothing Mist, but keep enough distance to avoid shared crowd control. Use Critical Mist after disabling effects land, then Polymorph the diver trying to continue the engage.', reminder:'Phase Shift is a long channel—start early and check that the destination ally is not retreating into danger.', talents:[[1,'Hyper Shift','Z','Soothing Mist reduces Phase Shift.',brightwingZ],[4,'Magic Spit','AA','Attacks improve Soothing Mist.',brightwingQ],[7,'Critical Mist','D','Cleanse nearby allies and heal.',brightwingZ],[10,'Blink Heal','R','Mobile burst healing.',brightwingBlink],[13,'Safety Dust','E','Pixie Dust boosts healing received.',brightwingE],[16,'Critterize','W','Polymorph reduces target Armor.',brightwingW],[20,'Invisible Friends','R','Blink Heal grants Stealth.',brightwingBlink]] },
+      { title:'Teleport', subtitle:'Global rescue', icon:brightwingZ, summary:'Strengthens Phase Shift into a frequent burst heal that safely reinforces allies across the map.', bestFor:'Large maps · split pressure · isolated allies', gameplan:'Watch allied Health bars while soaking safely, then Phase Shift before an ally becomes critically low. Peekaboo reveals the arrival area and grants both of you protection against the opening burst.', reminder:'Do not teleport merely to top off Health—save Phase Shift for pressure your passive aura cannot answer.', talents:[[1,'Hyper Shift','Z','Reduce global cooldown through healing.',brightwingZ],[4,'Magic Spit','AA','Improve passive healing frequency.',brightwingQ],[7,'Peekaboo!','Z','Reveal and Shield on arrival.',brightwingZ],[10,'Blink Heal','R','Reposition while healing allies.',brightwingBlink],[13,'Safety Dust','E','Amplify healing on a protected ally.',brightwingE],[16,'Critterize','W','Help the team burst a threat.',brightwingW],[20,'Invisible Friends','R','Protect Blink Heal targets.',brightwingBlink]] },
+    ],
+  },
+  {
+    id:'rehgar', name:'Rehgar', title:'Shaman of the Earthen Ring', role:'Healer', universe:'Warcraft', accent:'#5ebee3', portrait:rehgarPortrait,
+    source:'https://www.icy-veins.com/heroes/rehgar-build-guide', reviewed:'January 27, 2026 · latest guide review',
+    overview:'An aggressive melee Healer with strong camp clear, reliable slowing, and a massive single-target Ancestral Healing save.',
+    abilities:[['Q','Chain Heal',rehgarQ],['W','Lightning Shield',rehgarW],['E','Earthbind Totem',rehgarE],['Z','Ghost Wolf',rehgarD]],
+    builds:[
+      { title:'Earthbind Totem', subtitle:'Control and protection', icon:rehgarE, summary:'Turns Earthbind Totem into a large, durable zone that slows enemies and reduces their damage.', bestFor:'Dive defense · narrow objectives · team protection', gameplan:'Place Earthbind Totem just behind the target so retreat carries them deeper into the slow. Use Ancestral Healing before an ally reaches critical Health because the heal has a one-second delay.', reminder:'Rehgar can clear camps efficiently—use that advantage between objectives, not while your team needs healing.', talents:[[1,'Colossal Totem','E','Increase Totem area and range.',rehgarE],[4,'Earthliving Enchant','Q','Heal low-health allies over time.',rehgarQ],[7,'Grounded Totem','E','Reduce enemy damage and Attack Speed.',rehgarE],[10,'Ancestral Healing','R','Huge delayed single-target heal.',rehgarAncestral],[13,'Wellspring','E','Totem pulses healing.',rehgarE],[16,'Earthgrasp Totem','E','Apply a strong opening Slow.',rehgarE],[20,'Farseer’s Blessing','R','Ancestral Healing affects the team.',rehgarAncestral]] },
+      { title:'Lightning Shield', subtitle:'Aggressive sustain', icon:rehgarW, summary:'Rewards placing Lightning Shield on an active frontline Hero and grows into strong sustained teamfight damage.', bestFor:'Melee-heavy teams · camps · long brawls', gameplan:'Cast Lightning Shield on the ally who will remain in melee range, then refresh it when Rising Storm has accumulated. Weave empowered Ghost Wolf attacks only when stepping forward is safe.', reminder:'Lightning Shield generates more value on an allied diver than on Rehgar when you must stay back to heal.', talents:[[1,'Stormcaller','W','Lightning Shield returns Mana.',rehgarW],[4,'Electric Charge','W','Larger Shield radius and healing.',rehgarW],[7,'Purification','1','Cleanse an allied Hero.',rehgarQ],[10,'Ancestral Healing','R','Save the focused ally.',rehgarAncestral],[13,'Tidal Waves','Q','Chain Heal reduces its cooldown.',rehgarQ],[16,'Rising Storm','W','Repeated Shields scale damage.',rehgarW],[20,'Farseer’s Blessing','R','Add area healing to the save.',rehgarAncestral]] },
+    ],
+  },
+  {
+    id:'mephisto', name:'Mephisto', title:'Lord of Hatred', role:'Ranged Assassin', universe:'Diablo', accent:'#9b77ee', portrait:mephistoPortrait,
+    source:'https://www.icy-veins.com/heroes/mephisto-build-guide', reviewed:'September 11, 2026 · latest talent review',
+    overview:'An area-damage mage who uses temporary Shade teleports and repeated Hero hits to reset cooldowns at remarkable speed.',
+    abilities:[['Q','Skull Missile',mephistoQ],['W','Lightning Nova',mephistoW],['E','Shade of Mephisto',mephistoE],['D','Lord of Hatred',mephistoD]],
+    builds:[
+      { title:'Skull Missile', subtitle:'Repeatable spell burst', icon:mephistoQ, summary:'Stacks Skull Missile into a two-charge threat and detonates it through Lightning Nova for heavy area damage.', bestFor:'Grouped fights · allied setup · safe poke', gameplan:'Launch Skull Missile at slowed or rooted enemies, then position Lightning Nova so the missile crosses its ring for Lightning Reaction. Shade in only after identifying a safe return point.', reminder:'Everyone can see where Shade returns—never leave its origin inside enemy crowd control or displacement.', talents:[[1,'Unyielding Power','Q','Stack damage and gain a second charge.',mephistoQ],[4,'Spite','D','Globes accelerate cooldown resets.',mephistoD],[7,'Trickery','E','Speed and potential Shade reset.',mephistoE],[10,'Durance of Hate','R','Root one target and nearby enemies.',mephistoDurance],[13,'Abhorred Skull','Q','Skull Missile grants Spell Power.',mephistoQ],[16,'Lightning Reaction','Q','Missiles explode through Nova.',mephistoQ],[20,'Mimic','E','Shade casts a second Lightning Nova.',mephistoE]] },
+      { title:'Lightning Nova', subtitle:'Percent-damage brawler', icon:mephistoW, summary:'Punishes high-health, grouped Heroes with overlapping Novas and strong defensive shielding.', bestFor:'High-health teams · clustered objectives · sustained fights', gameplan:'Shade to the edge of a grouped fight and keep enemies on Lightning Nova’s outer ring. Use the cooldown reduction from repeated hits to cycle abilities, then return before opponents collapse on the Shade.', reminder:'Lightning Nova deals damage at its ring, not inside it—match your movement to the target’s path.', talents:[[1,'Furious Spark','W','Every third Nova hit deals bonus damage.',mephistoW],[4,'Static Barrier','W','Nova damage becomes a Shield.',mephistoW],[7,'Frost Storm','E','Shade adds Slows to abilities.',mephistoE],[10,'Durance of Hate','R','Hold enemies on the Nova ring.',mephistoDurance],[13,'Hysteria','D','Reduce Heroic cooldown and recover.',mephistoD],[16,'Static Field','W','Nova deals percent Health damage.',mephistoW],[20,'Mimic','E','Overlap Novas from both positions.',mephistoE]] },
+    ],
+  },
+  {
+    id:'auriel', name:'Auriel', title:'Archangel of Hope', role:'Healer', universe:'Diablo', accent:'#f1c762', portrait:aurielPortrait,
+    source:'https://www.icy-veins.com/heroes/auriel-build-guide', reviewed:'September 11, 2026 · latest guide update',
+    overview:'A resource-driven Healer who turns allied damage into Energy, enabling powerful burst healing without using Mana.',
+    abilities:[['Q','Sacred Sweep',aurielQ],['W','Ray of Heaven',aurielW],['E','Detainment Strike',aurielE],['D','Bestow Hope',aurielD]],
+    builds:[
+      { title:'Sustained Healing', subtitle:'Reliable Energy economy', icon:aurielW, summary:'Uses ranged Basic Attacks and efficient full-Energy heals to scale into enormous late-game healing.', bestFor:'Consistent damage dealers · long fights · standard games', gameplan:'Keep Bestow Hope on the ally dealing the most reliable Hero damage and move the crown as the fight changes. Attack safely to fill the remaining Energy, then cast Ray of Heaven at full charge.', reminder:'A full Energy bar does nothing by itself—spend it before incoming damage forces an inefficient emergency heal.', talents:[[1,'Searing Light','W','Ray of Heaven also damages enemies.',aurielW],[4,'Majestic Span','Q','Increase Sacred Sweep radius.',aurielQ],[7,'Energized Cord','AA','Attacks generate more Energy.',aurielD],[10,'Crystal Aegis','R','Put an ally in protective Stasis.',aurielAegis],[13,'Piercing Lash','E','Detainment Strike pierces Heroes.',aurielE],[16,'Reservoir of Hope','W','Full heals grow maximum Energy.',aurielW],[20,'Shield of Hope','1','Shield allies by missing Health.',aurielD]] },
+      { title:'Resurrect', subtitle:'High-stakes recovery', icon:aurielResurrect, summary:'Combines strong burst healing with a second chance for a key ally after the enemy commits resources.', bestFor:'Protect-the-carry teams · late fights · limited interrupts', gameplan:'Hold Resurrect until the corpse location is safe enough to channel and defend. Glimmer of Hope makes globe timing important: collect one, then spend a large Ray of Heaven efficiently.', reminder:'Resurrecting into an occupied enemy zone only creates a second death—secure the area before channeling.', talents:[[1,'Righteous Assault','Q','Hero hits reduce Sweep cooldown.',aurielQ],[4,'Majestic Span','Q','Easier center hits and Energy.',aurielQ],[7,'Glimmer of Hope','W','Globes discount the next heal.',aurielW],[10,'Resurrect','R','Return a fallen ally to life.',aurielResurrect],[13,'Converging Force','Q','Pull enemies into Sweep’s center.',aurielQ],[16,'Reservoir of Hope','W','Scale maximum Energy and healing.',aurielW],[20,'Light Speed','R','Resurrected allies escape quickly.',aurielResurrect]] },
     ],
   },
 ]
