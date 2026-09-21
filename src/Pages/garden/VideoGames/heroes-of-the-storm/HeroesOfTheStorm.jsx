@@ -28,6 +28,13 @@ import junkratW from './assets/junkrat-w.png'
 import junkratE from './assets/junkrat-e.png'
 import junkratTire from './assets/junkrat-tire.png'
 import junkratPortrait from './assets/optimized/junkrat-portrait-800.webp'
+import lucioQ from './assets/lucio-q.png'
+import lucioW from './assets/lucio-w.png'
+import lucioE from './assets/lucio-e.png'
+import lucioD from './assets/lucio-d.png'
+import lucioBarrier from './assets/lucio-barrier.png'
+import lucioFive from './assets/lucio-five.png'
+import lucioPortrait from './assets/optimized/lucio-portrait-800.webp'
 import './HeroesOfTheStorm.css'
 
 const HEROES = [
@@ -79,6 +86,16 @@ const HEROES = [
     builds:[
       { title:'Steel Trap', subtitle:'Anti-dive control', icon:junkratE, summary:'Build a two-trap perimeter that roots, Silences, and exposes anyone who dives through it.', bestFor:'Dive assassins · choke points · objective control', gameplan:'Set traps before the fight starts, covering your escape route and the enemy’s likely approach. When a trap catches a Hero, trigger Blow ’Em Up! and unload RIP-Tire or a close Spread Volley during the root and Silence.', reminder:'Steel Trap takes two seconds to arm—place it where the fight will move, not where the enemy is standing now.', talents:[[1,"Blow 'Em Up!",'D','Boost damage after Mine or Trap hits.',junkratW],[4,'Chattering Teeth','E','Traps chase nearby Heroes.',junkratE],[7,'Sticky Wicket','E','Trapped Heroes are Silenced.',junkratE],[10,'RIP-Tire','R','Remote burst and displacement.',junkratTire],[13,"Gotta Trap 'Em All!",'E','Maintain two traps with less cooldown.',junkratE],[16,'Spread Volley','1','Fire two extra grenades per charge.',junkratQ],[20,'Cannonball!','Q','Greatly increase grenade radius.',junkratQ]] },
       { title:'Frag Launcher', subtitle:'Long-range artillery', icon:junkratQ, summary:'Scale grenade damage into relentless late-game poke while preserving Mine for mobility and self-peel.', bestFor:'Long standoffs · waveclear · grouped enemies', gameplan:'Stack Taste For Explosions from a safe angle and weave Basic Attacks between grenades when positioning allows. Use Ripper Air on yourself for rotations or escape; save RIP-Tire until enemy interrupts are occupied.', reminder:'Aim at the front edge of a target so a near miss bounces into them instead of sailing past.', talents:[[1,'Extra-Wound Timers','Q','Empower the final grenade.',junkratQ],[4,'Taste For Explosions','Q','Permanently stack grenade damage.',junkratQ],[7,'Dirty Trickster','D','Punish dive and crowd control.',junkratPortrait],[10,'RIP-Tire','R','High-impact ranged teamfight burst.',junkratTire],[13,'Ripper Air','W','Frequent, stronger self-launches.',junkratW],[16,'Endless Nades','Q','Hero hits reduce launcher cooldown.',junkratQ],[20,'Cannonball!','Q','Larger grenades hit more targets.',junkratQ]] },
+    ],
+  },
+  {
+    id:'lucio', name:'Lúcio', title:'Freedom Fighting DJ', role:'Healer', universe:'Overwatch', accent:'#73d44f', portrait:lucioPortrait,
+    source:'https://www.icy-veins.com/heroes/lucio-build-guide', reviewed:'August 24, 2026 · latest guide update',
+    overview:'A highly mobile sustain Healer who accelerates rotations, disrupts engages, and saves allies with burst protection and Unstoppable.',
+    abilities:[['Q','Soundwave',lucioQ],['W','Crossfade',lucioW],['E','Amp It Up',lucioE],['Z','Wall Ride',lucioD]],
+    builds:[
+      { title:'Advanced', subtitle:'Mobile playmaker', icon:lucioFive, summary:'Turns Wall Ride, constant attacks, and High Five into aggressive mobility, cooldown reduction, and clutch cleanses.', bestFor:'Experienced players · dive teams · active peel', gameplan:'Maintain Wall Ride for Accelerando, harass safely, and keep Basic Attacks flowing to refresh Amp It Up. High Five a safe nearby ally first when you need Unstoppable before crossing enemy control to rescue someone deeper.', reminder:'Do not chase damage at the cost of your aura—your team still needs to remain inside Crossfade.', talents:[[1,'Accelerando','Z','Ramp Wall Ride speed to 40%.',lucioD],[4,'Off the Wall','Q','Wall Ride hits refresh Soundwave.',lucioQ],[7,'Reverse Amp','1','Damage or Slow with the active track.',lucioE],[10,'High Five','R','Heal and grant Unstoppable.',lucioFive],[13,'Heavy Casters','D','Push Off briefly Stuns.',lucioD],[16,'Up the Frequency','AA','Attacks refresh Amp It Up.',lucioE],[20,'Mixing Fire','R','Upgrade High Five and add anti-heal.',lucioFive]] },
+      { title:'Crossfade', subtitle:'Reliable team sustain', icon:lucioW, summary:'Expands and strengthens Lúcio’s healing aura for a simpler defensive style that keeps the whole team moving.', bestFor:'Newer players · grouped teams · sustained damage', gameplan:'Finish Party Mix by staying near allies, swap to Speed Boost for engages and retreats, then return to Healing Boost before using Amp It Up. Place Boombox where it safely extends coverage around an objective.', reminder:'Sound Barrier is strongest just before predictable burst lands—the shield decays quickly after the cast.', talents:[[1,'Party Mix','W','Grow Mana and Crossfade radius.',lucioW],[4,'Off the Wall','Q','More frequent peel from terrain.',lucioQ],[7,'Boombox','1','Extend aura coverage and grant Armor.',lucioW],[10,'Sound Barrier','R','Large team shield against burst.',lucioBarrier],[13,'All Together','W','Gain speed for each nearby ally.',lucioW],[16,'Rejuvenescência','E','Add percent-Health healing.',lucioE],[20,'House Party','W','Scale healing with nearby allies.',lucioW]] },
     ],
   },
 ]
