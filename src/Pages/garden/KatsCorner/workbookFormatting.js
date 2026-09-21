@@ -19,12 +19,13 @@ export function readWorkbookFormatting(bytes, headerRowNumber, headers) {
   const sheetRelation = relationships.find((entry) => attribute(entry, 'Id') === sheetId)
   const styleRelation = relationships.find((entry) => attribute(entry, 'Type')?.endsWith('/styles'))
   const themeRelation = relationships.find((entry) => attribute(entry, 'Type')?.endsWith('/theme'))
+  const stringsRelation = relationships.find((entry) => attribute(entry, 'Type')?.endsWith('/sharedStrings'))
   const worksheet = text(partPath(attribute(sheetRelation ?? '', 'Target') ?? 'worksheets/sheet1.xml'))
   const stylesXml = text(partPath(attribute(styleRelation ?? '', 'Target') ?? 'styles.xml'))
   if (!worksheet || !stylesXml) throw new Error('Could not read the Excel workbook formatting. Please save it as XLSX and try again.')
   const rowFormats = {}
   for (const match of worksheet.matchAll(/<row\b([^>]*?)(?:\/>|>([\s\S]*?)<\/row>)/g)) {
-    const row = { cells: {} }
+    const row = { cells: {}, xml: match[0] }
     for (const name of ['ht', 'customHeight', 's', 'customFormat']) {
       const value = attribute(match[1], name)
       if (value !== undefined) row[name] = value
@@ -41,6 +42,7 @@ export function readWorkbookFormatting(bytes, headerRowNumber, headers) {
     rowFormats,
     stylesXml,
     themeXml: themeRelation ? text(partPath(attribute(themeRelation, 'Target'))) : '',
+    sharedStringsXml: stringsRelation ? text(partPath(attribute(stringsRelation, 'Target'))) : '',
     worksheetOpen: worksheet.match(/<worksheet\b[^>]*>/)?.[0],
     columnsXml: worksheet.match(/<cols\b[^>]*>[\s\S]*?<\/cols>/)?.[0] ?? '',
     sheetFormatXml: worksheet.match(/<sheetFormatPr\b[^>]*\/>/)?.[0] ?? '',

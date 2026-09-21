@@ -95,7 +95,7 @@ describe('buildWeeklyReportDocx', () => {
 
     expect(xml).toContain('TTL UNITS: 759')
     expect(xml).toContain('UNITS: 444')
-    expect(xml).toContain('Black | UNITS: 315')
+    expect(xml).toContain('Mole | UNITS: 444')
     expect(xml).not.toContain('UNITS: 0')
   })
 

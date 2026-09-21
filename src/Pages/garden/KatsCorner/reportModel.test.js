@@ -159,6 +159,19 @@ describe('monthly report model', () => {
 })
 
 describe('weekly report model', () => {
+  it('keeps every Excel row while using one image for each unique nonempty description', () => {
+    const report = parseWeeklySpreadsheetRows([
+      { VIN: 'MK1', STYLE_DESCRIPTION: 'Blue', 'SS RATIO': 2, 'SLS UN': 10 },
+      { VIN: 'MK1', STYLE_DESCRIPTION: 'Blue', 'SS RATIO': 3, 'SLS UN': 20 },
+      { VIN: 'MK1', STYLE_DESCRIPTION: '', 'SS RATIO': 4, 'SLS UN': 30 },
+      { VIN: 'MK1 Total', 'SS RATIO': 3.5, 'SLS UN': 60 },
+    ])
+    expect(report.groups[0].detailRows).toHaveLength(3)
+    expect(report.groups[0].styles).toHaveLength(1)
+    expect(report.groups[0].styles[0]).toMatchObject({ description: 'Blue', units: 20 })
+    expect(report.groups[0].totalRow.sourceRow.VIN).toBe('MK1 Total')
+  })
+
   it('uses VIN total rows for headlines and grouping while retaining individual row statistics', () => {
     const report = parseWeeklySpreadsheetRows([
       { VIN: 'MK0895', STYLE_DESCRIPTION: 'Mole', 'SLS UN': 444, 'SS RATIO': 2.277 },
@@ -170,7 +183,7 @@ describe('weekly report model', () => {
     ])
     expect(report.groups).toHaveLength(2)
     expect(report.groups[0]).toMatchObject({ vin: 'MK0895', totalUnits: 759, totalSs: 2.9, classification: 'great' })
-    expect(report.groups[0].styles.map(({ units, ss }) => [units, ss])).toEqual([[444, 2.3], [315, 3.8]])
+    expect(report.groups[0].styles.map(({ units, ss }) => [units, ss])).toEqual([[315, 3.8], [444, 2.3]])
     expect(report.groups[1]).toMatchObject({ vin: 'MV2514A', totalUnits: 220, totalSs: 2.6 })
     expect(report.groups[1].styles.map(({ units, ss }) => [units, ss])).toEqual([[157, 2.9]])
   })
@@ -196,8 +209,8 @@ describe('weekly report model', () => {
       { VIN: 'MK0895', STYLE_DESCRIPTION: 'Ivory', 'SLS UN': 20, 'SS RATIO': 4.5 },
     ])
 
-    expect(report.groups[0].styles.map(({ units }) => units)).toEqual([1444, 315])
-    expect(report.groups.map(({ totalUnits }) => totalUnits)).toEqual([1759, 20])
+    expect(report.groups[0].styles.map(({ units }) => units)).toEqual([20, 315, 1444])
+    expect(report.groups.map(({ totalUnits }) => totalUnits)).toEqual([1779])
   })
 
   it('classifies rows by SS Ratio and orders the seller groups', () => {
@@ -209,8 +222,8 @@ describe('weekly report model', () => {
     ], 'week-8.xlsx')
 
     expect(report.type).toBe('weekly')
-    expect(report.groups.map(({ classification }) => classification)).toEqual(['great', 'good', 'ok', 'slow'])
-    expect(report.groups.map(({ vin }) => vin)).toEqual(['GREAT1', 'GOOD1', 'OK1', 'SLOW1'])
+    expect(report.groups.map(({ classification }) => classification)).toEqual(['slow', 'ok', 'good', 'great'])
+    expect(report.groups.map(({ vin }) => vin)).toEqual(['SLOW1', 'OK1', 'GOOD1', 'GREAT1'])
   })
 
   it('uses complete, gap-free SS thresholds', () => {
@@ -224,10 +237,10 @@ describe('weekly report model', () => {
     ])
 
     expect(report.groups).toHaveLength(1)
-    expect(report.groups[0].styles.map(({ description }) => description)).toEqual(['Black', 'Ivory'])
+    expect(report.groups[0].styles.map(({ description }) => description)).toEqual(['Ivory', 'Black'])
   })
 
-  it('orders weekly VIN groups by their lowest SS within each rating', () => {
+  it('orders weekly VIN groups by SS descending', () => {
     const report = parseWeeklySpreadsheetRows([
       { VIN: 'GOOD-HIGH', 'Style Description': 'Higher good', 'SS Ratio': 3.5 },
       { VIN: 'GREAT-HIGH', 'Style Description': 'Higher great', 'SS Ratio': 2.9 },
@@ -235,7 +248,7 @@ describe('weekly report model', () => {
       { VIN: 'GREAT-LOW', 'Style Description': 'Lower great', 'SS Ratio': 2.1 },
     ])
 
-    expect(report.groups.map(({ vin }) => vin)).toEqual(['GREAT-LOW', 'GREAT-HIGH', 'GOOD-LOW', 'GOOD-HIGH'])
+    expect(report.groups.map(({ vin }) => vin)).toEqual(['GOOD-HIGH', 'GOOD-LOW', 'GREAT-HIGH', 'GREAT-LOW'])
   })
 
   it('splits weekly VINs into knits first and wovens second', () => {
@@ -247,10 +260,10 @@ describe('weekly report model', () => {
     ])
 
     expect(report.groups.map(({ vin, fabric, classification }) => [vin, fabric, classification])).toEqual([
-      ['MK0001', 'knit', 'great'],
       ['MK0002', 'knit', 'slow'],
-      ['MV0001', 'woven', 'great'],
+      ['MK0001', 'knit', 'great'],
       ['MV0002', 'woven', 'good'],
+      ['MV0001', 'woven', 'great'],
     ])
   })
 

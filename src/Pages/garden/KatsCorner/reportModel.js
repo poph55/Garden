@@ -134,6 +134,8 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
       totalsByVin.set(totalVin, {
         totalUnits: numberValue(readValue(row, HEADER_ALIASES.units)),
         totalSs: roundSs(rawSs),
+        totalSortSs: numberValue(rawSs),
+        totalRow: { sourceRow: { ...row }, sourceRowNumber: row[SOURCE_ROW_NUMBER] },
       })
     }
   }
@@ -142,17 +144,17 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
     const vin = String(readValue(row, HEADER_ALIASES.vin) ?? '').trim().toUpperCase()
     const description = String(readValue(row, HEADER_ALIASES.description) ?? '').trim()
     const rawSs = readValue(row, HEADER_ALIASES.ss)
-    if (!vin || /\s+total$/i.test(vin) || !description || rawSs === undefined || rawSs === null || String(rawSs).trim() === '') return
+    if (!vin || /\s+total$/i.test(vin) || rawSs === undefined || rawSs === null || String(rawSs).trim() === '') return
 
     const ss = roundSs(rawSs)
     const rating = weeklyRating(ss)
     const totals = totalsByVin.get(vin)
     const groupRating = totals ? weeklyRating(totals.totalSs) : rating
     const fabric = fabricFromVin(vin)
-    const key = `${groupRating}:${vin}`
+    const key = vin
     if (!groups.has(key)) {
       groups.set(key, {
-        id: stableId([groupRating, vin]),
+        id: stableId(['weekly', vin]),
         vin,
         originalVin: vin,
         fabric,
@@ -160,25 +162,26 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
         totalUnits: 0,
         totalSs: ss,
         styles: [],
+        detailRows: [],
         candidates: [],
         assignments: {},
         confirmedAssignments: {},
       })
     }
 
-    groups.get(key).styles.push({
+    groups.get(key).detailRows.push({
       id: stableId([vin, description, ss, rowIndex]),
       vin,
       description,
       units: numberValue(readValue(row, HEADER_ALIASES.units)),
       ss,
+      sortSs: numberValue(rawSs),
       rating,
       sourceRow: { ...row },
       sourceRowNumber: row[SOURCE_ROW_NUMBER],
     })
   })
 
-  const ratingOrder = new Map(WEEKLY_RATINGS.map((rating, index) => [rating, index]))
   const fabricOrder = new Map(WEEKLY_FABRICS.map((fabric, index) => [fabric, index]))
   return {
     id: stableId([sourceName, 'weekly', rows.length]),
@@ -187,11 +190,17 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
     workbookFormatting: rows.workbookFormatting,
     groups: [...groups.values()]
       .map((group) => {
-        const styles = sortStylesBySs(group.styles)
-        const totals = totalsByVin.get(group.vin) ?? { totalUnits: styles.reduce((sum, style) => sum + style.units, 0), totalSs: styles[0]?.ss ?? group.totalSs }
-        return { ...group, ...totals, styles }
+        const detailRows = [...group.detailRows].sort((a, b) => b.sortSs - a.sortSs)
+        const seenDescriptions = new Set()
+        const styles = detailRows.filter((style) => {
+          if (!style.description || seenDescriptions.has(style.description)) return false
+          seenDescriptions.add(style.description)
+          return true
+        })
+        const totals = totalsByVin.get(group.vin) ?? { totalUnits: detailRows.reduce((sum, style) => sum + style.units, 0), totalSs: detailRows[0]?.ss ?? 0, totalSortSs: detailRows[0]?.sortSs ?? 0 }
+        return { ...group, ...totals, classification: weeklyRating(totals.totalSs), detailRows, styles }
       })
-      .sort((a, b) => fabricOrder.get(a.fabric) - fabricOrder.get(b.fabric) || ratingOrder.get(a.classification) - ratingOrder.get(b.classification) || a.totalSs - b.totalSs || a.vin.localeCompare(b.vin)),
+      .sort((a, b) => fabricOrder.get(a.fabric) - fabricOrder.get(b.fabric) || b.totalSortSs - a.totalSortSs || a.vin.localeCompare(b.vin)),
   }
 }
 

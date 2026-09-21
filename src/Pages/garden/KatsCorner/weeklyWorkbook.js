@@ -1,5 +1,5 @@
 import { zipSync } from 'fflate'
-import { WEEKLY_FABRICS, weeklyStylesInExportOrder } from './reportModel'
+import { WEEKLY_FABRICS, fabricFromVin } from './reportModel'
 
 const encoder = new TextEncoder()
 const MIME_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -46,9 +46,9 @@ function sourceColumns(styles) {
 
 function displayValue(style, column) {
   const token = normalized(column)
-  if (['vin', 'vendor item number', 'item'].includes(token)) return style.vin
+  if (['vin', 'vendor item number', 'item'].includes(token)) return style.isTotal ? `${style.vin} Total` : style.vin
   if (['style description', 'description', 'style', 'color description'].includes(token)) return style.description
-  if (['ss', 'ss ratio', 'sell through', 'sell through'].includes(token)) return style.ss
+  if (['ss', 'ss ratio', 'sell through'].includes(token)) return style.sortSs ?? style.ss
   return style.sourceRow?.[column] ?? ''
 }
 
@@ -60,15 +60,40 @@ function sourceCellStyle(formatting, row, column) {
   return formatting.rowFormats[row]?.cells[columnName(column)] ?? Number(formatting.rowFormats[row]?.s ?? 0)
 }
 
+function originalRowXml(formatting, sourceRowNumber, rowNumber, style) {
+  const original = formatting?.rowFormats[sourceRowNumber]?.xml
+  if (!original) return null
+  // Keep each original cell's formatting, rich text, and precise cached value.
+  // Formula results remain snapshots, as in the existing sorted export.
+  let xml = original.replace(/(<row\b[^>]*\br=")\d+"/, `$1${rowNumber}"`)
+    .replace(/(<c\b[^>]*\br=")([A-Z]+)\d+"/g, `$1$2${rowNumber}"`)
+    .replace(/<f\b[^>]*(?:\/>|>[\s\S]*?<\/f>)/g, '')
+  if (style && style.vin !== style.group.originalVin) {
+    const vinIndex = formatting.headers.findIndex(header => ['vin', 'vendor item number', 'item'].includes(normalized(header)))
+    const reference = `${columnName(vinIndex)}${rowNumber}`
+    const replacement = cellXml(style.isTotal ? `${style.vin} Total` : style.vin, reference, sourceCellStyle(formatting, sourceRowNumber, vinIndex))
+    xml = xml.replace(new RegExp(`<c\\b[^>]*\\br="${reference}"[^>]*(?:/>|>[\\s\\S]*?</c>)`), replacement)
+  }
+  return xml
+}
+
+function workbookRows(report, fabric) {
+  return report.groups.filter(group => (group.fabric ?? fabricFromVin(group.vin)) === fabric).flatMap(group => {
+    const rows = (group.detailRows ?? group.styles).map(style => ({ ...style, vin: group.vin, group }))
+    if (group.totalRow) rows.push({ ...group.totalRow, vin: group.vin, description: '', ss: group.totalSs, sortSs: group.totalSortSs, units: group.totalUnits, isTotal: true, group })
+    return rows
+  })
+}
+
 function worksheetXml(styles, formatting) {
   const columns = formatting?.headers ?? sourceColumns(styles)
   const lastColumn = columnName(columns.length - 1)
   const rows = [
-    `<row r="1"${formatting ? rowFormatAttributes(formatting.rowFormats[formatting.headerRowNumber]) : ' ht="24" customHeight="1"'}>${columns.map((column, index) => cellXml(column, `${columnName(index)}1`, formatting ? sourceCellStyle(formatting, formatting.headerRowNumber, index) : 1)).join('')}</row>`,
+    originalRowXml(formatting, formatting?.headerRowNumber, 1) ?? `<row r="1"${formatting ? rowFormatAttributes(formatting.rowFormats[formatting.headerRowNumber]) : ' ht="24" customHeight="1"'}>${columns.map((column, index) => cellXml(column, `${columnName(index)}1`, formatting ? sourceCellStyle(formatting, formatting.headerRowNumber, index) : 1)).join('')}</row>`,
     ...styles.map((style, rowIndex) => {
       const rowNumber = rowIndex + 2
       const rowStyle = RATING_STYLE[style.rating ?? style.group.classification]
-      return `<row r="${rowNumber}"${rowFormatAttributes(formatting?.rowFormats[style.sourceRowNumber])}>${columns.map((column, columnIndex) => cellXml(displayValue(style, column), `${columnName(columnIndex)}${rowNumber}`, formatting ? sourceCellStyle(formatting, style.sourceRowNumber, columnIndex) : rowStyle)).join('')}</row>`
+      return originalRowXml(formatting, style.sourceRowNumber, rowNumber, style) ?? `<row r="${rowNumber}"${rowFormatAttributes(formatting?.rowFormats[style.sourceRowNumber])}>${columns.map((column, columnIndex) => cellXml(displayValue(style, column), `${columnName(columnIndex)}${rowNumber}`, formatting ? sourceCellStyle(formatting, style.sourceRowNumber, columnIndex) : rowStyle)).join('')}</row>`
     }),
   ]
   const widths = columns.map((column, index) => `<col min="${index + 1}" max="${index + 1}" width="${Math.min(42, Math.max(12, String(column).length + 4))}" customWidth="1"/>`).join('')
@@ -82,7 +107,7 @@ function stylesXml() {
 
 export async function buildWeeklyWorkbookXlsx(report) {
   const formatting = report.workbookFormatting
-  const sheets = WEEKLY_FABRICS.map((fabric) => weeklyStylesInExportOrder(report, fabric))
+  const sheets = WEEKLY_FABRICS.map((fabric) => workbookRows(report, fabric))
   const files = {
     '[Content_Types].xml': encoder.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'),
     '_rels/.rels': encoder.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'),
@@ -97,6 +122,12 @@ export async function buildWeeklyWorkbookXlsx(report) {
     const decoder = new TextDecoder()
     files['[Content_Types].xml'] = encoder.encode(decoder.decode(files['[Content_Types].xml']).replace('</Types>', '<Override PartName="/xl/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/></Types>'))
     files['xl/_rels/workbook.xml.rels'] = encoder.encode(decoder.decode(files['xl/_rels/workbook.xml.rels']).replace('</Relationships>', '<Relationship Id="rIdTheme" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/></Relationships>'))
+  }
+  if (formatting?.sharedStringsXml) {
+    files['xl/sharedStrings.xml'] = encoder.encode(formatting.sharedStringsXml)
+    const decoder = new TextDecoder()
+    files['[Content_Types].xml'] = encoder.encode(decoder.decode(files['[Content_Types].xml']).replace('</Types>', '<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>'))
+    files['xl/_rels/workbook.xml.rels'] = encoder.encode(decoder.decode(files['xl/_rels/workbook.xml.rels']).replace('</Relationships>', '<Relationship Id="rIdStrings" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>'))
   }
   return new Blob([zipSync(files)], { type: MIME_TYPE })
 }
