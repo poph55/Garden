@@ -159,6 +159,36 @@ describe('monthly report model', () => {
 })
 
 describe('weekly report model', () => {
+  it('uses VIN total rows for headlines and grouping while retaining individual row statistics', () => {
+    const report = parseWeeklySpreadsheetRows([
+      { VIN: 'MK0895', STYLE_DESCRIPTION: 'Mole', 'SLS UN': 444, 'SS RATIO': 2.277 },
+      { VIN: 'MK0895', STYLE_DESCRIPTION: 'Black', 'SLS UN': 315, 'SS RATIO': 3.817 },
+      { VIN: 'MK0895 Total', 'SLS UN': 759, 'SS RATIO': 2.916 },
+      { VIN: 'MV2514A', STYLE_DESCRIPTION: 'Bison', 'SLS UN': 157, 'SS RATIO': 2.914 },
+      { VIN: 'MV2514A', 'SLS UN': 63, 'SS RATIO': 1.849 },
+      { VIN: 'MV2514A Total', 'SLS UN': 220, 'SS RATIO': 2.609 },
+    ])
+    expect(report.groups).toHaveLength(2)
+    expect(report.groups[0]).toMatchObject({ vin: 'MK0895', totalUnits: 759, totalSs: 2.9, classification: 'great' })
+    expect(report.groups[0].styles.map(({ units, ss }) => [units, ss])).toEqual([[444, 2.3], [315, 3.8]])
+    expect(report.groups[1]).toMatchObject({ vin: 'MV2514A', totalUnits: 220, totalSs: 2.6 })
+    expect(report.groups[1].styles.map(({ units, ss }) => [units, ss])).toEqual([[157, 2.9]])
+  })
+
+  it('excludes missing and whitespace-only descriptions without changing source totals', () => {
+    const rows = [
+      { VIN: 'MV2339', 'SLS UN': 152, 'SS RATIO': 2.8 },
+      { VIN: 'MV2339', STYLE_DESCRIPTION: '  ', 'SLS UN': 38, 'SS RATIO': 7.6 },
+      { VIN: 'MV2339', STYLE_DESCRIPTION: 'Black', 'SLS UN': 105, 'SS RATIO': 3.9 },
+      { VIN: 'MV2339 Total', 'SLS UN': 295, 'SS RATIO': 3.4 },
+    ]
+    const report = associateImages(parseWeeklySpreadsheetRows(rows), [{ id: 'candidate', name: 'MV2339.png' }])
+    const group = report.groups[0]
+    expect(group.styles).toHaveLength(1)
+    expect(group.styles[0]).toMatchObject({ description: 'Black', units: 105, ss: 3.9 })
+    expect(group).toMatchObject({ totalUnits: 295, totalSs: 3.4 })
+  })
+
   it('reads SLS UN and totals the styles in each weekly group', () => {
     const report = parseWeeklySpreadsheetRows([
       { VIN: 'MK0895', STYLE_DESCRIPTION: 'Mole', ' SLS UN ': '1,444', 'SS RATIO': 2.3 },

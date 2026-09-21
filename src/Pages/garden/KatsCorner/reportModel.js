@@ -126,24 +126,37 @@ export function fabricFromVin(vin) {
 
 export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
   const groups = new Map()
+  const totalsByVin = new Map()
+  for (const row of rows) {
+    const totalVin = String(readValue(row, HEADER_ALIASES.vin) ?? '').trim().match(/^(.+?)\s+total$/i)?.[1].toUpperCase()
+    const rawSs = readValue(row, HEADER_ALIASES.ss)
+    if (totalVin && rawSs !== undefined && rawSs !== null && String(rawSs).trim() !== '') {
+      totalsByVin.set(totalVin, {
+        totalUnits: numberValue(readValue(row, HEADER_ALIASES.units)),
+        totalSs: roundSs(rawSs),
+      })
+    }
+  }
 
   rows.forEach((row, rowIndex) => {
     const vin = String(readValue(row, HEADER_ALIASES.vin) ?? '').trim().toUpperCase()
     const description = String(readValue(row, HEADER_ALIASES.description) ?? '').trim()
     const rawSs = readValue(row, HEADER_ALIASES.ss)
-    if (!vin || !description || rawSs === undefined || rawSs === null || String(rawSs).trim() === '') return
+    if (!vin || /\s+total$/i.test(vin) || !description || rawSs === undefined || rawSs === null || String(rawSs).trim() === '') return
 
     const ss = roundSs(rawSs)
     const rating = weeklyRating(ss)
+    const totals = totalsByVin.get(vin)
+    const groupRating = totals ? weeklyRating(totals.totalSs) : rating
     const fabric = fabricFromVin(vin)
-    const key = `${rating}:${vin}`
+    const key = `${groupRating}:${vin}`
     if (!groups.has(key)) {
       groups.set(key, {
-        id: stableId([rating, vin]),
+        id: stableId([groupRating, vin]),
         vin,
         originalVin: vin,
         fabric,
-        classification: rating,
+        classification: groupRating,
         totalUnits: 0,
         totalSs: ss,
         styles: [],
@@ -175,7 +188,8 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
     groups: [...groups.values()]
       .map((group) => {
         const styles = sortStylesBySs(group.styles)
-        return { ...group, totalUnits: styles.reduce((sum, style) => sum + style.units, 0), totalSs: styles[0]?.ss ?? group.totalSs, styles }
+        const totals = totalsByVin.get(group.vin) ?? { totalUnits: styles.reduce((sum, style) => sum + style.units, 0), totalSs: styles[0]?.ss ?? group.totalSs }
+        return { ...group, ...totals, styles }
       })
       .sort((a, b) => fabricOrder.get(a.fabric) - fabricOrder.get(b.fabric) || ratingOrder.get(a.classification) - ratingOrder.get(b.classification) || a.totalSs - b.totalSs || a.vin.localeCompare(b.vin)),
   }

@@ -18,8 +18,9 @@ function run(text, { bold = false, size = 22, color = '231F20' } = {}) {
 
 function titleParagraph(group) {
   const isGreat = group.totalSs < 3.5
-  const rating = isGreat ? 'GREAT' : 'OK'
-  const color = isGreat ? '276749' : '7A4A00'
+  const weeklyColors = { great: '276749', good: '6B5900', ok: '7A4A00', slow: '9B2C2C' }
+  const rating = group.fabric ? group.classification.toUpperCase() : isGreat ? 'GREAT' : 'OK'
+  const color = group.fabric ? weeklyColors[group.classification] : isGreat ? '276749' : '7A4A00'
   const fabric = groupFabric(group) === 'woven' ? 'WOVENS' : 'KNITS'
   return `<w:p><w:pPr><w:spacing w:after="80"/><w:keepNext/></w:pPr>${run(`${fabric} - ${rating} - ${group.vin} - TTL UNITS: ${group.totalUnits.toLocaleString()} - SS: ${formatSs(group.totalSs)}`, { bold: true, size: 30, color })}</w:p>`
 }

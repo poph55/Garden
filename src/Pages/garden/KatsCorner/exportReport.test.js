@@ -63,6 +63,25 @@ describe('buildMonthlyReportDocx', () => {
 })
 
 describe('buildWeeklyReportDocx', () => {
+  it('keeps the source VIN total but omits images for unnamed styles', async () => {
+    const report = parseWeeklySpreadsheetRows([
+      { VIN: 'MV2514A', STYLE_DESCRIPTION: 'Bison', 'SLS UN': 157, 'SS RATIO': 2.914 },
+      { VIN: 'MV2514A', 'SLS UN': 63, 'SS RATIO': 1.849 },
+      { VIN: 'MV2514A Total', 'SLS UN': 220, 'SS RATIO': 2.609 },
+    ])
+    const group = report.groups[0]
+    group.candidates = [{ id: 'image', name: 'test.png', file: { arrayBuffer: async () => new Uint8Array([137, 80, 78, 71]).buffer } }]
+    for (const style of group.styles) group.assignments[style.id] = 'image'
+    const blob = await buildWeeklyReportDocx(report, 'woven')
+    const xml = strFromU8(unzipSync(new Uint8Array(await blob.arrayBuffer()))['word/document.xml'])
+    expect(xml).toContain('WOVENS - GREAT - MV2514A - TTL UNITS: 220 - SS: 2.6')
+    const labels = [...xml.matchAll(/<w:txbxContent>([\s\S]*?)<\/w:txbxContent>/g)].map(match => match[1])
+    expect(labels).toHaveLength(1)
+    expect(labels[0]).toContain('UNITS: 157')
+    expect(labels[0]).toContain('SS: 2.9')
+    expect(xml).not.toContain('UNITS: 63')
+  })
+
   it('exports imported SLS UN values in image labels, text fallbacks, and group totals', async () => {
     const report = parseWeeklySpreadsheetRows([
       { VIN: 'MK0895', STYLE_DESCRIPTION: 'Mole', 'SLS UN': 444, 'SS RATIO': 2.3 },
@@ -98,7 +117,7 @@ describe('buildWeeklyReportDocx', () => {
 
     expect(documentXml).not.toContain('MK-GREAT')
     expect(documentXml).toContain('MV-GOOD')
-    expect(documentXml).toContain('WOVENS - GREAT - MV-GOOD - TTL UNITS: 0 - SS: 3.2')
+    expect(documentXml).toContain('WOVENS - GOOD - MV-GOOD - TTL UNITS: 0 - SS: 3.2')
     expect(documentXml).toContain('w:orient="landscape"')
     expect(documentXml).toContain('<w:tblLayout w:type="fixed"/>')
     expect(relationships).toContain('Target="footer.xml"')
