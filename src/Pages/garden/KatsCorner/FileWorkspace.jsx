@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { WEEKLY_FABRICS, WEEKLY_RATINGS, applyManualImages, assignImage, associateImages, confirmImage, createImageAssets, formatSs, groupMatchStatus, manualImageKey, parseSpreadsheetRows, parseWeeklySpreadsheetRows, renameVinAndRematch, scoreImageCandidate, styleNeedsReview } from './reportModel'
 import { readSpreadsheet } from './spreadsheet'
+import { collectDroppedFiles } from './droppedFiles'
 import { currentMonthValue, currentWeekValue, dateValue, formatReportPeriod, formatWorkweekRange, parseDateValue, startOfWorkweek, workweekDates } from './reportPeriod'
 import './FileWorkspace.css'
 import './FileWorkspaceSimplified.css'
@@ -11,6 +12,38 @@ const EMPTY_CANDIDATES = []
 const EMPTY_ASSIGNMENTS = {}
 const REPORT_MODES = ['monthly', 'weekly']
 const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+
+function UploadCard({ uploaded, onFiles, onError, children }) {
+  const [dragging, setDragging] = useState(false)
+  const dragDepth = useRef(0)
+  return <label
+    className={`drop-card ${uploaded ? 'uploaded' : ''} ${dragging ? 'dragging' : ''}`}
+    onDragEnter={(event) => {
+      event.preventDefault()
+      if (!Array.from(event.dataTransfer.types).includes('Files')) return
+      dragDepth.current += 1
+      setDragging(true)
+    }}
+    onDragOver={(event) => {
+      event.preventDefault()
+      event.dataTransfer.dropEffect = Array.from(event.dataTransfer.types).includes('Files') ? 'copy' : 'none'
+    }}
+    onDragLeave={(event) => {
+      event.preventDefault()
+      dragDepth.current = Math.max(0, dragDepth.current - 1)
+      if (!dragDepth.current) setDragging(false)
+    }}
+    onDrop={async (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      dragDepth.current = 0
+      setDragging(false)
+      if (!Array.from(event.dataTransfer.types).includes('Files')) return
+      try { await onFiles(await collectDroppedFiles(event.dataTransfer)) }
+      catch { onError('Could not read the dropped files. Please try again or use the file picker.') }
+    }}
+  >{children}</label>
+}
 
 function WorkweekPicker({ value, onChange }) {
   const pickerRef = useRef(null)
@@ -163,9 +196,12 @@ export default function FileWorkspace() {
     return () => cancelAnimationFrame(frame)
   }, [reviewTargetStyleId, state.selectedGroupId])
 
-  async function handleSpreadsheet(event) {
-    const file = event.target.files?.[0]
-    if (!file) return
+  async function handleSpreadsheet(files) {
+    const file = files?.[0]
+    if (!file || files.length !== 1 || !/\.(csv|xlsx)$/i.test(file.name)) {
+      dispatch({ type: 'error', message: 'Please choose or drop one CSV or XLSX spreadsheet.' })
+      return
+    }
     try {
       const rows = await readSpreadsheet(file)
       dispatch({ type: 'report', report: createReport(rows, file.name, reportMode) })
@@ -206,13 +242,16 @@ export default function FileWorkspace() {
     })
   }
 
-  async function handleDirectory(event) {
-    const files = event.target.files
-    if (!files?.length) return
-    const folderName = files[0].webkitRelativePath?.split('/')[0] || 'Selected folder'
+  async function handleDirectory(files) {
+    const folderNames = new Set(Array.from(files).map((file) => file.webkitRelativePath?.split('/').slice(0, -1)[0]).filter(Boolean))
+    const folderName = folderNames.size === 1 ? [...folderNames][0] : 'Selected images'
     dispatch({ type: 'status', message: `Indexing ${files.length.toLocaleString()} files…` })
     await new Promise((resolve) => setTimeout(resolve, 0))
     const assets = createImageAssets(files)
+    if (!assets.length) {
+      dispatch({ type: 'error', message: 'No supported images found. Please choose or drop image files or a folder containing images.' })
+      return
+    }
     dispatch({ type: 'assets', assets, folderName })
   }
 
@@ -252,8 +291,8 @@ export default function FileWorkspace() {
       >{mode}</button>)}
     </div>
     <section className="import-grid">
-      <label className={`drop-card ${state.report ? 'uploaded' : ''}`}><span className="upload-status">{state.report ? `✓ ${reportModeLabel} spreadsheet uploaded` : `${reportModeLabel} sales spreadsheet`}</span><strong>{state.report?.sourceName ?? 'Choose CSV or Excel'}</strong><small>{state.report ? 'Click to replace' : 'CSV or XLSX'}</small><input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleSpreadsheet}/></label>
-      <label className={`drop-card ${state.assets.length ? 'uploaded' : ''}`}><span className="upload-status">{state.assets.length ? `✓ ${reportModeLabel} image folder uploaded` : `${reportModeLabel} product images`}</span><strong>{state.imageFolderName || 'Choose image folder'}</strong><small>{state.assets.length ? `${state.assets.length.toLocaleString()} images · Click to replace` : 'Subfolders included'}</small><input type="file" accept="image/*" webkitdirectory="" multiple onChange={handleDirectory}/></label>
+      <UploadCard key={`${reportMode}-spreadsheet`} uploaded={Boolean(state.report)} onFiles={handleSpreadsheet} onError={(message) => dispatch({ type: 'error', message })}><span className="upload-status">{state.report ? `✓ ${reportModeLabel} spreadsheet uploaded` : `${reportModeLabel} sales spreadsheet`}</span><strong>{state.report?.sourceName ?? 'Drop CSV or Excel here'}</strong><small>{state.report ? 'Drop or click to replace' : 'CSV or XLSX · or click to choose'}</small><input type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={(event) => { if (event.target.files?.length) handleSpreadsheet(Array.from(event.target.files)); event.target.value = '' }}/></UploadCard>
+      <UploadCard key={`${reportMode}-images`} uploaded={Boolean(state.assets.length)} onFiles={handleDirectory} onError={(message) => dispatch({ type: 'error', message })}><span className="upload-status">{state.assets.length ? `✓ ${reportModeLabel} images uploaded` : `${reportModeLabel} product images`}</span><strong>{state.imageFolderName || 'Drop images or a folder here'}</strong><small>{state.assets.length ? `${state.assets.length.toLocaleString()} images · Drop or click to replace` : 'Subfolders included · or click to choose a folder'}</small><input type="file" accept="image/*" webkitdirectory="" multiple onChange={(event) => { if (event.target.files?.length) handleDirectory(Array.from(event.target.files)); event.target.value = '' }}/></UploadCard>
     </section>
     {(state.status || state.error) && <p className={state.error ? 'workspace-message error' : 'workspace-message'} role="status">{state.error || state.status}</p>}
     {state.report && <section className="report-summary">{summaryItems.map((item) => <div key={item.label}><span>{item.value}</span> {item.label}</div>)}</section>}

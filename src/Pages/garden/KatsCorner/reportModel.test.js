@@ -159,6 +159,17 @@ describe('monthly report model', () => {
 })
 
 describe('weekly report model', () => {
+  it('reads SLS UN and totals the styles in each weekly group', () => {
+    const report = parseWeeklySpreadsheetRows([
+      { VIN: 'MK0895', STYLE_DESCRIPTION: 'Mole', ' SLS UN ': '1,444', 'SS RATIO': 2.3 },
+      { VIN: 'MK0895', STYLE_DESCRIPTION: 'Black', 'SLS UN': 315, 'SS RATIO': 2.8 },
+      { VIN: 'MK0895', STYLE_DESCRIPTION: 'Ivory', 'SLS UN': 20, 'SS RATIO': 4.5 },
+    ])
+
+    expect(report.groups[0].styles.map(({ units }) => units)).toEqual([1444, 315])
+    expect(report.groups.map(({ totalUnits }) => totalUnits)).toEqual([1759, 20])
+  })
+
   it('classifies rows by SS Ratio and orders the seller groups', () => {
     const report = parseWeeklySpreadsheetRows([
       { VIN: 'SLOW1', style_description: 'Slow style', 'SS Ratio': '4.1' },

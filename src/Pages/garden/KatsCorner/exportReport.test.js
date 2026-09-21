@@ -1,6 +1,7 @@
 import { strFromU8, unzipSync } from 'fflate'
 import { describe, expect, it } from 'vitest'
 import { buildMonthlyReportDocx, buildWeeklyReportDocx } from './exportReport'
+import { parseWeeklySpreadsheetRows } from './reportModel'
 
 describe('buildMonthlyReportDocx', () => {
   it('packages ordered VIN pages with a monthly footer', async () => {
@@ -62,6 +63,23 @@ describe('buildMonthlyReportDocx', () => {
 })
 
 describe('buildWeeklyReportDocx', () => {
+  it('exports imported SLS UN values in image labels, text fallbacks, and group totals', async () => {
+    const report = parseWeeklySpreadsheetRows([
+      { VIN: 'MK0895', STYLE_DESCRIPTION: 'Mole', 'SLS UN': 444, 'SS RATIO': 2.3 },
+      { VIN: 'MK0895', STYLE_DESCRIPTION: 'Black', 'SLS UN': 315, 'SS RATIO': 2.8 },
+    ])
+    const group = report.groups[0]
+    group.candidates = [{ id: 'image', name: 'MK0895.png', file: { arrayBuffer: async () => new Uint8Array([137, 80, 78, 71]).buffer } }]
+    group.assignments[group.styles[0].id] = 'image'
+    const blob = await buildWeeklyReportDocx(report, 'knit')
+    const xml = strFromU8(unzipSync(new Uint8Array(await blob.arrayBuffer()))['word/document.xml'])
+
+    expect(xml).toContain('TTL UNITS: 759')
+    expect(xml).toContain('UNITS: 444')
+    expect(xml).toContain('Black | UNITS: 315')
+    expect(xml).not.toContain('UNITS: 0')
+  })
+
   it('uses the monthly landscape layout with a weekly footer', async () => {
     const style = (id, ss) => ({ id, vin: id.toUpperCase(), description: `style ${id}`, units: 0, ss })
     const report = {

@@ -66,6 +66,13 @@
   font-weight: 800;
 }
 
+.drop-card.dragging,
+.drop-card:focus-within {
+  border-color: #8d526b;
+  background: #f8e5ed;
+  box-shadow: 0 0 0 3px rgba(141, 82, 107, 0.2);
+}
+
 .drop-card strong {
   overflow-wrap: anywhere;
 }

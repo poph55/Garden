@@ -4,11 +4,13 @@
 /** @typedef {{ id: string, vin: string, classification: Classification, totalUnits: number, totalSs: number, styles: StyleRow[], candidates: ImageAsset[], assignments: Record<string, string> }} VinGroup */
 /** @typedef {{ id: string, sourceName: string, groups: VinGroup[] }} MonthlyReport */
 
+import { SOURCE_ROW_NUMBER } from './workbookFormatting'
+
 const HEADER_ALIASES = {
   vin: ['vin', 'vendor item number', 'item'],
   classification: ['classification', 'class', 'fabric'],
   description: ['style description', 'description', 'style', 'color description'],
-  units: ['sls units', 'sales units', 'units', 'unit sales'],
+  units: ['sls un', 'sls units', 'sales units', 'units', 'unit sales'],
   ss: ['ss', 'ss ratio', 'sell through', 'sell-through'],
 }
 
@@ -159,6 +161,7 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
       ss,
       rating,
       sourceRow: { ...row },
+      sourceRowNumber: row[SOURCE_ROW_NUMBER],
     })
   })
 
@@ -168,10 +171,11 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
     id: stableId([sourceName, 'weekly', rows.length]),
     sourceName,
     type: 'weekly',
+    workbookFormatting: rows.workbookFormatting,
     groups: [...groups.values()]
       .map((group) => {
         const styles = sortStylesBySs(group.styles)
-        return { ...group, totalSs: styles[0]?.ss ?? group.totalSs, styles }
+        return { ...group, totalUnits: styles.reduce((sum, style) => sum + style.units, 0), totalSs: styles[0]?.ss ?? group.totalSs, styles }
       })
       .sort((a, b) => fabricOrder.get(a.fabric) - fabricOrder.get(b.fabric) || ratingOrder.get(a.classification) - ratingOrder.get(b.classification) || a.totalSs - b.totalSs || a.vin.localeCompare(b.vin)),
   }

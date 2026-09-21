@@ -1,3 +1,5 @@
+import { readWorkbookFormatting, SOURCE_ROW_NUMBER } from './workbookFormatting'
+
 function parseCsv(text) {
   const rows = []
   let row = []
@@ -25,18 +27,25 @@ function parseCsv(text) {
   return rows
 }
 
-export function rowsToObjects(rows) {
+export function rowsToObjects(rows, workbookBytes) {
   const headerIndex = rows.findIndex((row) => {
     const headers = row.map((value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim())
     return headers.includes('vin') && headers.some((header) => ['ss', 'ss ratio', 'sell through'].includes(header))
   })
   if (headerIndex < 0) throw new Error('Could not find VIN and SS columns in this spreadsheet.')
   const headers = rows[headerIndex]
-  return rows.slice(headerIndex + 1).map((row) => Object.fromEntries(headers.map((header, index) => [String(header ?? ''), row[index] ?? ''])))
+  const objects = rows.slice(headerIndex + 1).map((row, index) => {
+    const object = Object.fromEntries(headers.map((header, column) => [String(header ?? ''), row[column] ?? '']))
+    Object.defineProperty(object, SOURCE_ROW_NUMBER, { value: headerIndex + index + 2 })
+    return object
+  })
+  if (workbookBytes) objects.workbookFormatting = readWorkbookFormatting(workbookBytes, headerIndex + 1, headers)
+  return objects
 }
 
 export async function readSpreadsheet(file) {
   if (file.name.toLowerCase().endsWith('.csv')) return rowsToObjects(parseCsv(await file.text()))
   const { readSheet } = await import('read-excel-file/browser')
-  return rowsToObjects(await readSheet(file))
+  const bytes = await file.arrayBuffer()
+  return rowsToObjects(await readSheet(bytes), bytes)
 }
