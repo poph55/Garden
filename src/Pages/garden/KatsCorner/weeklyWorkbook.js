@@ -85,15 +85,35 @@ function workbookRows(report, fabric) {
   })
 }
 
-function worksheetXml(styles, formatting) {
+function setRowCell(xml, columnIndex, rowNumber, value, cellStyle) {
+  const column = columnName(columnIndex)
+  const reference = `${column}${rowNumber}`
+  const replacement = cellXml(value, reference, cellStyle)
+  const pattern = new RegExp(`<c\\b[^>]*\\br="${reference}"[^>]*(?:/>|>[\\s\\S]*?</c>)`)
+  if (pattern.test(xml)) return xml.replace(pattern, () => replacement)
+  // Sparse source rows may not contain an empty vendor cell at all.
+  const nextCell = [...xml.matchAll(/<c\b[^>]*\br="([A-Z]+)\d+"/g)].find(match => match[1].length > column.length || (match[1].length === column.length && match[1] > column))
+  if (nextCell) return xml.slice(0, nextCell.index) + replacement + xml.slice(nextCell.index)
+  return xml.replace('</row>', `${replacement}</row>`)
+}
+
+function worksheetXml(styles, formatting, vendorName) {
   const columns = formatting?.headers ?? sourceColumns(styles)
+  const vendorColumn = columns.findIndex(column => normalized(column) === 'vendor name')
+  let detailRowCount = 0
   const lastColumn = columnName(columns.length - 1)
   const rows = [
     originalRowXml(formatting, formatting?.headerRowNumber, 1) ?? `<row r="1"${formatting ? rowFormatAttributes(formatting.rowFormats[formatting.headerRowNumber]) : ' ht="24" customHeight="1"'}>${columns.map((column, index) => cellXml(column, `${columnName(index)}1`, formatting ? sourceCellStyle(formatting, formatting.headerRowNumber, index) : 1)).join('')}</row>`,
     ...styles.map((style, rowIndex) => {
       const rowNumber = rowIndex + 2
       const rowStyle = RATING_STYLE[style.rating ?? style.group.classification]
-      return originalRowXml(formatting, style.sourceRowNumber, rowNumber, style) ?? `<row r="${rowNumber}"${rowFormatAttributes(formatting?.rowFormats[style.sourceRowNumber])}>${columns.map((column, columnIndex) => cellXml(displayValue(style, column), `${columnName(columnIndex)}${rowNumber}`, formatting ? sourceCellStyle(formatting, style.sourceRowNumber, columnIndex) : rowStyle)).join('')}</row>`
+      let xml = originalRowXml(formatting, style.sourceRowNumber, rowNumber, style) ?? `<row r="${rowNumber}"${rowFormatAttributes(formatting?.rowFormats[style.sourceRowNumber])}>${columns.map((column, columnIndex) => cellXml(displayValue(style, column), `${columnName(columnIndex)}${rowNumber}`, formatting ? sourceCellStyle(formatting, style.sourceRowNumber, columnIndex) : rowStyle)).join('')}</row>`
+      if (!style.isTotal) detailRowCount += 1
+      if (vendorColumn >= 0 && String(vendorName ?? '').trim()) {
+        const value = !style.isTotal && detailRowCount === 2 ? vendorName : ''
+        xml = setRowCell(xml, vendorColumn, rowNumber, value, formatting ? sourceCellStyle(formatting, style.sourceRowNumber, vendorColumn) : rowStyle)
+      }
+      return xml
     }),
   ]
   const widths = columns.map((column, index) => `<col min="${index + 1}" max="${index + 1}" width="${Math.min(42, Math.max(12, String(column).length + 4))}" customWidth="1"/>`).join('')
@@ -114,8 +134,8 @@ export async function buildWeeklyWorkbookXlsx(report) {
     'xl/workbook.xml': encoder.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Knits" sheetId="1" r:id="rId1"/><sheet name="Wovens" sheetId="2" r:id="rId2"/></sheets></workbook>'),
     'xl/_rels/workbook.xml.rels': encoder.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'),
     'xl/styles.xml': encoder.encode(formatting?.stylesXml ?? stylesXml()),
-    'xl/worksheets/sheet1.xml': encoder.encode(worksheetXml(sheets[0], formatting)),
-    'xl/worksheets/sheet2.xml': encoder.encode(worksheetXml(sheets[1], formatting)),
+    'xl/worksheets/sheet1.xml': encoder.encode(worksheetXml(sheets[0], formatting, report.vendorName)),
+    'xl/worksheets/sheet2.xml': encoder.encode(worksheetXml(sheets[1], formatting, report.vendorName)),
   }
   if (formatting?.themeXml) {
     files['xl/theme/theme1.xml'] = encoder.encode(formatting.themeXml)

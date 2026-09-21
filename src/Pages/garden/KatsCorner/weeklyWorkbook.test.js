@@ -9,7 +9,42 @@ import { rowsToObjects } from './spreadsheet'
 import { buildWeeklyReportDocx } from './exportReport'
 
 describe('buildWeeklyWorkbookXlsx', () => {
-  it('keeps complete VIN blocks in descending total SS order with totals last and matching Word pages', async () => {
+  it.each([false, true])('places the vendor once on each sheet’s second detail row (source formatting: %s)', async (formatted) => {
+    const data = [
+      ['VENDOR_NAME', 'VIN', 'STYLE_DESCRIPTION', 'SS RATIO'],
+      ['R & O / Modern Works', 'MK-LATE', 'Black', 5],
+      ['', 'MK-LATE Total', '', 5],
+      ['', 'MK-EARLY', 'Ivory', 1],
+      ['', 'MK-EARLY Total', '', 1],
+      ['', 'MV1', 'Blue', 2],
+      ['', 'MV1', 'White', 3],
+      ['', 'MV1 Total', '', 2.5],
+    ]
+    let bytes
+    if (formatted) {
+      const template = await buildWeeklyWorkbookXlsx(parseWeeklySpreadsheetRows(rowsToObjects(data)))
+      const files = unzipSync(new Uint8Array(await template.arrayBuffer()))
+      const rows = data.map((row, i) => `<row r="${i + 1}">${row.map((value, j) => {
+        if (i === 6 && j === 0) return '' // A missing cell must be inserted in column order.
+        const content = typeof value === 'number' ? `<v>${value}</v>` : `<is><t>${value.replaceAll('&', '&amp;')}</t></is>`
+        return `<c r="${String.fromCharCode(65 + j)}${i + 1}" s="1"${typeof value === 'number' ? '' : ' t="inlineStr"'}>${content}</c>`
+      }).join('')}</row>`).join('')
+      files['xl/worksheets/sheet1.xml'] = new TextEncoder().encode(`<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${rows}</sheetData></worksheet>`)
+      bytes = zipSync(files)
+    }
+    const report = parseWeeklySpreadsheetRows(rowsToObjects(data, bytes))
+    const output = Buffer.from(await (await buildWeeklyWorkbookXlsx(report)).arrayBuffer())
+    const sheets = await readXlsxFile(Readable.from(output))
+    expect(sheets[0].data.map(row => row[0])).toEqual(['VENDOR_NAME', null, null, 'R & O / Modern Works', null])
+    expect(sheets[1].data.map(row => row[0])).toEqual(['VENDOR_NAME', null, 'R & O / Modern Works', null])
+    if (formatted) {
+      const files = unzipSync(output)
+      expect(strFromU8(files['xl/worksheets/sheet1.xml'])).toContain('<c r="A4" s="1" t="inlineStr">')
+      expect(strFromU8(files['xl/worksheets/sheet2.xml'])).toContain('<c r="A3" s="0" t="inlineStr">')
+    }
+  })
+
+  it('keeps complete VIN blocks in ascending total SS order with totals last and matching Word pages', async () => {
     const report = parseWeeklySpreadsheetRows([
       { VIN: 'MK-LOW', STYLE_DESCRIPTION: 'Blue', 'SS RATIO': 9, 'SLS UN': 10 },
       { VIN: 'MK-LOW', STYLE_DESCRIPTION: '', 'SS RATIO': 8, 'SLS UN': 20 },
@@ -24,22 +59,22 @@ describe('buildWeeklyWorkbookXlsx', () => {
     const blob = await buildWeeklyWorkbookXlsx(report)
     const sheets = await readXlsxFile(Readable.from(Buffer.from(await blob.arrayBuffer())))
     expect(sheets[0].data.slice(1).map(row => [row[0], row[1], row[2]])).toEqual([
-      ['MK-HIGH', null, 6], ['MK-HIGH', 'Ivory', 2.44], ['MK-HIGH', 'Black', 2.41], ['MK-HIGH Total', null, 3.44],
-      ['MK-LOW', 'Blue', 9], ['MK-LOW', null, 8], ['MK-LOW Total', null, 3.41],
+      ['MK-LOW', null, 8], ['MK-LOW', 'Blue', 9], ['MK-LOW Total', null, 3.41],
+      ['MK-HIGH', 'Black', 2.41], ['MK-HIGH', 'Ivory', 2.44], ['MK-HIGH', null, 6], ['MK-HIGH Total', null, 3.44],
     ])
     expect(sheets[1].data.slice(1).map(row => row[0])).toEqual(['MV-WOVEN', 'MV-WOVEN Total'])
     const word = await buildWeeklyReportDocx(report, 'knit')
     const xml = strFromU8(unzipSync(new Uint8Array(await word.arrayBuffer()))['word/document.xml'])
-    expect(xml.indexOf('MK-HIGH - TTL')).toBeLessThan(xml.indexOf('MK-LOW - TTL'))
-    expect(xml.indexOf('Ivory |')).toBeLessThan(xml.indexOf('Black |'))
+    expect(xml.indexOf('MK-LOW - TTL')).toBeLessThan(xml.indexOf('MK-HIGH - TTL'))
+    expect(xml.indexOf('Black |')).toBeLessThan(xml.indexOf('Ivory |'))
     expect(xml).not.toContain('UNITS: 15 |')
   })
 
   it('carries source cell formats, widths, and heights with rows when sorting Excel uploads', async () => {
     const data = [
       ['VIN', 'STYLE_DESCRIPTION', 'SS RATIO', 'SLS UN', 'ST%'],
-      ['MK0001', 'Lower knit', 2, 100, 0.25],
-      ['MK0002', 'Higher knit', 5, 200, 0.75],
+      ['MK0001', 'Higher knit', 5, 100, 0.25],
+      ['MK0002', 'Lower knit', 2, 200, 0.75],
     ]
     const original = await buildWeeklyWorkbookXlsx(parseWeeklySpreadsheetRows(rowsToObjects(data)))
     const files = unzipSync(new Uint8Array(await original.arrayBuffer()))
@@ -85,9 +120,9 @@ describe('buildWeeklyWorkbookXlsx', () => {
 
     expect(workbook).toContain('name="Knits"')
     expect(workbook).toContain('name="Wovens"')
-    expect(knits.indexOf('MK0001')).toBeGreaterThan(knits.indexOf('MK0002'))
-    expect(knits.indexOf('MK0002')).toBeGreaterThan(knits.indexOf('MK0003'))
-    expect(wovens.indexOf('MV0001')).toBeGreaterThan(wovens.indexOf('MV0002'))
+    expect(knits.indexOf('MK0001')).toBeLessThan(knits.indexOf('MK0002'))
+    expect(knits.indexOf('MK0002')).toBeLessThan(knits.indexOf('MK0003'))
+    expect(wovens.indexOf('MV0001')).toBeLessThan(wovens.indexOf('MV0002'))
     expect(knits).toContain('Buyer')
     expect(knits).toContain('s="2"')
     expect(knits).toContain('s="3"')
@@ -100,6 +135,6 @@ describe('buildWeeklyWorkbookXlsx', () => {
 
     const parsedSheets = await readXlsxFile(Readable.from(Buffer.from(await blob.arrayBuffer())), { getSheets: true })
     const knitRows = parsedSheets.find((sheet) => sheet.sheet === 'Knits').data
-    expect(knitRows.map((row) => row[0])).toEqual(['VIN', 'MK0003', 'MK0002', 'MK0001', 'MK0001', 'MK0004'])
+    expect(knitRows.map((row) => row[0])).toEqual(['VIN', 'MK0001', 'MK0001', 'MK0004', 'MK0002', 'MK0003'])
   })
 })

@@ -187,10 +187,11 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
     id: stableId([sourceName, 'weekly', rows.length]),
     sourceName,
     type: 'weekly',
+    vendorName: rows.map(row => readValue(row, ['vendor name'])).find(value => String(value ?? '').trim()) ?? '',
     workbookFormatting: rows.workbookFormatting,
     groups: [...groups.values()]
       .map((group) => {
-        const detailRows = [...group.detailRows].sort((a, b) => b.sortSs - a.sortSs)
+        const detailRows = [...group.detailRows].sort((a, b) => a.sortSs - b.sortSs)
         const seenDescriptions = new Set()
         const styles = detailRows.filter((style) => {
           if (!style.description || seenDescriptions.has(style.description)) return false
@@ -200,7 +201,7 @@ export function parseWeeklySpreadsheetRows(rows, sourceName = 'Weekly report') {
         const totals = totalsByVin.get(group.vin) ?? { totalUnits: detailRows.reduce((sum, style) => sum + style.units, 0), totalSs: detailRows[0]?.ss ?? 0, totalSortSs: detailRows[0]?.sortSs ?? 0 }
         return { ...group, ...totals, classification: weeklyRating(totals.totalSs), detailRows, styles }
       })
-      .sort((a, b) => fabricOrder.get(a.fabric) - fabricOrder.get(b.fabric) || b.totalSortSs - a.totalSortSs || a.vin.localeCompare(b.vin)),
+      .sort((a, b) => fabricOrder.get(a.fabric) - fabricOrder.get(b.fabric) || a.totalSortSs - b.totalSortSs || a.vin.localeCompare(b.vin)),
   }
 }
 
