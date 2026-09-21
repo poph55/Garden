@@ -23,6 +23,11 @@ import jainaD from './assets/jaina-d.jpg'
 import jainaRing from './assets/jaina-ring.jpg'
 import jainaElemental from './assets/jaina-elemental.jpg'
 import jainaVeins from './assets/jaina-veins.jpg'
+import junkratQ from './assets/junkrat-q.png'
+import junkratW from './assets/junkrat-w.png'
+import junkratE from './assets/junkrat-e.png'
+import junkratTire from './assets/junkrat-tire.png'
+import junkratPortrait from './assets/optimized/junkrat-portrait-800.webp'
 import './HeroesOfTheStorm.css'
 
 const HEROES = [
@@ -64,6 +69,16 @@ const HEROES = [
     builds:[
       { title:'Frostbolt', subtitle:'Single-target pressure', icon:jainaQ, summary:'Reliable sustained poke that becomes lethal once Frostbolt repeatedly connects with Chilled targets.', bestFor:'Standard games · frontline pressure · safe poke', gameplan:'Apply Chill before each Frostbolt so Ice Lance refunds cooldown and Mana. Summon Water Elemental early in the fight to keep targets Chilled, then use Icy Veins when you have room to keep casting.', reminder:'Frostbolt can pierce with Frost Shards—line up a second Hero instead of treating the frontline as a blocker.', talents:[[1,'Fingers of Frost','D','Mana regeneration and bonus damage.',jainaD],[4,'Frost Shards','Q','Frostbolt pierces two targets.',jainaQ],[7,'Ice Lance','Q','Faster Frostbolts on Chilled targets.',jainaQ],[10,'Water Elemental','R','Reliable Chill and sustained pressure.',jainaElemental],[13,'Icy Veins','1','Rapid, cheaper Basic Abilities.',jainaVeins],[16,'Northern Exposure','E','Reduce Armor for the burst window.',jainaE],[20,'Wintermute','R','Elemental mirrors Basic Abilities.',jainaElemental]] },
       { title:'Cone of Cold', subtitle:'Anti-melee control', icon:jainaE, summary:'Turns repeated Cone of Cold casts into a punishing root-and-burst cycle against grouped melee Heroes.', bestFor:'Multiple melee enemies · dive defense · wombo combos', gameplan:'Chill enemies before Cone of Cold so Numbing Blast roots them. Activate Icy Veins only after enemies commit, then chain wide Cones and Blizzards while the root keeps every wave on target.', reminder:'Ring of Frost needs setup—cast it after allied control or your own Numbing Blast, not as an opener.', talents:[[1,'Fingers of Frost','D','Mana and stronger Frostbite.',jainaD],[4,'Arcane Intellect','D','Mana returns and high-Mana power.',jainaD],[7,'Ice Floes','E','Wider Cone with cooldown refunds.',jainaE],[10,'Ring of Frost','R','Long area root for committed fights.',jainaRing],[13,'Icy Veins','1','Fuel the control-and-burst cycle.',jainaVeins],[16,'Numbing Blast','E','Root targets already Chilled.',jainaE],[20,'Cold Snap','R','Upgrade Ring and reset Frostbolt.',jainaRing]] },
+    ],
+  },
+  {
+    id:'junkrat', name:'Junkrat', title:'Junker Demolitionist', role:'Ranged Assassin', universe:'Overwatch', accent:'#f3c84b', portrait:junkratPortrait,
+    source:'https://www.icy-veins.com/heroes/junkrat-build-guide', reviewed:'September 26, 2023 · latest guide update',
+    overview:'A long-range demolitionist who blankets choke points with grenades, traps divers, and displaces enemies with carefully timed mines.',
+    abilities:[['Q','Frag Launcher',junkratQ],['W','Concussion Mine',junkratW],['E','Steel Trap',junkratE],['D','Total Mayhem',junkratPortrait]],
+    builds:[
+      { title:'Steel Trap', subtitle:'Anti-dive control', icon:junkratE, summary:'Build a two-trap perimeter that roots, Silences, and exposes anyone who dives through it.', bestFor:'Dive assassins · choke points · objective control', gameplan:'Set traps before the fight starts, covering your escape route and the enemy’s likely approach. When a trap catches a Hero, trigger Blow ’Em Up! and unload RIP-Tire or a close Spread Volley during the root and Silence.', reminder:'Steel Trap takes two seconds to arm—place it where the fight will move, not where the enemy is standing now.', talents:[[1,"Blow 'Em Up!",'D','Boost damage after Mine or Trap hits.',junkratW],[4,'Chattering Teeth','E','Traps chase nearby Heroes.',junkratE],[7,'Sticky Wicket','E','Trapped Heroes are Silenced.',junkratE],[10,'RIP-Tire','R','Remote burst and displacement.',junkratTire],[13,"Gotta Trap 'Em All!",'E','Maintain two traps with less cooldown.',junkratE],[16,'Spread Volley','1','Fire two extra grenades per charge.',junkratQ],[20,'Cannonball!','Q','Greatly increase grenade radius.',junkratQ]] },
+      { title:'Frag Launcher', subtitle:'Long-range artillery', icon:junkratQ, summary:'Scale grenade damage into relentless late-game poke while preserving Mine for mobility and self-peel.', bestFor:'Long standoffs · waveclear · grouped enemies', gameplan:'Stack Taste For Explosions from a safe angle and weave Basic Attacks between grenades when positioning allows. Use Ripper Air on yourself for rotations or escape; save RIP-Tire until enemy interrupts are occupied.', reminder:'Aim at the front edge of a target so a near miss bounces into them instead of sailing past.', talents:[[1,'Extra-Wound Timers','Q','Empower the final grenade.',junkratQ],[4,'Taste For Explosions','Q','Permanently stack grenade damage.',junkratQ],[7,'Dirty Trickster','D','Punish dive and crowd control.',junkratPortrait],[10,'RIP-Tire','R','High-impact ranged teamfight burst.',junkratTire],[13,'Ripper Air','W','Frequent, stronger self-launches.',junkratW],[16,'Endless Nades','Q','Hero hits reduce launcher cooldown.',junkratQ],[20,'Cannonball!','Q','Larger grenades hit more targets.',junkratQ]] },
     ],
   },
 ]
