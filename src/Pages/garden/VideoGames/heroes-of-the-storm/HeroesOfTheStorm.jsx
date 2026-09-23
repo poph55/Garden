@@ -27,83 +27,71 @@ import junkratW from './assets/junkrat-w.png'
 import junkratE from './assets/junkrat-e.png'
 import junkratTire from './assets/junkrat-tire.png'
 import junkratTrait from './assets/junkrat-trait.png'
-import junkratPortrait from './assets/optimized/junkrat-portrait-800.webp'
 import lucioQ from './assets/lucio-q.png'
 import lucioW from './assets/lucio-w.png'
 import lucioE from './assets/lucio-e.png'
 import lucioD from './assets/lucio-d.png'
 import lucioFive from './assets/lucio-five.png'
-import lucioPortrait from './assets/optimized/lucio-portrait-800.webp'
 import johannaQ from './assets/johanna-punish_hexagon.png'
 import johannaW from './assets/johanna-condemn_hexagon.png'
 import johannaE from './assets/johanna-shield-glare_hexagon.png'
 import johannaD from './assets/johanna-iron-skin_hexagon.png'
 import johannaShield from './assets/johanna-blessed-shield_hexagon.png'
-import johannaPortrait from './assets/optimized/johanna-portrait-800.webp'
 import hoggerQ from './assets/hogger-staggering-blow.png'
 import hoggerW from './assets/hogger-ez-thro-dynamite.png'
 import hoggerE from './assets/hogger-hogg-wild.png'
 import hoggerD from './assets/hogger-loot-hoard.png'
 import hoggerHoard from './assets/hogger-hoardapult.png'
 import hoggerShockwave from './assets/hogger-shockwave.png'
-import hoggerPortrait from './assets/optimized/hogger-portrait-800.webp'
 import yrelQ from './assets/yrel-vindication_hexagon.png'
 import yrelW from './assets/yrel-righteous-hammer_hexagon.png'
 import yrelE from './assets/yrel-avenging-wrath_hexagon.png'
 import yrelD from './assets/yrel-divine-purpose_hexagon.png'
 import yrelArdent from './assets/yrel-ardent-defender_hexagon.png'
 import yrelGround from './assets/yrel-sacred-ground_hexagon.png'
-import yrelPortrait from './assets/optimized/yrel-portrait-800.webp'
 import qhiraQ from './assets/qhira-carnage_hexagon.png'
 import qhiraW from './assets/qhira-blood-rage_hexagon.png'
 import qhiraE from './assets/qhira-revolving-sweep_hexagon.png'
 import qhiraD from './assets/qhira-grappling-hook_hexagon.png'
 import qhiraFinal from './assets/qhira-final-strike_hexagon.png'
-import qhiraPortrait from './assets/optimized/qhira-portrait-800.webp'
 import falstadQ from './assets/falstad-hammerang_hexagon.png'
 import falstadW from './assets/falstad-lightning-rod_hexagon.png'
 import falstadE from './assets/falstad-barrel-roll_hexagon.png'
 import falstadZ from './assets/falstad-flight_hexagon.png'
 import falstadGust from './assets/falstad-mighty-gust_hexagon.png'
 import falstadTrait from './assets/falstad-tailwind_hexagon.png'
-import falstadPortrait from './assets/optimized/falstad-portrait-800.webp'
 import sylvanasQ from './assets/sylvanas-withering-fire_hexagon.png'
 import sylvanasW from './assets/sylvanas-shadow-dagger_hexagon.png'
 import sylvanasE from './assets/sylvanas-haunting-wave_hexagon.png'
 import sylvanasD from './assets/sylvanas-black-arrows_hexagon.png'
 import sylvanasMind from './assets/sylvanas-mind-control_hexagon.png'
 import sylvanasArrow from './assets/sylvanas-wailing-arrow_hexagon.png'
-import sylvanasPortrait from './assets/optimized/sylvanas-portrait-800.webp'
 import brightwingQ from './assets/brightwing-arcane-flare_hexagon.png'
 import brightwingW from './assets/brightwing-polymorph_hexagon.png'
 import brightwingE from './assets/brightwing-pixie-dust_hexagon.png'
 import brightwingZ from './assets/brightwing-phase-shift_hexagon.png'
 import brightwingD from './assets/brightwing-soothing-mist_hexagon.png'
 import brightwingBlink from './assets/brightwing-blink-heal_hexagon.png'
-import brightwingPortrait from './assets/optimized/brightwing-portrait-800.webp'
 import rehgarQ from './assets/rehgar-chain-heal_hexagon.png'
 import rehgarW from './assets/rehgar-lightning-shield_hexagon.png'
 import rehgarE from './assets/rehgar-earthbind-totem_hexagon.png'
 import rehgarD from './assets/rehgar-ghost-wolf_hexagon.png'
 import rehgarAncestral from './assets/rehgar-ancestral-healing_hexagon.png'
-import rehgarPortrait from './assets/optimized/rehgar-portrait-800.webp'
 import mephistoQ from './assets/mephisto-skull-missile_hexagon.png'
 import mephistoW from './assets/mephisto-lightning-nova_hexagon.png'
 import mephistoE from './assets/mephisto-shade-of-mephisto_hexagon.png'
 import mephistoD from './assets/mephisto-lord-of-hatred_hexagon.png'
 import mephistoDurance from './assets/mephisto-durance-of-hate_hexagon.png'
-import mephistoPortrait from './assets/optimized/mephisto-portrait-800.webp'
 import aurielQ from './assets/auriel-sacred-sweep_hexagon.png'
 import aurielW from './assets/auriel-ray-of-heaven_hexagon.png'
 import aurielE from './assets/auriel-detainment-strike_hexagon.png'
 import aurielD from './assets/auriel-bestow-hope_hexagon.png'
 import aurielAegis from './assets/auriel-crystal-aegis_hexagon.png'
-import aurielPortrait from './assets/optimized/auriel-portrait-800.webp'
 import './HeroesOfTheStorm.css'
 
 const HEROES = [
   {
-    id: 'valla', name: 'Valla', title: 'Demon Hunter', role: 'Ranged Assassin', universe: 'Diablo', accent: '#dc607d', portrait: vallaD, trait:vallaD,
+    id: 'valla', name: 'Valla', title: 'Demon Hunter', role: 'Ranged Assassin', universe: 'Diablo', accent: '#dc607d', trait:vallaD,
     source: 'https://www.icy-veins.com/heroes/valla-build-guide', reviewed: 'May 2, 2025 · patch 2.55.10',
     overview: 'A fragile, high-output damage dealer who rewards disciplined positioning and constant Hatred upkeep.',
     abilities: [['Q','Hungering Arrow',vallaQ],['W','Multishot',vallaW],['E','Vault',vallaE],['D','Hatred',vallaD]],
@@ -113,7 +101,7 @@ const HEROES = [
     ],
   },
   {
-    id:'blaze', name:'Blaze', title:'Veteran Firebat', role:'Tank / Offlaner', universe:'StarCraft', accent:'#ef8d3f', portrait:blazeD, trait:blazeD,
+    id:'blaze', name:'Blaze', title:'Veteran Firebat', role:'Tank / Offlaner', universe:'StarCraft', accent:'#ef8d3f', trait:blazeD,
     source:'https://www.icy-veins.com/heroes/blaze-build-guide', reviewed:'July 20, 2026 · latest patch',
     overview:'A durable area-control tank with excellent waveclear, long-range engage, and a fight-saving Bunker.',
     abilities:[['Q','Flame Stream',blazeQ],['W','Oil Spill',blazeD],['E','Jet Propulsion',blazeE],['D','Pyromania',blazeD]],
@@ -123,7 +111,7 @@ const HEROES = [
     ],
   },
   {
-    id:'anduin', name:'Anduin', title:'King of Stormwind', role:'Healer', universe:'Warcraft', accent:'#e3c467', portrait:anduinD, trait:anduinD,
+    id:'anduin', name:'Anduin', title:'King of Stormwind', role:'Healer', universe:'Warcraft', accent:'#e3c467', trait:anduinD,
     source:'https://www.icy-veins.com/heroes/anduin-build-guide', reviewed:'July 12, 2026 · latest review',
     overview:'A backline healer with reliable burst healing, baseline rescue utility, and strong counter-engage tools.',
     abilities:[['Q','Flash Heal',anduinQ],['W','Divine Star',anduinW],['E','Chastise',anduinE],['D','Leap of Faith',anduinD]],
@@ -133,7 +121,7 @@ const HEROES = [
     ],
   },
   {
-    id:'jaina', name:'Jaina', title:'Archmage', role:'Ranged Assassin', universe:'Warcraft', accent:'#72c9ee', portrait:jainaD, trait:jainaD,
+    id:'jaina', name:'Jaina', title:'Archmage', role:'Ranged Assassin', universe:'Warcraft', accent:'#72c9ee', trait:jainaD,
     source:'https://www.icy-veins.com/heroes/jaina-build-guide', reviewed:'March 16, 2026 · balance patch',
     overview:'A combo-focused Frost Mage with exceptional burst, area control, and waveclear—but very little margin for poor positioning.',
     abilities:[['Q','Frostbolt',jainaQ],['W','Blizzard',jainaW],['E','Cone of Cold',jainaE],['D','Frostbite',jainaD]],
@@ -142,16 +130,16 @@ const HEROES = [
     ],
   },
   {
-    id:'junkrat', name:'Junkrat', title:'Junker Demolitionist', role:'Ranged Assassin', universe:'Overwatch', accent:'#f3c84b', portrait:junkratPortrait, trait:junkratTrait,
+    id:'junkrat', name:'Junkrat', title:'Junker Demolitionist', role:'Ranged Assassin', universe:'Overwatch', accent:'#f3c84b', trait:junkratTrait,
     source:'https://www.icy-veins.com/heroes/junkrat-build-guide', reviewed:'September 26, 2023 · latest guide update',
     overview:'A long-range demolitionist who blankets choke points with grenades, traps divers, and displaces enemies with carefully timed mines.',
-    abilities:[['Q','Frag Launcher',junkratQ],['W','Concussion Mine',junkratW],['E','Steel Trap',junkratE],['D','Total Mayhem',junkratPortrait]],
+    abilities:[['Q','Frag Launcher',junkratQ],['W','Concussion Mine',junkratW],['E','Steel Trap',junkratE],['D','Total Mayhem',junkratTrait]],
     builds:[
       { title:'Steel Trap', subtitle:'Anti-dive control', icon:junkratE, summary:'Build a two-trap perimeter that roots, Silences, and exposes anyone who dives through it.', bestFor:'Dive assassins · choke points · objective control', gameplan:'Set traps before the fight starts, covering your escape route and the enemy’s likely approach. When a trap catches a Hero, trigger Blow ’Em Up! and unload RIP-Tire or a close Spread Volley during the root and Silence.', reminder:'Steel Trap takes two seconds to arm—place it where the fight will move, not where the enemy is standing now.', talents:[[1,"Blow 'Em Up!",'D','Boost damage after Mine or Trap hits.',junkratW],[4,'Chattering Teeth','E','Traps chase nearby Heroes.',junkratE],[7,'Sticky Wicket','E','Trapped Heroes are Silenced.',junkratE],[10,'RIP-Tire','R','Remote burst and displacement.',junkratTire],[13,"Gotta Trap 'Em All!",'E','Maintain two traps with less cooldown.',junkratE],[16,'Spread Volley','1','Fire two extra grenades per charge.',junkratQ],[20,'Cannonball!','Q','Greatly increase grenade radius.',junkratQ]] },
     ],
   },
   {
-    id:'lucio', name:'Lúcio', title:'Freedom Fighting DJ', role:'Healer', universe:'Overwatch', accent:'#73d44f', portrait:lucioPortrait, trait:lucioD,
+    id:'lucio', name:'Lúcio', title:'Freedom Fighting DJ', role:'Healer', universe:'Overwatch', accent:'#73d44f', trait:lucioD,
     source:'https://www.icy-veins.com/heroes/lucio-build-guide', reviewed:'August 24, 2026 · latest guide update',
     overview:'A highly mobile sustain Healer who accelerates rotations, disrupts engages, and saves allies with burst protection and Unstoppable.',
     abilities:[['Q','Soundwave',lucioQ],['W','Crossfade',lucioW],['E','Amp It Up',lucioE],['Z','Wall Ride',lucioD]],
@@ -160,7 +148,7 @@ const HEROES = [
     ],
   },
   {
-    id:'johanna', name:'Johanna', title:'Crusader of Zakarum', role:'Tank', universe:'Diablo', accent:'#e6c66d', portrait:johannaPortrait, trait:johannaD,
+    id:'johanna', name:'Johanna', title:'Crusader of Zakarum', role:'Tank', universe:'Diablo', accent:'#e6c66d', trait:johannaD,
     source:'https://www.icy-veins.com/heroes/johanna-build-guide', reviewed:'July 20, 2026 · latest guide update',
     overview:'A resilient frontline anchor with superb waveclear, reliable blinds, and one of the safest initiation tools in the Nexus.',
     abilities:[['Q','Punish',johannaQ],['W','Condemn',johannaW],['E','Shield Glare',johannaE],['D','Iron Skin',johannaD]],
@@ -170,7 +158,7 @@ const HEROES = [
     ],
   },
   {
-    id:'hogger', name:'Hogger', title:'Scourge of Elwynn', role:'Bruiser', universe:'Warcraft', accent:'#e08743', portrait:hoggerPortrait, trait:hoggerD,
+    id:'hogger', name:'Hogger', title:'Scourge of Elwynn', role:'Bruiser', universe:'Warcraft', accent:'#e08743', trait:hoggerD,
     source:'https://www.icy-veins.com/heroes/hogger-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A disruptive Bruiser whose Rage, terrain angles, and chaotic spins convert tight spaces into overwhelming pressure.',
     abilities:[['Q','Staggering Blow',hoggerQ],['W','Ez-Thro Dynamite',hoggerW],['E','Hogg Wild',hoggerE],['D','Loot Hoard',hoggerD]],
@@ -180,7 +168,7 @@ const HEROES = [
     ],
   },
   {
-    id:'yrel', name:'Yrel', title:'Light of Hope', role:'Bruiser', universe:'Warcraft', accent:'#f1ce67', portrait:yrelPortrait, trait:yrelD,
+    id:'yrel', name:'Yrel', title:'Light of Hope', role:'Bruiser', universe:'Warcraft', accent:'#f1ce67', trait:yrelD,
     source:'https://www.icy-veins.com/heroes/yrel-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A durable support Bruiser who charges powerful abilities to peel, reposition enemies, and protect nearby allies.',
     abilities:[['Q','Vindication',yrelQ],['W','Righteous Hammer',yrelW],['E','Avenging Wrath',yrelE],['D','Divine Purpose',yrelD]],
@@ -190,7 +178,7 @@ const HEROES = [
     ],
   },
   {
-    id:'qhira', name:'Qhira', title:'Realmless Bounty Hunter', role:'Melee Assassin', universe:'Nexus', accent:'#db5f78', portrait:qhiraPortrait, trait:qhiraD,
+    id:'qhira', name:'Qhira', title:'Realmless Bounty Hunter', role:'Melee Assassin', universe:'Nexus', accent:'#db5f78', trait:qhiraD,
     source:'https://www.icy-veins.com/heroes/qhira-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A high-risk melee Assassin who stacks bleeding, swings through danger, and heals by cashing in Blood Rage at the right instant.',
     abilities:[['Q','Carnage',qhiraQ],['W','Blood Rage',qhiraW],['E','Revolving Sweep',qhiraE],['D','Grappling Hook',qhiraD]],
@@ -200,7 +188,7 @@ const HEROES = [
     ],
   },
   {
-    id:'falstad', name:'Falstad', title:'Wildhammer Thane', role:'Ranged Assassin', universe:'Warcraft', accent:'#70c7ea', portrait:falstadPortrait, trait:falstadTrait,
+    id:'falstad', name:'Falstad', title:'Wildhammer Thane', role:'Ranged Assassin', universe:'Warcraft', accent:'#70c7ea', trait:falstadTrait,
     source:'https://www.icy-veins.com/heroes/falstad-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A global Ranged Assassin who converts map pressure into timely objective arrivals and fight-winning Mighty Gusts.',
     abilities:[['Q','Hammerang',falstadQ],['W','Lightning Rod',falstadW],['E','Barrel Roll',falstadE],['Z','Flight',falstadZ]],
@@ -210,7 +198,7 @@ const HEROES = [
     ],
   },
   {
-    id:'sylvanas', name:'Sylvanas', title:'The Banshee Queen', role:'Ranged Assassin', universe:'Warcraft', accent:'#a879d4', portrait:sylvanasPortrait, trait:sylvanasD,
+    id:'sylvanas', name:'Sylvanas', title:'The Banshee Queen', role:'Ranged Assassin', universe:'Warcraft', accent:'#a879d4', trait:sylvanasD,
     source:'https://www.icy-veins.com/heroes/sylvanas-build-guide', reviewed:'March 11, 2026 · latest guide update',
     overview:'A flexible ranged carry who disables enemy structures, spreads pressure through teams, and turns good positioning into relentless damage.',
     abilities:[['Q','Withering Fire',sylvanasQ],['W','Shadow Dagger',sylvanasW],['E','Haunting Wave',sylvanasE],['D','Black Arrows',sylvanasD]],
@@ -220,7 +208,7 @@ const HEROES = [
     ],
   },
   {
-    id:'brightwing', name:'Brightwing', title:'Faerie Dragon', role:'Healer', universe:'Warcraft', accent:'#67d7a2', portrait:brightwingPortrait, trait:brightwingD,
+    id:'brightwing', name:'Brightwing', title:'Faerie Dragon', role:'Healer', universe:'Warcraft', accent:'#67d7a2', trait:brightwingD,
     source:'https://www.icy-veins.com/heroes/brightwing-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A global Healer who passively sustains nearby allies, neutralizes divers with Polymorph, and teleports to emergencies.',
     abilities:[['Q','Arcane Flare',brightwingQ],['W','Polymorph',brightwingW],['E','Pixie Dust',brightwingE],['D','Soothing Mist',brightwingD]],
@@ -230,7 +218,7 @@ const HEROES = [
     ],
   },
   {
-    id:'rehgar', name:'Rehgar', title:'Shaman of the Earthen Ring', role:'Healer', universe:'Warcraft', accent:'#5ebee3', portrait:rehgarPortrait, trait:rehgarD,
+    id:'rehgar', name:'Rehgar', title:'Shaman of the Earthen Ring', role:'Healer', universe:'Warcraft', accent:'#5ebee3', trait:rehgarD,
     source:'https://www.icy-veins.com/heroes/rehgar-build-guide', reviewed:'January 27, 2026 · latest guide review',
     overview:'An aggressive melee Healer with strong camp clear, reliable slowing, and a massive single-target Ancestral Healing save.',
     abilities:[['Q','Chain Heal',rehgarQ],['W','Lightning Shield',rehgarW],['E','Earthbind Totem',rehgarE],['Z','Ghost Wolf',rehgarD]],
@@ -240,7 +228,7 @@ const HEROES = [
     ],
   },
   {
-    id:'mephisto', name:'Mephisto', title:'Lord of Hatred', role:'Ranged Assassin', universe:'Diablo', accent:'#9b77ee', portrait:mephistoPortrait, trait:mephistoD,
+    id:'mephisto', name:'Mephisto', title:'Lord of Hatred', role:'Ranged Assassin', universe:'Diablo', accent:'#9b77ee', trait:mephistoD,
     source:'https://www.icy-veins.com/heroes/mephisto-build-guide', reviewed:'September 11, 2026 · latest talent review',
     overview:'An area-damage mage who uses temporary Shade teleports and repeated Hero hits to reset cooldowns at remarkable speed.',
     abilities:[['Q','Skull Missile',mephistoQ],['W','Lightning Nova',mephistoW],['E','Shade of Mephisto',mephistoE],['D','Lord of Hatred',mephistoD]],
@@ -250,7 +238,7 @@ const HEROES = [
     ],
   },
   {
-    id:'auriel', name:'Auriel', title:'Archangel of Hope', role:'Healer', universe:'Diablo', accent:'#f1c762', portrait:aurielPortrait, trait:aurielD,
+    id:'auriel', name:'Auriel', title:'Archangel of Hope', role:'Healer', universe:'Diablo', accent:'#f1c762', trait:aurielD,
     source:'https://www.icy-veins.com/heroes/auriel-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A resource-driven Healer who turns allied damage into Energy, enabling powerful burst healing without using Mana.',
     abilities:[['Q','Sacred Sweep',aurielQ],['W','Ray of Heaven',aurielW],['E','Detainment Strike',aurielE],['D','Bestow Hope',aurielD]],
@@ -261,16 +249,23 @@ const HEROES = [
   },
 ]
 
+const PADDED_ICON_NAMES = ['_hexagon', 'junkrat-', 'lucio-']
+
+function iconClassName(image, className = '') {
+  const isPadded = PADDED_ICON_NAMES.some(name => image.includes(name))
+  return `${className}${isPadded ? ' hots-icon-padded' : ''}`.trim()
+}
+
 function HeroNav({ activeHero, onSelect }) {
-  return <nav className="hots-hero-nav" aria-label="Choose a hero">{HEROES.map(hero => <button key={hero.id} className={activeHero === hero.id ? 'is-active' : ''} style={{'--hero-accent':hero.accent}} onClick={() => onSelect(hero.id)}><img src={hero.portrait} alt="" /><span><strong>{hero.name}</strong><small>{hero.role}</small></span></button>)}</nav>
+  return <nav className="hots-hero-nav" aria-label="Choose a hero">{HEROES.map(hero => <button key={hero.id} className={activeHero === hero.id ? 'is-active' : ''} style={{'--hero-accent':hero.accent}} onClick={() => onSelect(hero.id)}><img className={iconClassName(hero.trait)} src={hero.trait} alt="" /><span><strong>{hero.name}</strong><small>{hero.role}</small></span></button>)}</nav>
 }
 
 function BuildCard({ build, accent }) {
-  return <article className="hots-build" style={{'--build-accent':accent}}><header className="hots-build-header"><img src={build.icon} alt="" /><div><p>{build.subtitle}</p><h3>{build.title}</h3></div></header><p className="hots-build-summary">{build.summary}</p><p className="hots-best-for"><span>Best for</span>{build.bestFor}</p><ol className="hots-talents" aria-label={`${build.title} talent order`}>{build.talents.map(([level,name,key,note,image]) => <li className="hots-talent" key={level}><span className="hots-level">{level}</span><img src={image} alt="" /><span className="hots-talent-copy"><strong>{name}<kbd>{key}</kbd></strong><small>{note}</small></span></li>)}</ol><div className="hots-plan"><span>How to play it</span><p>{build.gameplan}</p></div><p className="hots-reminder"><strong>Remember</strong>{build.reminder}</p></article>
+  return <article className="hots-build" style={{'--build-accent':accent}}><header className="hots-build-header"><img className={iconClassName(build.icon)} src={build.icon} alt="" /><div><p>{build.subtitle}</p><h3>{build.title}</h3></div></header><p className="hots-build-summary">{build.summary}</p><p className="hots-best-for"><span>Best for</span>{build.bestFor}</p><ol className="hots-talents" aria-label={`${build.title} talent order`}>{build.talents.map(([level,name,key,note,image]) => <li className="hots-talent" key={level}><span className="hots-level">{level}</span><img className={iconClassName(image)} src={image} alt="" /><span className="hots-talent-copy"><strong>{name}<kbd>{key}</kbd></strong><small>{note}</small></span></li>)}</ol><div className="hots-plan"><span>How to play it</span><p>{build.gameplan}</p></div><p className="hots-reminder"><strong>Remember</strong>{build.reminder}</p></article>
 }
 
 export default function HeroesOfTheStorm() {
   const [activeId,setActiveId] = useState('valla')
   const hero = HEROES.find(item => item.id === activeId) ?? HEROES[0]
-  return <div className="hots-shell" style={{'--hero-accent':hero.accent}}><HeroNav activeHero={hero.id} onSelect={setActiveId} /><section className="hots-guide"><header className="hots-hero-header"><img className="hots-portrait" src={hero.trait} alt={`${hero.name} trait icon`} /><div><p className="hots-kicker">{hero.universe} · {hero.role}</p><h2>{hero.name}</h2><p className="hots-hero-title">{hero.title}</p><p className="hots-overview">{hero.overview}</p></div><div className="hots-abilities" aria-label={`${hero.name} basic abilities`}>{hero.abilities.map(([key,name,image]) => <span key={key}><img src={image} alt="" /><kbd>{key}</kbd><small>{name}</small></span>)}</div><a href={hero.source} target="_blank" rel="noreferrer" className="hots-source">Icy Veins source ↗</a></header><div className="hots-build-grid">{hero.builds.map(build => <BuildCard key={build.title} build={build} accent={hero.accent} />)}</div><footer className="hots-guide-footer"><span>Source reviewed {hero.reviewed}</span><span>Game artwork © Blizzard Entertainment · personal reference guide</span></footer></section></div>
+  return <div className="hots-shell" style={{'--hero-accent':hero.accent}}><HeroNav activeHero={hero.id} onSelect={setActiveId} /><section className="hots-guide"><header className="hots-hero-header"><img className={iconClassName(hero.trait, 'hots-portrait')} src={hero.trait} alt={`${hero.name} trait icon`} /><div><p className="hots-kicker">{hero.universe} · {hero.role}</p><h2>{hero.name}</h2><p className="hots-hero-title">{hero.title}</p><p className="hots-overview">{hero.overview}</p></div><div className="hots-abilities" aria-label={`${hero.name} basic abilities`}>{hero.abilities.map(([key,name,image]) => <span key={key}><img className={iconClassName(image)} src={image} alt="" /><kbd>{key}</kbd><small>{name}</small></span>)}</div><a href={hero.source} target="_blank" rel="noreferrer" className="hots-source">Icy Veins source ↗</a></header><div className="hots-build-grid">{hero.builds.map(build => <BuildCard key={build.title} build={build} accent={hero.accent} />)}</div><footer className="hots-guide-footer"><span>Source reviewed {hero.reviewed}</span><span>Game artwork © Blizzard Entertainment · personal reference guide</span></footer></section></div>
 }
