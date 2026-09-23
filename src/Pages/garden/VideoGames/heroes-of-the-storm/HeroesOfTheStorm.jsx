@@ -20,19 +20,18 @@ import jainaQ from './assets/jaina-q.jpg'
 import jainaW from './assets/jaina-w.jpg'
 import jainaE from './assets/jaina-e.jpg'
 import jainaD from './assets/jaina-d.jpg'
-import jainaRing from './assets/jaina-ring.jpg'
 import jainaElemental from './assets/jaina-elemental.jpg'
 import jainaVeins from './assets/jaina-veins.jpg'
 import junkratQ from './assets/junkrat-q.png'
 import junkratW from './assets/junkrat-w.png'
 import junkratE from './assets/junkrat-e.png'
 import junkratTire from './assets/junkrat-tire.png'
+import junkratTrait from './assets/junkrat-trait.png'
 import junkratPortrait from './assets/optimized/junkrat-portrait-800.webp'
 import lucioQ from './assets/lucio-q.png'
 import lucioW from './assets/lucio-w.png'
 import lucioE from './assets/lucio-e.png'
 import lucioD from './assets/lucio-d.png'
-import lucioBarrier from './assets/lucio-barrier.png'
 import lucioFive from './assets/lucio-five.png'
 import lucioPortrait from './assets/optimized/lucio-portrait-800.webp'
 import johannaQ from './assets/johanna-punish_hexagon.png'
@@ -46,6 +45,7 @@ import hoggerW from './assets/hogger-ez-thro-dynamite.png'
 import hoggerE from './assets/hogger-hogg-wild.png'
 import hoggerD from './assets/hogger-loot-hoard.png'
 import hoggerHoard from './assets/hogger-hoardapult.png'
+import hoggerShockwave from './assets/hogger-shockwave.png'
 import hoggerPortrait from './assets/optimized/hogger-portrait-800.webp'
 import yrelQ from './assets/yrel-vindication_hexagon.png'
 import yrelW from './assets/yrel-righteous-hammer_hexagon.png'
@@ -65,6 +65,7 @@ import falstadW from './assets/falstad-lightning-rod_hexagon.png'
 import falstadE from './assets/falstad-barrel-roll_hexagon.png'
 import falstadZ from './assets/falstad-flight_hexagon.png'
 import falstadGust from './assets/falstad-mighty-gust_hexagon.png'
+import falstadTrait from './assets/falstad-tailwind_hexagon.png'
 import falstadPortrait from './assets/optimized/falstad-portrait-800.webp'
 import sylvanasQ from './assets/sylvanas-withering-fire_hexagon.png'
 import sylvanasW from './assets/sylvanas-shadow-dagger_hexagon.png'
@@ -102,7 +103,7 @@ import './HeroesOfTheStorm.css'
 
 const HEROES = [
   {
-    id: 'valla', name: 'Valla', title: 'Demon Hunter', role: 'Ranged Assassin', universe: 'Diablo', accent: '#dc607d', portrait: vallaD,
+    id: 'valla', name: 'Valla', title: 'Demon Hunter', role: 'Ranged Assassin', universe: 'Diablo', accent: '#dc607d', portrait: vallaD, trait:vallaD,
     source: 'https://www.icy-veins.com/heroes/valla-build-guide', reviewed: 'May 2, 2025 · patch 2.55.10',
     overview: 'A fragile, high-output damage dealer who rewards disciplined positioning and constant Hatred upkeep.',
     abilities: [['Q','Hungering Arrow',vallaQ],['W','Multishot',vallaW],['E','Vault',vallaE],['D','Hatred',vallaD]],
@@ -112,7 +113,7 @@ const HEROES = [
     ],
   },
   {
-    id:'blaze', name:'Blaze', title:'Veteran Firebat', role:'Tank / Offlaner', universe:'StarCraft', accent:'#ef8d3f', portrait:blazeD,
+    id:'blaze', name:'Blaze', title:'Veteran Firebat', role:'Tank / Offlaner', universe:'StarCraft', accent:'#ef8d3f', portrait:blazeD, trait:blazeD,
     source:'https://www.icy-veins.com/heroes/blaze-build-guide', reviewed:'July 20, 2026 · latest patch',
     overview:'A durable area-control tank with excellent waveclear, long-range engage, and a fight-saving Bunker.',
     abilities:[['Q','Flame Stream',blazeQ],['W','Oil Spill',blazeD],['E','Jet Propulsion',blazeE],['D','Pyromania',blazeD]],
@@ -122,7 +123,7 @@ const HEROES = [
     ],
   },
   {
-    id:'anduin', name:'Anduin', title:'King of Stormwind', role:'Healer', universe:'Warcraft', accent:'#e3c467', portrait:anduinD,
+    id:'anduin', name:'Anduin', title:'King of Stormwind', role:'Healer', universe:'Warcraft', accent:'#e3c467', portrait:anduinD, trait:anduinD,
     source:'https://www.icy-veins.com/heroes/anduin-build-guide', reviewed:'July 12, 2026 · latest review',
     overview:'A backline healer with reliable burst healing, baseline rescue utility, and strong counter-engage tools.',
     abilities:[['Q','Flash Heal',anduinQ],['W','Divine Star',anduinW],['E','Chastise',anduinE],['D','Leap of Faith',anduinD]],
@@ -132,37 +133,34 @@ const HEROES = [
     ],
   },
   {
-    id:'jaina', name:'Jaina', title:'Archmage', role:'Ranged Assassin', universe:'Warcraft', accent:'#72c9ee', portrait:jainaD,
+    id:'jaina', name:'Jaina', title:'Archmage', role:'Ranged Assassin', universe:'Warcraft', accent:'#72c9ee', portrait:jainaD, trait:jainaD,
     source:'https://www.icy-veins.com/heroes/jaina-build-guide', reviewed:'March 16, 2026 · balance patch',
     overview:'A combo-focused Frost Mage with exceptional burst, area control, and waveclear—but very little margin for poor positioning.',
     abilities:[['Q','Frostbolt',jainaQ],['W','Blizzard',jainaW],['E','Cone of Cold',jainaE],['D','Frostbite',jainaD]],
     builds:[
       { title:'Frostbolt', subtitle:'Single-target pressure', icon:jainaQ, summary:'Reliable sustained poke that becomes lethal once Frostbolt repeatedly connects with Chilled targets.', bestFor:'Standard games · frontline pressure · safe poke', gameplan:'Apply Chill before each Frostbolt so Ice Lance refunds cooldown and Mana. Summon Water Elemental early in the fight to keep targets Chilled, then use Icy Veins when you have room to keep casting.', reminder:'Frostbolt can pierce with Frost Shards—line up a second Hero instead of treating the frontline as a blocker.', talents:[[1,'Fingers of Frost','D','Mana regeneration and bonus damage.',jainaD],[4,'Frost Shards','Q','Frostbolt pierces two targets.',jainaQ],[7,'Ice Lance','Q','Faster Frostbolts on Chilled targets.',jainaQ],[10,'Water Elemental','R','Reliable Chill and sustained pressure.',jainaElemental],[13,'Icy Veins','1','Rapid, cheaper Basic Abilities.',jainaVeins],[16,'Northern Exposure','E','Reduce Armor for the burst window.',jainaE],[20,'Wintermute','R','Elemental mirrors Basic Abilities.',jainaElemental]] },
-      { title:'Cone of Cold', subtitle:'Anti-melee control', icon:jainaE, summary:'Turns repeated Cone of Cold casts into a punishing root-and-burst cycle against grouped melee Heroes.', bestFor:'Multiple melee enemies · dive defense · wombo combos', gameplan:'Chill enemies before Cone of Cold so Numbing Blast roots them. Activate Icy Veins only after enemies commit, then chain wide Cones and Blizzards while the root keeps every wave on target.', reminder:'Ring of Frost needs setup—cast it after allied control or your own Numbing Blast, not as an opener.', talents:[[1,'Fingers of Frost','D','Mana and stronger Frostbite.',jainaD],[4,'Arcane Intellect','D','Mana returns and high-Mana power.',jainaD],[7,'Ice Floes','E','Wider Cone with cooldown refunds.',jainaE],[10,'Ring of Frost','R','Long area root for committed fights.',jainaRing],[13,'Icy Veins','1','Fuel the control-and-burst cycle.',jainaVeins],[16,'Numbing Blast','E','Root targets already Chilled.',jainaE],[20,'Cold Snap','R','Upgrade Ring and reset Frostbolt.',jainaRing]] },
     ],
   },
   {
-    id:'junkrat', name:'Junkrat', title:'Junker Demolitionist', role:'Ranged Assassin', universe:'Overwatch', accent:'#f3c84b', portrait:junkratPortrait,
+    id:'junkrat', name:'Junkrat', title:'Junker Demolitionist', role:'Ranged Assassin', universe:'Overwatch', accent:'#f3c84b', portrait:junkratPortrait, trait:junkratTrait,
     source:'https://www.icy-veins.com/heroes/junkrat-build-guide', reviewed:'September 26, 2023 · latest guide update',
     overview:'A long-range demolitionist who blankets choke points with grenades, traps divers, and displaces enemies with carefully timed mines.',
     abilities:[['Q','Frag Launcher',junkratQ],['W','Concussion Mine',junkratW],['E','Steel Trap',junkratE],['D','Total Mayhem',junkratPortrait]],
     builds:[
       { title:'Steel Trap', subtitle:'Anti-dive control', icon:junkratE, summary:'Build a two-trap perimeter that roots, Silences, and exposes anyone who dives through it.', bestFor:'Dive assassins · choke points · objective control', gameplan:'Set traps before the fight starts, covering your escape route and the enemy’s likely approach. When a trap catches a Hero, trigger Blow ’Em Up! and unload RIP-Tire or a close Spread Volley during the root and Silence.', reminder:'Steel Trap takes two seconds to arm—place it where the fight will move, not where the enemy is standing now.', talents:[[1,"Blow 'Em Up!",'D','Boost damage after Mine or Trap hits.',junkratW],[4,'Chattering Teeth','E','Traps chase nearby Heroes.',junkratE],[7,'Sticky Wicket','E','Trapped Heroes are Silenced.',junkratE],[10,'RIP-Tire','R','Remote burst and displacement.',junkratTire],[13,"Gotta Trap 'Em All!",'E','Maintain two traps with less cooldown.',junkratE],[16,'Spread Volley','1','Fire two extra grenades per charge.',junkratQ],[20,'Cannonball!','Q','Greatly increase grenade radius.',junkratQ]] },
-      { title:'Frag Launcher', subtitle:'Long-range artillery', icon:junkratQ, summary:'Scale grenade damage into relentless late-game poke while preserving Mine for mobility and self-peel.', bestFor:'Long standoffs · waveclear · grouped enemies', gameplan:'Stack Taste For Explosions from a safe angle and weave Basic Attacks between grenades when positioning allows. Use Ripper Air on yourself for rotations or escape; save RIP-Tire until enemy interrupts are occupied.', reminder:'Aim at the front edge of a target so a near miss bounces into them instead of sailing past.', talents:[[1,'Extra-Wound Timers','Q','Empower the final grenade.',junkratQ],[4,'Taste For Explosions','Q','Permanently stack grenade damage.',junkratQ],[7,'Dirty Trickster','D','Punish dive and crowd control.',junkratPortrait],[10,'RIP-Tire','R','High-impact ranged teamfight burst.',junkratTire],[13,'Ripper Air','W','Frequent, stronger self-launches.',junkratW],[16,'Endless Nades','Q','Hero hits reduce launcher cooldown.',junkratQ],[20,'Cannonball!','Q','Larger grenades hit more targets.',junkratQ]] },
     ],
   },
   {
-    id:'lucio', name:'Lúcio', title:'Freedom Fighting DJ', role:'Healer', universe:'Overwatch', accent:'#73d44f', portrait:lucioPortrait,
+    id:'lucio', name:'Lúcio', title:'Freedom Fighting DJ', role:'Healer', universe:'Overwatch', accent:'#73d44f', portrait:lucioPortrait, trait:lucioD,
     source:'https://www.icy-veins.com/heroes/lucio-build-guide', reviewed:'August 24, 2026 · latest guide update',
     overview:'A highly mobile sustain Healer who accelerates rotations, disrupts engages, and saves allies with burst protection and Unstoppable.',
     abilities:[['Q','Soundwave',lucioQ],['W','Crossfade',lucioW],['E','Amp It Up',lucioE],['Z','Wall Ride',lucioD]],
     builds:[
       { title:'Advanced', subtitle:'Mobile playmaker', icon:lucioFive, summary:'Turns Wall Ride, constant attacks, and High Five into aggressive mobility, cooldown reduction, and clutch cleanses.', bestFor:'Experienced players · dive teams · active peel', gameplan:'Maintain Wall Ride for Accelerando, harass safely, and keep Basic Attacks flowing to refresh Amp It Up. High Five a safe nearby ally first when you need Unstoppable before crossing enemy control to rescue someone deeper.', reminder:'Do not chase damage at the cost of your aura—your team still needs to remain inside Crossfade.', talents:[[1,'Accelerando','Z','Ramp Wall Ride speed to 40%.',lucioD],[4,'Off the Wall','Q','Wall Ride hits refresh Soundwave.',lucioQ],[7,'Reverse Amp','1','Damage or Slow with the active track.',lucioE],[10,'High Five','R','Heal and grant Unstoppable.',lucioFive],[13,'Heavy Casters','D','Push Off briefly Stuns.',lucioD],[16,'Up the Frequency','AA','Attacks refresh Amp It Up.',lucioE],[20,'Mixing Fire','R','Upgrade High Five and add anti-heal.',lucioFive]] },
-      { title:'Crossfade', subtitle:'Reliable team sustain', icon:lucioW, summary:'Expands and strengthens Lúcio’s healing aura for a simpler defensive style that keeps the whole team moving.', bestFor:'Newer players · grouped teams · sustained damage', gameplan:'Finish Party Mix by staying near allies, swap to Speed Boost for engages and retreats, then return to Healing Boost before using Amp It Up. Place Boombox where it safely extends coverage around an objective.', reminder:'Sound Barrier is strongest just before predictable burst lands—the shield decays quickly after the cast.', talents:[[1,'Party Mix','W','Grow Mana and Crossfade radius.',lucioW],[4,'Off the Wall','Q','More frequent peel from terrain.',lucioQ],[7,'Boombox','1','Extend aura coverage and grant Armor.',lucioW],[10,'Sound Barrier','R','Large team shield against burst.',lucioBarrier],[13,'All Together','W','Gain speed for each nearby ally.',lucioW],[16,'Rejuvenescência','E','Add percent-Health healing.',lucioE],[20,'House Party','W','Scale healing with nearby allies.',lucioW]] },
     ],
   },
   {
-    id:'johanna', name:'Johanna', title:'Crusader of Zakarum', role:'Tank', universe:'Diablo', accent:'#e6c66d', portrait:johannaPortrait,
+    id:'johanna', name:'Johanna', title:'Crusader of Zakarum', role:'Tank', universe:'Diablo', accent:'#e6c66d', portrait:johannaPortrait, trait:johannaD,
     source:'https://www.icy-veins.com/heroes/johanna-build-guide', reviewed:'July 20, 2026 · latest guide update',
     overview:'A resilient frontline anchor with superb waveclear, reliable blinds, and one of the safest initiation tools in the Nexus.',
     abilities:[['Q','Punish',johannaQ],['W','Condemn',johannaW],['E','Shield Glare',johannaE],['D','Iron Skin',johannaD]],
@@ -172,17 +170,17 @@ const HEROES = [
     ],
   },
   {
-    id:'hogger', name:'Hogger', title:'Scourge of Elwynn', role:'Bruiser', universe:'Warcraft', accent:'#e08743', portrait:hoggerPortrait,
+    id:'hogger', name:'Hogger', title:'Scourge of Elwynn', role:'Bruiser', universe:'Warcraft', accent:'#e08743', portrait:hoggerPortrait, trait:hoggerD,
     source:'https://www.icy-veins.com/heroes/hogger-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A disruptive Bruiser whose Rage, terrain angles, and chaotic spins convert tight spaces into overwhelming pressure.',
     abilities:[['Q','Staggering Blow',hoggerQ],['W','Ez-Thro Dynamite',hoggerW],['E','Hogg Wild',hoggerE],['D','Loot Hoard',hoggerD]],
     builds:[
       { title:'Hoardapult Rage', subtitle:'Teamfight disruption', icon:hoggerHoard, summary:'Creates instant terrain, spreads fire, and rewards high Rage with devastating wall stuns.', bestFor:'Objective fights · tight spaces · enemy backlines', gameplan:'Hoardapult behind the enemy team, drop Loot Hoard to create an angle, then knock a target into terrain with Staggering Blow. Hogger’s Joggers and Anger Management reward disciplined Rage control.', reminder:'Headbanger needs terrain—place Loot Hoard first when the map does not provide a wall.', talents:[[1,'On The Prowl','D','Manage Rage and heal on demand.',hoggerD],[4,"Hogger's Joggers",'D','Gain speed and healing at high Rage.',hoggerD],[7,'Garbage Fire','D','Loot Hoard ignites the area.',hoggerD],[10,'Hoardapult','R','Global engage with fresh Loot Hoard.',hoggerHoard],[13,'Pummel','E','Reduce damage from Heroes hit.',hoggerE],[16,'Headbanger','Q','Wall hits deal percent damage.',hoggerQ],[20,'Anger Management','D','High Rage accelerates cooldowns.',hoggerD]] },
-      { title:'Ez-Thro Dynamite', subtitle:'Safer ranged pressure', icon:hoggerW, summary:'Builds repeatable poke and sustain while keeping Hogger useful when terrain does not favor long spins.', bestFor:'Open maps · poke fights · safer offlane play', gameplan:'Keep Dynamite between Hogger and the target so a Basic Attack detonates it instantly. Dense Blasting Powder and Kablooie reward accurate placement; Secret Stash upgrades the Hoardapult landing zone.', reminder:'A direct Dynamite hit is less important than detonating it at the right moment with a Basic Attack.', talents:[[1,'Journeyman Cooking','W','Stack Dynamite damage and healing.',hoggerW],[4,"Hogger's Joggers",'D','Gain speed and healing at high Rage.',hoggerD],[7,'Dense Blasting Powder','W','Create two extra explosions.',hoggerW],[10,'Hoardapult','R','Flexible engage and escape.',hoggerHoard],[13,'Pummel','E','Reduce damage from Heroes hit.',hoggerE],[16,'Kablooie!','W','Reward central Dynamite hits.',hoggerW],[20,'Secret Stash','R','Hoardapult launches Dynamite.',hoggerHoard]] },
+      { title:'Shockwave Rage', subtitle:'Frontline burst control', icon:hoggerShockwave, summary:'Trades Hoardapult mobility for a fast melee stun that chains into Staggering Blow and Headbanger.', bestFor:'Front-to-back teams · frontline kills · reliable follow-up', gameplan:'Build Rage before the engage, use Shockwave in melee range, then immediately knock the stunned target into terrain or Loot Hoard with Staggering Blow. Seeing Red accelerates the combo at high Rage.', reminder:'This is the alternative when your team wants to kill the enemy frontline first; Hoardapult remains better for diving the backline.', talents:[[1,'On The Prowl','D','Manage Rage and heal on demand.',hoggerD],[4,"Hogger's Joggers",'D','Gain speed and healing at high Rage.',hoggerD],[7,'Seeing Red','D','High Rage accelerates Basic Abilities.',hoggerD],[10,'Shockwave','R','Melee burst and Stun.',hoggerShockwave],[13,'Pummel','E','Reduce damage from Heroes hit.',hoggerE],[16,'Headbanger','Q','Wall hits deal percent damage.',hoggerQ],[20,'Anger Management','D','High Rage accelerates cooldowns.',hoggerD]] },
     ],
   },
   {
-    id:'yrel', name:'Yrel', title:'Light of Hope', role:'Bruiser', universe:'Warcraft', accent:'#f1ce67', portrait:yrelPortrait,
+    id:'yrel', name:'Yrel', title:'Light of Hope', role:'Bruiser', universe:'Warcraft', accent:'#f1ce67', portrait:yrelPortrait, trait:yrelD,
     source:'https://www.icy-veins.com/heroes/yrel-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A durable support Bruiser who charges powerful abilities to peel, reposition enemies, and protect nearby allies.',
     abilities:[['Q','Vindication',yrelQ],['W','Righteous Hammer',yrelW],['E','Avenging Wrath',yrelE],['D','Divine Purpose',yrelD]],
@@ -192,7 +190,7 @@ const HEROES = [
     ],
   },
   {
-    id:'qhira', name:'Qhira', title:'Realmless Bounty Hunter', role:'Melee Assassin', universe:'Nexus', accent:'#db5f78', portrait:qhiraPortrait,
+    id:'qhira', name:'Qhira', title:'Realmless Bounty Hunter', role:'Melee Assassin', universe:'Nexus', accent:'#db5f78', portrait:qhiraPortrait, trait:qhiraD,
     source:'https://www.icy-veins.com/heroes/qhira-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A high-risk melee Assassin who stacks bleeding, swings through danger, and heals by cashing in Blood Rage at the right instant.',
     abilities:[['Q','Carnage',qhiraQ],['W','Blood Rage',qhiraW],['E','Revolving Sweep',qhiraE],['D','Grappling Hook',qhiraD]],
@@ -202,17 +200,17 @@ const HEROES = [
     ],
   },
   {
-    id:'falstad', name:'Falstad', title:'Wildhammer Thane', role:'Ranged Assassin', universe:'Warcraft', accent:'#70c7ea', portrait:falstadPortrait,
+    id:'falstad', name:'Falstad', title:'Wildhammer Thane', role:'Ranged Assassin', universe:'Warcraft', accent:'#70c7ea', portrait:falstadPortrait, trait:falstadTrait,
     source:'https://www.icy-veins.com/heroes/falstad-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A global Ranged Assassin who converts map pressure into timely objective arrivals and fight-winning Mighty Gusts.',
     abilities:[['Q','Hammerang',falstadQ],['W','Lightning Rod',falstadW],['E','Barrel Roll',falstadE],['Z','Flight',falstadZ]],
     builds:[
-      { title:'Lightning Rod', subtitle:'Single-target pressure', icon:falstadW, summary:'Locks reliable damage onto one Hero while shields and mobility keep Falstad alive through the channel.', bestFor:'Mobile targets · skirmishes · dependable damage', gameplan:'Apply Lightning Rod after enemy mobility is spent and move with the target to preserve every strike. Charged Up extends the barrage after Thunderstrikes has amplified it.', reminder:'Lightning Rod ends if the target leaves range—Barrel Roll forward only when enemy crowd control is accounted for.', talents:[[1,'Dishonorable Discharge','W','Stack Lightning Rod damage.',falstadW],[4,'Static Shield','W','Gain Shields from Rod strikes.',falstadW],[7,'Thunderstrikes','W','Each Rod strike grows stronger.',falstadW],[10,'Mighty Gust','R','Disengage or isolate enemies.',falstadGust],[13,'Charged Up','W','Add strikes and increase range.',falstadW],[16,'Afterburner','E','Barrel Roll grants Movement Speed.',falstadE],[20,'Wind Tunnel','R','Mighty Gust repeatedly pushes.',falstadGust]] },
+      { title:'Basic Attacks', subtitle:'Recommended sustained damage', icon:falstadTrait, summary:'The standard meta path adds safe, percent-based frontline pressure without relying on Hero-stacking quests.', bestFor:'Large maps · split pressure · durable frontlines', gameplan:'Use Hammerang to activate Secret Weapon, then spend the empowered attack window on the priority frontline target. Preserve Tailwind for Aerie Gusts and keep Mighty Gust ready to reset dives.', reminder:'This build does not need Hero stacks, making it the dependable choice when macro and split pressure limit early fights.', talents:[[1,'Frequent Flyer','AA','Attacks build speed and damage.',falstadTrait],[4,'Hammer Gains','AA','Basic Attacks restore Health.',falstadQ],[7,'Secret Weapon','Q','Hammerang empowers Basic Attacks.',falstadQ],[10,'Mighty Gust','R','Disengage or isolate enemies.',falstadGust],[13,'Sustained Winds','AA','Attacks deal percent Health damage.',falstadTrait],[16,'Aerie Gusts','D','Tailwind activates sooner.',falstadTrait],[20,'Wind Tunnel','R','Mighty Gust repeatedly pushes.',falstadGust]] },
       { title:'Hammerang', subtitle:'Ranged poke and waveclear', icon:falstadQ, summary:'Improves safe poke and area damage for grouped fights where Lightning Rod range is dangerous.', bestFor:'Grouped enemies · waveclear · long standoffs', gameplan:'Stack Gathering Storm, throw Hammerang through the frontline, and detonate BOOMerang when it overlaps multiple targets. Mighty Gust can pin enemies or reset a losing fight.', reminder:'The return path can hit twice—reposition so Hammerang crosses the target again on its way back.', talents:[[1,'Gathering Storm','Q','Stack Hammerang damage.',falstadQ],[4,'Updraft','E','Increase Barrel Roll range and Shield.',falstadE],[7,'BOOMerang','Q','Reactivate for area damage.',falstadQ],[10,'Mighty Gust','R','Control the shape of the fight.',falstadGust],[13,'Flow Rider','D','Tailwind reduces ability cooldowns.',falstadZ],[16,'Aerie Gusts','D','Tailwind activates sooner.',falstadZ],[20,'Wind Tunnel','R','Create a sustained displacement wall.',falstadGust]] },
     ],
   },
   {
-    id:'sylvanas', name:'Sylvanas', title:'The Banshee Queen', role:'Ranged Assassin', universe:'Warcraft', accent:'#a879d4', portrait:sylvanasPortrait,
+    id:'sylvanas', name:'Sylvanas', title:'The Banshee Queen', role:'Ranged Assassin', universe:'Warcraft', accent:'#a879d4', portrait:sylvanasPortrait, trait:sylvanasD,
     source:'https://www.icy-veins.com/heroes/sylvanas-build-guide', reviewed:'March 11, 2026 · latest guide update',
     overview:'A flexible ranged carry who disables enemy structures, spreads pressure through teams, and turns good positioning into relentless damage.',
     abilities:[['Q','Withering Fire',sylvanasQ],['W','Shadow Dagger',sylvanasW],['E','Haunting Wave',sylvanasE],['D','Black Arrows',sylvanasD]],
@@ -222,7 +220,7 @@ const HEROES = [
     ],
   },
   {
-    id:'brightwing', name:'Brightwing', title:'Faerie Dragon', role:'Healer', universe:'Warcraft', accent:'#67d7a2', portrait:brightwingPortrait,
+    id:'brightwing', name:'Brightwing', title:'Faerie Dragon', role:'Healer', universe:'Warcraft', accent:'#67d7a2', portrait:brightwingPortrait, trait:brightwingD,
     source:'https://www.icy-veins.com/heroes/brightwing-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A global Healer who passively sustains nearby allies, neutralizes divers with Polymorph, and teleports to emergencies.',
     abilities:[['Q','Arcane Flare',brightwingQ],['W','Polymorph',brightwingW],['E','Pixie Dust',brightwingE],['D','Soothing Mist',brightwingD]],
@@ -232,7 +230,7 @@ const HEROES = [
     ],
   },
   {
-    id:'rehgar', name:'Rehgar', title:'Shaman of the Earthen Ring', role:'Healer', universe:'Warcraft', accent:'#5ebee3', portrait:rehgarPortrait,
+    id:'rehgar', name:'Rehgar', title:'Shaman of the Earthen Ring', role:'Healer', universe:'Warcraft', accent:'#5ebee3', portrait:rehgarPortrait, trait:rehgarD,
     source:'https://www.icy-veins.com/heroes/rehgar-build-guide', reviewed:'January 27, 2026 · latest guide review',
     overview:'An aggressive melee Healer with strong camp clear, reliable slowing, and a massive single-target Ancestral Healing save.',
     abilities:[['Q','Chain Heal',rehgarQ],['W','Lightning Shield',rehgarW],['E','Earthbind Totem',rehgarE],['Z','Ghost Wolf',rehgarD]],
@@ -242,7 +240,7 @@ const HEROES = [
     ],
   },
   {
-    id:'mephisto', name:'Mephisto', title:'Lord of Hatred', role:'Ranged Assassin', universe:'Diablo', accent:'#9b77ee', portrait:mephistoPortrait,
+    id:'mephisto', name:'Mephisto', title:'Lord of Hatred', role:'Ranged Assassin', universe:'Diablo', accent:'#9b77ee', portrait:mephistoPortrait, trait:mephistoD,
     source:'https://www.icy-veins.com/heroes/mephisto-build-guide', reviewed:'September 11, 2026 · latest talent review',
     overview:'An area-damage mage who uses temporary Shade teleports and repeated Hero hits to reset cooldowns at remarkable speed.',
     abilities:[['Q','Skull Missile',mephistoQ],['W','Lightning Nova',mephistoW],['E','Shade of Mephisto',mephistoE],['D','Lord of Hatred',mephistoD]],
@@ -252,7 +250,7 @@ const HEROES = [
     ],
   },
   {
-    id:'auriel', name:'Auriel', title:'Archangel of Hope', role:'Healer', universe:'Diablo', accent:'#f1c762', portrait:aurielPortrait,
+    id:'auriel', name:'Auriel', title:'Archangel of Hope', role:'Healer', universe:'Diablo', accent:'#f1c762', portrait:aurielPortrait, trait:aurielD,
     source:'https://www.icy-veins.com/heroes/auriel-build-guide', reviewed:'September 11, 2026 · latest guide update',
     overview:'A resource-driven Healer who turns allied damage into Energy, enabling powerful burst healing without using Mana.',
     abilities:[['Q','Sacred Sweep',aurielQ],['W','Ray of Heaven',aurielW],['E','Detainment Strike',aurielE],['D','Bestow Hope',aurielD]],
@@ -274,5 +272,5 @@ function BuildCard({ build, accent }) {
 export default function HeroesOfTheStorm() {
   const [activeId,setActiveId] = useState('valla')
   const hero = HEROES.find(item => item.id === activeId) ?? HEROES[0]
-  return <div className="hots-shell" style={{'--hero-accent':hero.accent}}><HeroNav activeHero={hero.id} onSelect={setActiveId} /><section className="hots-guide"><header className="hots-hero-header"><img className="hots-portrait" src={hero.portrait} alt={`${hero.name} ability artwork`} /><div><p className="hots-kicker">{hero.universe} · {hero.role}</p><h2>{hero.name}</h2><p className="hots-hero-title">{hero.title}</p><p className="hots-overview">{hero.overview}</p></div><div className="hots-abilities" aria-label={`${hero.name} basic abilities`}>{hero.abilities.map(([key,name,image]) => <span key={key}><img src={image} alt="" /><kbd>{key}</kbd><small>{name}</small></span>)}</div><a href={hero.source} target="_blank" rel="noreferrer" className="hots-source">Icy Veins source ↗</a></header><div className="hots-build-grid">{hero.builds.map(build => <BuildCard key={build.title} build={build} accent={hero.accent} />)}</div><footer className="hots-guide-footer"><span>Source reviewed {hero.reviewed}</span><span>Game artwork © Blizzard Entertainment · personal reference guide</span></footer></section></div>
+  return <div className="hots-shell" style={{'--hero-accent':hero.accent}}><HeroNav activeHero={hero.id} onSelect={setActiveId} /><section className="hots-guide"><header className="hots-hero-header"><img className="hots-portrait" src={hero.trait} alt={`${hero.name} trait icon`} /><div><p className="hots-kicker">{hero.universe} · {hero.role}</p><h2>{hero.name}</h2><p className="hots-hero-title">{hero.title}</p><p className="hots-overview">{hero.overview}</p></div><div className="hots-abilities" aria-label={`${hero.name} basic abilities`}>{hero.abilities.map(([key,name,image]) => <span key={key}><img src={image} alt="" /><kbd>{key}</kbd><small>{name}</small></span>)}</div><a href={hero.source} target="_blank" rel="noreferrer" className="hots-source">Icy Veins source ↗</a></header><div className="hots-build-grid">{hero.builds.map(build => <BuildCard key={build.title} build={build} accent={hero.accent} />)}</div><footer className="hots-guide-footer"><span>Source reviewed {hero.reviewed}</span><span>Game artwork © Blizzard Entertainment · personal reference guide</span></footer></section></div>
 }
