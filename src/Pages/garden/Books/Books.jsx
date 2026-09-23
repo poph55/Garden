@@ -8,11 +8,21 @@ import snowsOfKilimanjaro from './covers/snows of kilimanjaro and other stories.
 import loveTriangle from './covers/love triangle.jpg'
 import bookOfLaughterAndForgetting from './covers/the book of laughter and forgetting.jpg'
 import bigSwiss from './covers/optimized/big swiss.webp'
+import godEmperorOfDune from './covers/optimized/god emperor of dune.webp'
 import meditations from './covers/optimized/meditations.webp'
 import notesFromUnderground from './covers/optimized/notes from underground.webp'
 import './Books.css'
 
 const entries = [
+  {
+    title: 'God Emperor of Dune',
+    author: 'Frank Herbert',
+    year: 1981,
+    cover: godEmperorOfDune,
+    endDate: 'Sep 18, 2026',
+    rating: 4.5,
+    link: 'https://app.thestorygraph.com/books/893ef970-664d-4cea-934b-c4473ac944d5',
+  },
   {
     title: 'Big Swiss',
     author: 'Jen Beagin',
